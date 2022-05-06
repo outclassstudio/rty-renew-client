@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import Paper from "paper";
 import { useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { isThemaModal } from "../../redux/actions/index";
+import Background from "./Background";
+import Thema1 from "../../assets/images/sky.jpg";
 
 export const CanvasBox = styled.div`
   width: 100vw;
@@ -10,10 +14,18 @@ export const CanvasBox = styled.div`
 export const CanvasArea = styled.canvas`
   width: 100%;
   height: 100%;
-  background: black;
+  background-image: url(${Thema1});
+  background-size: 1920px 960px;
+  background-repeat: no-repeat;
 `;
 
 export default function Canvas() {
+  const dispatch = useDispatch();
+  const themaModal = useSelector(
+    (state: any) => state.spaceReducer.isThemaModal.boolean
+  );
+  //const [isOpen, setIsOpen] = useState<Boolean>(false);
+
   const draw = () => {
     let myPath: any;
 
@@ -26,8 +38,6 @@ export default function Canvas() {
     Paper.view.onMouseDrag = (event: any) => {
       myPath.add(event.point);
     };
-
-    // Paper.view.draw();
   };
 
   useEffect(() => {
@@ -37,9 +47,17 @@ export default function Canvas() {
   }, []);
 
   const canvasRef = useRef(null);
+
+  const changeThemaHandler = () => {
+    dispatch(isThemaModal(true));
+  };
+
   return (
     <CanvasBox>
+      <button onClick={changeThemaHandler}>테마수정</button>
       <CanvasArea ref={canvasRef} id="canvas"></CanvasArea>
+
+      {themaModal ? <Background /> : null}
     </CanvasBox>
   );
 }
