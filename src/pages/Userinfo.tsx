@@ -1,5 +1,9 @@
-export default function Userinfo () {
+import Layout from "./Layout";
+
+export default function Userinfo() {
   return (
-    <div></div>
-  )
+    <Layout title={"userinfo"}>
+      <div>userinfo</div>
+    </Layout>
+  );
 }
