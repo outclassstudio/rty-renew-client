@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { isThemaModal } from "../../redux/actions/index";
+import { editThema, isThemaModal } from "../../redux/actions/index";
 import { themaList } from "../../utils/themaList";
-//import img from "../../assets/images/sky.jpg";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -50,6 +49,8 @@ export const Img = styled.img`
   height: 100%;
 `;
 
+export const ImgName = styled.p``;
+
 export const SelectImg = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,7 +76,7 @@ export const CloseBtn = styled.button`
 export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-  console.log("list", themaList);
+  //const [selectThema, setSelectThema] = useState<String>("");
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
@@ -86,6 +87,11 @@ export default function Background() {
   };
 
   const changeThemaHandler = () => {
+    dispatch(editThema(checkedItem[0]));
+    dispatch(isThemaModal(false));
+  };
+
+  const closeThemaHandler = () => {
     dispatch(isThemaModal(false));
   };
 
@@ -99,22 +105,23 @@ export default function Background() {
                 <ImgBox>
                   <Img src={img.url} alt="thema" />
                 </ImgBox>
+                <ImgName>{img.name}</ImgName>
                 <SelectInput
                   type="checkbox"
-                  value={img.name}
+                  value={img.url}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(img.name) ? true : false}
+                  checked={checkedItem.includes(img.url) ? true : false}
                 ></SelectInput>
               </SelectImg>
             );
           })}
         </ImgContainer>
-        {checkedItem}
+
         <BtnBox>
-          <SaveBtn>저장</SaveBtn>
-          <CloseBtn onClick={changeThemaHandler}> 닫기</CloseBtn>
+          <SaveBtn onClick={changeThemaHandler}>저장</SaveBtn>
+          <CloseBtn onClick={closeThemaHandler}> 닫기</CloseBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>

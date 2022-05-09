@@ -1,4 +1,5 @@
 import { IS_THEMA_MODAL } from "../actions/index";
+import { EDIT_THEMA } from "../actions/index";
 import { initialState } from "./initialState";
 
 const spaceReducer: any = (
@@ -13,6 +14,11 @@ const spaceReducer: any = (
     case IS_THEMA_MODAL:
       return { ...newState, isThemaModal: action.payload };
       break;
+
+    case EDIT_THEMA:
+      return { ...newState, myThema: action.payload };
+      break;
+
     default:
       return state;
   }
