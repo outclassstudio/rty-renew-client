@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { isThemaModal } from "../../redux/actions/index";
+import { themaList } from "../../utils/themaList";
+//import img from "../../assets/images/sky.jpg";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -30,18 +32,22 @@ export const ModalView = styled.div`
   }
 `;
 
-export const ImgBox = styled.div`
+export const ImgContainer = styled.div`
   width: 400px;
   display: flex;
   justify-content: center;
   flex-direction: row;
 `;
-export const Img = styled.div`
+export const ImgBox = styled.div`
   width: 150px;
   height: 160px;
-  background: red;
   margin: 0 6px 12px 6px;
   border-radius: 3px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 export const SelectImg = styled.div`
@@ -69,12 +75,7 @@ export const CloseBtn = styled.button`
 export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-
-  const backImg = [
-    { id: 1, url: "url1" },
-    { id: 2, url: "url2" },
-    { id: 3, url: "url3" },
-  ];
+  console.log("list", themaList);
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
@@ -91,23 +92,25 @@ export default function Background() {
   return (
     <ModalBackground>
       <ModalView>
-        <ImgBox>
-          {backImg.map((img, idx) => {
+        <ImgContainer>
+          {themaList.map((img) => {
             return (
-              <SelectImg>
-                <Img key="idx">{img.url}</Img>
+              <SelectImg key={img.id}>
+                <ImgBox>
+                  <Img src={img.url} alt="thema" />
+                </ImgBox>
                 <SelectInput
                   type="checkbox"
-                  value={img.url}
+                  value={img.name}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(img.url) ? true : false}
+                  checked={checkedItem.includes(img.name) ? true : false}
                 ></SelectInput>
               </SelectImg>
             );
           })}
-        </ImgBox>
+        </ImgContainer>
         {checkedItem}
         <BtnBox>
           <SaveBtn>저장</SaveBtn>

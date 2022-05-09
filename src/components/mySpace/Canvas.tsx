@@ -56,7 +56,6 @@ export default function Canvas() {
     <CanvasBox>
       <button onClick={changeThemaHandler}>테마수정</button>
       <CanvasArea ref={canvasRef} id="canvas"></CanvasArea>
-
       {themaModal ? <Background /> : null}
     </CanvasBox>
   );
