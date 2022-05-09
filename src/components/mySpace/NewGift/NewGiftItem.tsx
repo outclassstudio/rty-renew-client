@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const ItemBox = styled.div`
   width: 100px;
   margin: 15px;
+  background: transparent;
+  cursor: grab;
 `;
 
 export const ItemP = styled.p`

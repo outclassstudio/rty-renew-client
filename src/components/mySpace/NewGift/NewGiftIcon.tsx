@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { isOpenNewGift } from "../../../redux/actions/index";
-import NewGifts from "../../../assets/images/svg/newGiftBox.svg";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
 import { useEffect } from "react";
 
