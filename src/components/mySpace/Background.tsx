@@ -18,7 +18,7 @@ export const ModalView = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: 500px;
+  width: 600px;
   padding: 2rem 1rem 2rem;
   top: 50%;
   left: 50%;
@@ -38,15 +38,16 @@ export const ImgContainer = styled.div`
   flex-direction: row;
 `;
 export const ImgBox = styled.div`
-  width: 150px;
-  height: 160px;
-  margin: 0 6px 12px 6px;
-  border-radius: 3px;
+  width: 180px;
+  height: 200px;
+  margin: 0 12px 12px 12px;
+  border-radius: 5px;
 `;
 
 export const Img = styled.img`
   width: 100%;
   height: 100%;
+  border-radius: 12px;
 `;
 
 export const ImgName = styled.p``;

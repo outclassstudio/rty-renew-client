@@ -4,6 +4,8 @@ import Header from "../components/Header";
 const MainContainer = styled.div``;
 const ChildrenDiv = styled.div`
   margin-top: 50px;
+  display: flex;
+  justify-content: center;
 `;
 
 interface Props {

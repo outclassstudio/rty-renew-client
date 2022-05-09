@@ -5,7 +5,7 @@ interface Props {
 }
 
 const HeaderDiv = styled.header`
-  height: 50px;
+  height: 70px;
   /* width: 100vw; */
   position: fixed;
   display: flex;

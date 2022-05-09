@@ -5,18 +5,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { editThema, isThemaModal } from "../../redux/actions/index";
 import Background from "./Background";
 import { themaList } from "../../utils/themaList";
+import Layout from "../../pages/Layout";
 //import Thema1 from "../../assets/images/sky.jpg";
 
 export const CanvasBox = styled.div`
-  width: 100vw;
-  height: 100vh;
+  margin-top: 50px;
+  width: 1280px;
+  height: 720px;
 `;
 
 export const CanvasArea = styled.canvas`
   width: 100%;
   height: 100%;
+  border-radius: 10px;
   background-image: url(${(props) => props.color});
-  background-size: 1920px 960px;
+  background-size: 100%;
   background-repeat: no-repeat;
 `;
 
@@ -60,10 +63,14 @@ export default function Canvas() {
   };
 
   return (
-    <CanvasBox>
-      <button onClick={changeThemaHandler}>테마수정</button>
-      <CanvasArea ref={canvasRef} id="canvas" color={myThema}></CanvasArea>
-      {themaModal ? <Background /> : null}
-    </CanvasBox>
+    <Layout>
+      <CanvasBox>
+        <CanvasArea ref={canvasRef} id="canvas" color={myThema}></CanvasArea>
+        {themaModal ? <Background /> : null}
+        <button onClick={changeThemaHandler}>테마수정</button>
+        <button>아바타 수정</button>
+        <button>공간 수정</button>
+      </CanvasBox>
+    </Layout>
   );
 }
