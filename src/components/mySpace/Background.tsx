@@ -67,10 +67,14 @@ export const BtnBox = styled.div`
 `;
 
 export const SaveBtn = styled.button`
+  width: 60px;
+  padding: 5px;
   margin: 2px;
 `;
 
 export const CloseBtn = styled.button`
+  padding: 5px;
+  width: 60px;
   margin: 2px;
 `;
 
@@ -88,8 +92,10 @@ export default function Background() {
   };
 
   const changeThemaHandler = () => {
-    dispatch(editThema(checkedItem[0]));
-    dispatch(isThemaModal(false));
+    if (checkedItem.length !== 0) {
+      dispatch(editThema(checkedItem[0]));
+      dispatch(isThemaModal(false));
+    }
   };
 
   const closeThemaHandler = () => {
