@@ -1,5 +1,9 @@
-export default function Send () {
+import Layout from "./Layout";
+
+export default function Send() {
   return (
-    <div></div>
-  )
+    <Layout title={"send"}>
+      <div>send</div>
+    </Layout>
+  );
 }
