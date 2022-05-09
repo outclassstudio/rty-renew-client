@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { isThemaModal } from "../../redux/actions/index";
+import { editThema, isThemaModal } from "../../redux/actions/index";
+import { themaList } from "../../utils/themaList";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -17,7 +18,7 @@ export const ModalView = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: 500px;
+  width: 600px;
   padding: 2rem 1rem 2rem;
   top: 50%;
   left: 50%;
@@ -30,19 +31,26 @@ export const ModalView = styled.div`
   }
 `;
 
-export const ImgBox = styled.div`
+export const ImgContainer = styled.div`
   width: 400px;
   display: flex;
   justify-content: center;
   flex-direction: row;
 `;
-export const Img = styled.div`
-  width: 150px;
-  height: 160px;
-  background: red;
-  margin: 0 6px 12px 6px;
-  border-radius: 3px;
+export const ImgBox = styled.div`
+  width: 180px;
+  height: 200px;
+  margin: 0 12px 12px 12px;
+  border-radius: 5px;
 `;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+`;
+
+export const ImgName = styled.p``;
 
 export const SelectImg = styled.div`
   display: flex;
@@ -69,12 +77,7 @@ export const CloseBtn = styled.button`
 export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-
-  const backImg = [
-    { id: 1, url: "url1" },
-    { id: 2, url: "url2" },
-    { id: 3, url: "url3" },
-  ];
+  //const [selectThema, setSelectThema] = useState<String>("");
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
@@ -85,17 +88,25 @@ export default function Background() {
   };
 
   const changeThemaHandler = () => {
+    dispatch(editThema(checkedItem[0]));
+    dispatch(isThemaModal(false));
+  };
+
+  const closeThemaHandler = () => {
     dispatch(isThemaModal(false));
   };
 
   return (
     <ModalBackground>
       <ModalView>
-        <ImgBox>
-          {backImg.map((img, idx) => {
+        <ImgContainer>
+          {themaList.map((img) => {
             return (
-              <SelectImg>
-                <Img key="idx">{img.url}</Img>
+              <SelectImg key={img.id}>
+                <ImgBox>
+                  <Img src={img.url} alt="thema" />
+                </ImgBox>
+                <ImgName>{img.name}</ImgName>
                 <SelectInput
                   type="checkbox"
                   value={img.url}
@@ -107,11 +118,11 @@ export default function Background() {
               </SelectImg>
             );
           })}
-        </ImgBox>
-        {checkedItem}
+        </ImgContainer>
+
         <BtnBox>
-          <SaveBtn>저장</SaveBtn>
-          <CloseBtn onClick={changeThemaHandler}> 닫기</CloseBtn>
+          <SaveBtn onClick={changeThemaHandler}>저장</SaveBtn>
+          <CloseBtn onClick={closeThemaHandler}> 닫기</CloseBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>
