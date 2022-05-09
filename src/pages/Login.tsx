@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
+import { fadeAction } from "../style/global";
 
 const MainContainer = styled.div`
   display: flex;
@@ -9,6 +10,7 @@ const MainContainer = styled.div`
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  animation: 0.7s ease-in-out ${fadeAction};
   /* background-image: url("https://i.imgur.com/8d2hJfL.jpg");
   background-position: center;
   background-size: cover; */

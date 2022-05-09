@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, keyframes } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
 @font-face {
@@ -31,3 +31,13 @@ export const mediaQuery = {
 };
 
 export const baseColor = "#e8e8e8";
+
+export const fadeAction = keyframes`
+  0% {
+    opacity:0
+  }
+
+  100% {
+    opacity: 1;
+  }
+`;

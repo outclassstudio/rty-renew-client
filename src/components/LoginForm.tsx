@@ -5,6 +5,8 @@ import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { loginChange } from "../redux/actions/loginActions";
 
+axios.defaults.withCredentials = true;
+
 export const LoginItems = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,12 +39,17 @@ export const LoginBtn = styled.button`
   width: 293px;
   height: 45px;
   color: white;
-  box-shadow: 1px 1px 1px #6969693d;
-  border: 0.1px solid #a5a5a575;
+  border: none;
+  /* box-shadow: 1px 1px 1px #6969693d; */
+  /* border: 0.1px solid #a5a5a575; */
   border-radius: 0.1rem;
   cursor: pointer;
   margin-bottom: 0.3rem;
-  background-color: #ec047a;
+  background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
+
+  :active {
+    box-shadow: inset 2px 2px 2px 1px rgba(0, 0, 0, 0.4);
+  }
 `;
 
 export const LoginText = styled.div`
