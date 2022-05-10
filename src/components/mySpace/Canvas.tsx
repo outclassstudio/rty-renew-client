@@ -81,7 +81,7 @@ export default function Canvas() {
       return el.id !== Number(targetId);
     });
     setNewList(a);
-    console.log("drop", a, "new");
+    console.log("drop", newList, "new");
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
     // newGiftList에서 targetId와 같은건 삭제한다.
@@ -89,14 +89,22 @@ export default function Canvas() {
       return el.id === Number(targetId);
     });
     console.log("drop", targetItem, newList, targetId);
-    const x = e.clientX - 180;
-    const y = e.clientY - 120;
+    const x = e.clientX - 150;
+    const y = e.clientY - 100;
     const targetSvg = targetItem[0].url;
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
       expandShapes: true,
       //load
       onLoad: function (item: any) {
+        const hitOptions = {
+          segments: true,
+          stroke: true,
+          fill: true,
+          tolerance: 5,
+        };
+        //  const tool = new Paper.Tool();
+
         item.position = new Paper.Point(x, y);
         if (item.firstChild.size._width < 500) {
           item.scale(1.5);
@@ -104,15 +112,79 @@ export default function Canvas() {
           item.scale(0.15);
         }
 
-        //drag event
+        /*/drag event
         item.onMouseDrag = function (e: { delta: any }) {
           item.position.x += e.delta.x;
           item.position.y += e.delta.y;
         };
+
+        item.onMouseDown = function (e: { delta: any }) {
+          item.bounds.selected = true;
+        };*/
+        console.log("-===========", item.bounds);
+        var segment: any;
+        var path: any;
+        item.onMouseDown = function (e: any) {
+          console.log("eeeee", e.point, Paper.project);
+          segment = path = null;
+          const hitResult = Paper.project.hitTest(e.point, hitOptions);
+
+          console.log(hitResult, "hit------------", "----", e.modifiers);
+          if (!hitResult) {
+            return;
+          }
+          console.log("tooldown type", hitResult.type);
+          if (hitResult) {
+            path = hitResult.item;
+            if (hitResult.type === "fill") {
+              item.bounds.selected = true;
+              path.data.state = "moving";
+            }
+            if (hitResult && hitResult.type === "segment") {
+              path = Paper.project.selectedItems[0];
+              segment = hitResult.segment;
+              console.log("path", path, Paper.project);
+              if (e.modifiers.control) {
+                path.data.state = "rotating";
+              } else {
+                path.data.state = "resizing";
+                path.data.bounds = path.bounds.clone();
+                path.data.scaleBase = e.point - path.bounds.center;
+              }
+              console.log(path.data);
+            }
+          }
+        };
+        item.onMouseDrag = function (e: any) {
+          console.log("tool dragS");
+          if (segment && path.data.state === "rotating") {
+            var center = path.bounds.center;
+            var baseVec: any = center - e.lastPoint;
+            var nowVec: any = center - e.point;
+            const angle = nowVec.angle - baseVec.angle;
+            if (angle < 0) {
+              path.rotate(-45);
+            } else {
+              path.rotate(45);
+            }
+            adjustBounds(path);
+          } else if (path && path.data.state === "moving") {
+            //  path.position += e.delta;
+            item.position.x += e.delta.x;
+            item.position.y += e.delta.y;
+            //  adjustBounds(path);
+          }
+        };
+        //error
       },
-      //error
-      onError: console.log("something went wrong importing"),
     });
+    function adjustBounds(o: any) {
+      if (o.data.state === "moving") {
+        o.data.highlight.position = o.position;
+      } else {
+        o.data.highlight.children[0].bounds = o.bounds;
+      }
+    }
   };
 
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
