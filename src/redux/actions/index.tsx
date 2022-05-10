@@ -1,6 +1,7 @@
 export const IS_THEMA_MODAL = "IS_THEMA_MODAL";
 export const EDIT_THEMA = "EDIT_THEMA";
 export const IS_OPEN_NEW_GIFT_BOX = "IS_OPEN_NEW_GIFT_BOX";
+export const NEW_GIFT_LIST = "NEW_GIFT_LIST";
 
 export function isThemaModal(boolean: boolean) {
   return {
@@ -27,5 +28,13 @@ export function editThema(thema: string) {
     payload: {
       thema,
     },
+  };
+}
+
+export function newGiftList(item: any) {
+  console.log("index", item);
+  return {
+    type: NEW_GIFT_LIST,
+    payload: item,
   };
 }

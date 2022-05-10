@@ -1,6 +1,10 @@
-import { IS_THEMA_MODAL } from "../actions/index";
-import { IS_OPEN_NEW_GIFT_BOX } from "../actions/index";
-import { EDIT_THEMA } from "../actions/index";
+import {
+  IS_THEMA_MODAL,
+  IS_OPEN_NEW_GIFT_BOX,
+  NEW_GIFT_LIST,
+  EDIT_THEMA,
+} from "../actions/index";
+
 import { initialState } from "./initialState";
 
 const spaceReducer: any = (
@@ -22,6 +26,10 @@ const spaceReducer: any = (
 
     case EDIT_THEMA:
       return { ...newState, myThema: action.payload };
+      break;
+
+    case NEW_GIFT_LIST:
+      return { ...newState, newGiftList: action.payload };
       break;
 
     default:

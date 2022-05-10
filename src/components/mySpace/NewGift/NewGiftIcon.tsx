@@ -25,17 +25,23 @@ export default function NewGift() {
   const isOpenGift = useSelector(
     (state: any) => state.spaceReducer.isOpenNewGift.boolean
   );
+  const newGiftLists = useSelector(
+    (state: any) => state.spaceReducer.newGiftList
+  );
   console.log(isOpenGift);
-  useEffect(() => {}, [isOpenGift]);
+  useEffect(() => {}, [isOpenGift, newGiftLists]);
 
   const openGiftHandler = () => {
     console.log("click new gift");
     dispatch(isOpenNewGift(!isOpenGift));
   };
+  console.log("-------newGiftLists", newGiftLists);
   return (
     <div>
       <GiftIconBox>
-        <NewGifIcon1 onClick={openGiftHandler} />
+        {newGiftLists && !newGiftLists.length ? null : (
+          <NewGifIcon1 onClick={openGiftHandler} />
+        )}
         {isOpenGift ? "open" : "close"}
         {/*img src={NewGifts} alt="giftBox" /> */}
       </GiftIconBox>
