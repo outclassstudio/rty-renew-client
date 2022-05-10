@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { baseColor } from "../style/global";
 import Dropdown from "./Dropdown";
 
@@ -12,12 +12,14 @@ export default function Header({ title }: Props) {
   const navigate = useNavigate();
   const [activeSearch, setActiveSearch] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
+  const [activeClass, setActiveClass] = useState<boolean>(false);
 
   //서치바 on/off
   const handleActiveSearch = (): void => {
     if (activeSearch) {
       setActiveSearch(false);
     } else {
+      setActiveClass(true);
       setActiveSearch(true);
     }
   };
@@ -48,13 +50,26 @@ export default function Header({ title }: Props) {
       </HeaderLeft>
       <HeaderCenter>{title}</HeaderCenter>
       <HeaderRight>
-        <SearchBar>
+        <SearchBar
+          className={activeClass ? (activeSearch ? "slideIn" : "slideOut") : ""}
+        >
           <img
             src="https://i.imgur.com/vX7F9l4.png"
             onClick={handleActiveSearch}
             alt=""
           />
-          {activeSearch ? <input type="text" /> : ""}
+          {/* {activeSearch ? (
+            <SearchBarWrapper>
+              <input type="text" placeholder="친구를 찾아봐요" />
+              <div onClick={handleActiveSearch}>X</div>
+            </SearchBarWrapper>
+          ) : (
+            ""
+          )} */}
+          <SearchBarWrapper className={activeSearch ? "slideIn" : "invisible"}>
+            <input type="text" placeholder="친구를 찾아봐요" />
+            <div onClick={handleActiveSearch}>X</div>
+          </SearchBarWrapper>
         </SearchBar>
         <img
           src="https://i.imgur.com/avLXvDj.png"
@@ -70,6 +85,38 @@ export default function Header({ title }: Props) {
     </HeaderDiv>
   );
 }
+
+const slideInFade = keyframes`
+  0% {
+    transform : translateX(5px);
+    opacity: 0;
+  }
+
+  100% {
+    transform : translateX(0px);
+    opacity: 1;
+  }
+`;
+
+const slideIn = keyframes`
+  0% {
+    transform : translateX(80%);
+  }
+
+  100% {
+    transform : translateX(0%);
+  }
+`;
+
+const slideOut = keyframes`
+  0% {
+    transform : translateX(-80%);
+  }
+
+  100% {
+    transform : translateX(0%);
+  }
+`;
 
 const HeaderDiv = styled.header`
   height: 50px;
@@ -125,6 +172,14 @@ const SearchBar = styled.div`
   align-items: center;
   gap: 5px;
 
+  &.slideIn {
+    animation: 0.2s ease-out ${slideIn};
+  }
+
+  &.slideOut {
+    animation: 0.2s ease-out ${slideOut};
+  }
+
   img {
     margin-top: 2px;
     width: 28px;
@@ -137,5 +192,40 @@ const SearchBar = styled.div`
     border-radius: 5px;
     border: none;
     opacity: 0.7;
+  }
+`;
+
+const SearchBarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  color: white;
+  gap: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+
+  &.slideIn {
+    animation: 0.2s ease-out ${slideInFade};
+  }
+
+  &.invisible {
+    display: none;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    opacity: 0.3;
+  }
+
+  div:hover {
+    opacity: 1;
+  }
+
+  input {
+    padding-left: 7px;
+  }
+
+  input::placeholder {
+    font-size: 11px;
   }
 `;

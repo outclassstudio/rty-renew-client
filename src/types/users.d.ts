@@ -4,6 +4,8 @@ declare namespace Users {
     nickname: undefined | string;
     point: number;
     birth?: undefined | string;
+    theme?: number;
+    [key: string]: any;
   }
 
   interface loginDTO {

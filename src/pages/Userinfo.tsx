@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { getUserInfo, logoutUser } from "../apis/userApi";
+import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor, fadeAction } from "../style/global";
 import Layout from "./Layout";
+import { NormalBtn } from "../style/btnStyle.style";
 
 export default function Userinfo() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //유저정보 저장
-  const [userInfo, setUserInfo] = useState<Users.myinfoDTO>({
+  const [userInfo, setUserInfo] = useState<any>({
     id: "",
     nickname: "",
     point: 0,
@@ -19,13 +23,23 @@ export default function Userinfo() {
   //유저정보 불러오기
   useEffect(() => {
     getUserInfo().then((res) => {
-      setUserInfo(res.data);
+      setUserInfo({
+        id: res.data.id,
+        nickname: res.data.nickname,
+        point: res.data.point,
+        birth: res.data.birth,
+      });
     });
   }, []);
 
   //로그아웃 요청
   const handleLogout = (): void => {
-    logoutUser();
+    logoutUser().then(() => {
+      dispatch(logoutChange());
+      navigate("/");
+      window.localStorage.removeItem("token");
+      window.localStorage.removeItem("id");
+    });
   };
 
   return (
@@ -55,10 +69,17 @@ export default function Userinfo() {
               <UserinfoBox>{userInfo.point}</UserinfoBox>
             </UserinfoItems>
           </SubWrapper>
-          <Btn className="a" onClick={handleLogout}>
+          <NormalBtn
+            className="a"
+            width={"315px"}
+            height={"45px"}
+            onClick={handleLogout}
+          >
             로그아웃
-          </Btn>
-          <Btn className="b">계정삭제</Btn>
+          </NormalBtn>
+          <NormalBtn className="b" width={"315px"} height={"45px"}>
+            계정삭제
+          </NormalBtn>
         </UserInfoWrapper>
       </MainContainer>
     </Layout>
@@ -87,10 +108,11 @@ export const UserInfoWrapper = styled.form`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  margin-bottom: 20px;
 `;
 
 const SubWrapper = styled.div`
-  padding: 20px 30px 20px 30px;
+  padding: 20px 30px;
   border-radius: 10px;
   flex-direction: column;
   justify-content: center;
@@ -100,7 +122,7 @@ const SubWrapper = styled.div`
 `;
 
 export const UserinfoItems = styled.div`
-  margin: 0.8rem 0.8rem 0.8rem 0.8rem;
+  margin: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -114,8 +136,8 @@ export const UserinfoBox = styled.div`
   height: 40px;
   padding-left: 10px;
   border: 1px solid #a5a5a5;
-  box-shadow: 0.05rem 0.05rem 0.05rem #6969692d;
-  margin-bottom: 0.25rem;
+  box-shadow: 1px 1px 1px #6969692d;
+  margin-bottom: 4px;
   background: white;
   color: ${baseColor};
 
@@ -136,50 +158,5 @@ export const UserinfoText = styled.div`
 
   span {
     color: #ff8352;
-  }
-`;
-
-export const ErrMsg = styled.div`
-  margin-top: 3px;
-  font-size: 13px;
-  &.err {
-    color: #ff8352;
-  }
-  &.ok {
-    color: #0e7a00;
-  }
-  &.loginErr {
-    color: #ff8352;
-    margin-top: 0px;
-    margin-bottom: 5px;
-  }
-  &.centered {
-    color: #ff8352;
-    text-align: center;
-  }
-`;
-
-export const Btn = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 45px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-
-  &.a {
-    background: linear-gradient(90deg, #ffca60 0%, #fb834c 58.85%);
-  }
-
-  &.b {
-    background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
-  }
-
-  :active {
-    box-shadow: inset 1px 1px 2px 2px rgba(0, 0, 0, 0.3);
   }
 `;

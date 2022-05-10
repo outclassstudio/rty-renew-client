@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { loginChange } from "../redux/reducers/loginReducer";
+import { NormalBtn } from "../style/btnStyle.style";
 
 axios.defaults.withCredentials = true;
 
@@ -23,7 +24,6 @@ export default function LoginForm() {
   const handleLoginInfo =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setLoginInfo({ ...loginInfo, [key]: e.target.value });
-      console.log(loginInfo);
     };
 
   //일반 로그인 요청 함수
@@ -34,8 +34,8 @@ export default function LoginForm() {
         pwd: loginInfo.pwd,
       })
       .then((res) => {
-        console.log(res.data);
         window.localStorage.setItem("token", res.data);
+        window.localStorage.setItem("id", loginInfo.id);
         dispatch(loginChange());
         navigate("/");
       })
@@ -43,9 +43,6 @@ export default function LoginForm() {
         setIsError(true);
         setErrorMessage("아이디 또는 비밀번호를 확인해주세요");
       });
-
-    // dispatch(loginChange());
-    // navigate("/");
   };
 
   return (
@@ -64,7 +61,14 @@ export default function LoginForm() {
           ></LoginBox>
         </LoginItems>
         <LoginItems>
-          <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
+          <NormalBtn
+            width={"293px"}
+            height={"45px"}
+            className="b"
+            onClick={handleLogin}
+          >
+            로그인
+          </NormalBtn>
         </LoginItems>
         {isError ? <ErrMsg className="loginErr">{errorMessage}</ErrMsg> : ""}
       </form>
@@ -95,24 +99,6 @@ export const LoginBox = styled.input`
   border: 1px solid #a5a5a5;
   box-shadow: 1px 1px 1px #6969692d;
   margin-bottom: 0.25rem;
-`;
-
-export const LoginBtn = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 293px;
-  height: 45px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 0.3rem;
-  background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
-
-  :active {
-    box-shadow: inset 1px 1px 2px 2px rgba(0, 0, 0, 0.3);
-  }
 `;
 
 export const LoginText = styled.div`
