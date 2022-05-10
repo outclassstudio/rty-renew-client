@@ -2,17 +2,21 @@ import { AxiosResponse } from "axios";
 import apiClient from ".";
 
 //나의 정보 조회
-export const getUserInfo = (): Promise<AxiosResponse<Users.myinfoDTO>> => {
+export const getUserInfo = async (): Promise<
+  AxiosResponse<Users.myinfoDTO>
+> => {
   let myId = localStorage.getItem("id");
   return apiClient()
     .get(`/users/${myId}`)
     .then((res) => {
-      return res.data;
+      return res;
     });
 };
 
 //다른 사람 찾기
-export const findUser = (data: string): Promise<AxiosResponse<string[]>> => {
+export const findUser = async (
+  data: string
+): Promise<AxiosResponse<string[]>> => {
   return apiClient()
     .get(`/users/find/${data}`)
     .then((res) => {
@@ -20,6 +24,7 @@ export const findUser = (data: string): Promise<AxiosResponse<string[]>> => {
     });
 };
 
+//로그아웃 요청
 export const logoutUser = (): Promise<AxiosResponse<any>> => {
   return apiClient().delete("/users/logout");
 };

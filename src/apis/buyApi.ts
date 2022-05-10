@@ -5,7 +5,9 @@ import apiClient from ".";
 const myId = localStorage.getItem("id");
 
 //모든 아이템 불러오기
-export const getItems = (): Promise<AxiosResponse<Buy.singleItemDTO[]>> => {
+export const getItems = async (): Promise<
+  AxiosResponse<Buy.singleItemDTO[]>
+> => {
   return apiClient()
     .get("/buy/items")
     .then((res) => {
@@ -14,21 +16,23 @@ export const getItems = (): Promise<AxiosResponse<Buy.singleItemDTO[]>> => {
 };
 
 //나의 아이템 불러오기
-export const getMyItems = (): Promise<AxiosResponse<Buy.singleItemDTO[]>> => {
+export const getMyItems = async (): Promise<
+  AxiosResponse<Buy.singleItemDTO[]>
+> => {
   return apiClient()
     .get(`/buy/${myId}`)
     .then((res) => {
-      return res.data;
+      return res;
     });
 };
 
 //선물사기 및 포인트 차감
-export const buyItem = (
+export const buyItem = async (
   data: Buy.buyItemReqDTO
 ): Promise<AxiosResponse<Buy.buyItemResDTO>> => {
   return apiClient()
     .post(`/buy/${myId}`, data)
     .then((res) => {
-      return res.data;
+      return res;
     });
 };

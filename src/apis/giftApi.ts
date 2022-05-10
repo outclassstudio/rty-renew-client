@@ -8,7 +8,7 @@ export const getGift = (): Promise<AxiosResponse<Gift.singleGiftDTO[]>> => {
   return apiClient()
     .get(`/gift/${myId}`)
     .then((res) => {
-      return res.data;
+      return res;
     });
 };
 

@@ -1,14 +1,22 @@
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { logoutUser } from "../apis/userApi";
+import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor } from "../style/global";
 
 export default function Dropdown({ handleActiveDropdown }: any) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //로그아웃 요청
   const handleLogout = (): void => {
-    logoutUser();
+    logoutUser().then(() => {
+      dispatch(logoutChange());
+      navigate("/");
+      window.localStorage.removeItem("token");
+      window.localStorage.removeItem("id");
+    });
   };
 
   return (
@@ -50,4 +58,5 @@ const Menu = styled.div`
   color: white;
   cursor: pointer;
   z-index: 1;
+  font-size: 14px;
 `;

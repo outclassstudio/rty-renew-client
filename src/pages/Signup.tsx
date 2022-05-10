@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { NormalBtn } from "../style/btnStyle.style";
 import { fadeAction } from "../style/global";
 
 axios.defaults.withCredentials = true;
@@ -23,10 +24,6 @@ export default function Signup() {
     idOverlap: false,
     permitSignUpBtn: false,
     emptyBoxCheck: false,
-    emailValidCheck: false,
-    permitAuthNumBox: false,
-    authCodeErr: false,
-    recaptcha: false,
   });
 
   //메세지 렌더링 상태
@@ -131,18 +128,14 @@ export default function Signup() {
           pwd: signUpInfo.password,
           birth: signUpInfo.birth,
         })
-        .then((res) => {
+        .then(() => {
           // swal({
           //   title: "회원가입 성공!",
           //   icon: "success",
           // });
-          console.log(res);
           navigate("/");
         });
     }
-    //  .catch(() => {
-    //   setIsError(true);
-    // })
   };
 
   return (
@@ -164,11 +157,15 @@ export default function Signup() {
                 type="text"
                 onChange={handleSignUpValue("userId")}
               ></SignUpBox>
-              <SignUpBtn onClick={handleIdCheck} className="c">
+              <NormalBtn
+                height={"45px"}
+                width={"100px"}
+                onClick={handleIdCheck}
+                className="a"
+              >
                 <span>아이디</span>
-                <br></br>
-                <span> 중복확인</span>
-              </SignUpBtn>
+                <span>중복확인</span>
+              </NormalBtn>
             </SignUpSubItem>
             {messageRender ? renderIdCheckMessage() : ""}
             {errors.emptyBoxCheck
@@ -227,9 +224,14 @@ export default function Signup() {
             ></SignUpBox>
           </SignUpItems>
         </SubWrapper>
-        <SignUpBtn className="a" onClick={handleSignUp}>
+        <NormalBtn
+          className="b"
+          width="313px"
+          height="43px"
+          onClick={handleSignUp}
+        >
           회원가입
-        </SignUpBtn>
+        </NormalBtn>
       </SignUpWrapper>
     </MainContainer>
   );
@@ -265,6 +267,7 @@ const SubWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background: #4c3e9f;
+  margin-bottom: 15px;
 `;
 
 export const SignUpItems = styled.div`
@@ -313,31 +316,6 @@ export const SignUpText = styled.div`
 
   span {
     color: #ff8352;
-  }
-`;
-
-export const SignUpBtn = styled.button`
-  width: 313px;
-  height: 43px;
-  color: white;
-  box-shadow: 1px 1px 1px #696969;
-  border: 0px solid #a5a5a5;
-  cursor: pointer;
-  margin-bottom: 0.5rem;
-
-  &.a {
-    margin-top: 1rem;
-    background-color: #5c5c5c;
-  }
-
-  &.b {
-    background-color: #7c7c7c;
-  }
-
-  &.c {
-    width: 100px;
-    background-color: #7c7c7c;
-    margin-bottom: 0rem;
   }
 `;
 
