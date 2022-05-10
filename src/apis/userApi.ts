@@ -19,3 +19,7 @@ export const findUser = (data: string): Promise<AxiosResponse<string[]>> => {
       return res.data;
     });
 };
+
+export const logoutUser = (): Promise<AxiosResponse<any>> => {
+  return apiClient().delete("/users/logout");
+};
