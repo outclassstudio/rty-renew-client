@@ -1,7 +1,27 @@
-import React from "react";
+import styled from "styled-components";
 
-const NewGiftItem = () => {
-  return <div></div>;
+export const ItemBox = styled.div`
+  width: 100px;
+  margin: 15px;
+  background: transparent;
+  cursor: grab;
+`;
+
+export const ItemP = styled.p`
+  width: 100px;
+  margin: 15px;
+`;
+
+const NewGiftItem = (item: any) => {
+  console.log("list", item);
+  return (
+    <>
+      <ItemBox>
+        <ItemP>from. 효영</ItemP>
+        <img src={item.url} alt="giftItem" />
+      </ItemBox>
+    </>
+  );
 };
 
 export default NewGiftItem;

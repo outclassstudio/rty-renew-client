@@ -2,20 +2,22 @@ import styled from "styled-components";
 import Paper from "paper";
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { isThemaModal } from "../../redux/actions/index";
+import { editThema, isThemaModal } from "../../redux/actions/index";
 import Background from "./Background";
-import Thema1 from "../../assets/images/sky.jpg";
+import { themaList } from "../../utils/themaList";
 
 export const CanvasBox = styled.div`
-  width: 100vw;
-  height: 100vh;
+  margin-top: 50px;
+  width: 1280px;
+  height: 720px;
 `;
 
 export const CanvasArea = styled.canvas`
   width: 100%;
   height: 100%;
-  background-image: url(${Thema1});
-  background-size: 1920px 960px;
+  border-radius: 10px;
+  background-image: url(${(props) => props.color});
+  background-size: 100%;
   background-repeat: no-repeat;
 `;
 
@@ -24,7 +26,8 @@ export default function Canvas() {
   const themaModal = useSelector(
     (state: any) => state.spaceReducer.isThemaModal.boolean
   );
-  //const [isOpen, setIsOpen] = useState<Boolean>(false);
+  const myThema = useSelector((state: any) => state.spaceReducer.myThema.thema);
+  console.log(myThema, "canvasa");
 
   const draw = () => {
     let myPath: any;
@@ -41,10 +44,15 @@ export default function Canvas() {
   };
 
   useEffect(() => {
+    console.log("thema updated");
+  }, [myThema]);
+
+  useEffect(() => {
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
     draw();
-  }, []);
+    dispatch(editThema(themaList[0].url));
+  }, [dispatch]);
 
   const canvasRef = useRef(null);
 
@@ -54,10 +62,11 @@ export default function Canvas() {
 
   return (
     <CanvasBox>
-      <button onClick={changeThemaHandler}>테마수정</button>
-      <CanvasArea ref={canvasRef} id="canvas"></CanvasArea>
-
+      <CanvasArea ref={canvasRef} id="canvas" color={myThema}></CanvasArea>
       {themaModal ? <Background /> : null}
+      <button onClick={changeThemaHandler}>테마수정</button>
+      <button>아바타 수정</button>
+      <button>공간 수정</button>
     </CanvasBox>
   );
 }
