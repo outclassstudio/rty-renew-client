@@ -10,6 +10,7 @@ export const apiClient = () => {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    withCredentials: true,
   });
 
   return instance;

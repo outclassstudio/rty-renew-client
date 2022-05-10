@@ -6,132 +6,6 @@ import { fadeAction } from "../style/global";
 
 axios.defaults.withCredentials = true;
 
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-  gap: 10px;
-  animation: 0.7s ease-in-out ${fadeAction};
-`;
-
-const Logo = styled.img`
-  width: 320px;
-  cursor: pointer;
-`;
-
-export const SignUpWrapper = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SubWrapper = styled.div`
-  padding: 20px 30px 20px 30px;
-  border-radius: 10px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #4c3e9f;
-`;
-
-export const SignUpItems = styled.div`
-  margin: 0.8rem 0.8rem 0.8rem 0.8rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* align-items: center; */
-  color: white;
-
-  &.sub {
-    margin: 0.8rem 0.8rem 0.8rem 0.8rem;
-  }
-`;
-
-export const SignUpSubItem = styled.div`
-  display: flex;
-  &.timer {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #c40000;
-  }
-`;
-
-export const SignUpBox = styled.input`
-  width: 300px;
-  height: 40px;
-  padding-left: 10px;
-  border: 1px solid #a5a5a5;
-  box-shadow: 0.05rem 0.05rem 0.05rem #6969692d;
-  margin-bottom: 0.25rem;
-  &.sub {
-    width: 191px;
-    margin-right: 8px;
-    margin-bottom: 0px;
-  }
-`;
-
-export const SignUpText = styled.div`
-  font-weight: bold;
-
-  &.sub {
-    font-size: 12px;
-    font-weight: 340;
-  }
-
-  span {
-    color: #ff8352;
-  }
-`;
-
-export const SignUpBtn = styled.button`
-  width: 313px;
-  height: 43px;
-  color: white;
-  box-shadow: 1px 1px 1px #696969;
-  border: 0px solid #a5a5a5;
-  cursor: pointer;
-  margin-bottom: 0.5rem;
-
-  &.a {
-    margin-top: 1rem;
-    background-color: #5c5c5c;
-  }
-
-  &.b {
-    background-color: #7c7c7c;
-  }
-
-  &.c {
-    width: 100px;
-    background-color: #7c7c7c;
-    margin-bottom: 0rem;
-  }
-`;
-
-export const ErrMsg = styled.div`
-  margin-top: 3px;
-  font-size: 13px;
-  &.err {
-    color: #ff8352;
-  }
-  &.ok {
-    color: #0e7a00;
-  }
-  &.loginErr {
-    color: #ff8352;
-    margin-top: 0px;
-    margin-bottom: 5px;
-  }
-  &.centered {
-    color: #ff8352;
-    text-align: center;
-  }
-`;
-
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -162,7 +36,7 @@ export default function Signup() {
   const handleSignUpValue =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setSignUpInfo({ ...signUpInfo, [key]: e.target.value });
-      console.log(signUpInfo);
+      // console.log(signUpInfo);
     };
 
   //아이디 중복 검사 함수
@@ -360,3 +234,129 @@ export default function Signup() {
     </MainContainer>
   );
 }
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  gap: 10px;
+  animation: 0.7s ease-in-out ${fadeAction};
+`;
+
+const Logo = styled.img`
+  width: 320px;
+  cursor: pointer;
+`;
+
+export const SignUpWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SubWrapper = styled.div`
+  padding: 20px 30px 20px 30px;
+  border-radius: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #4c3e9f;
+`;
+
+export const SignUpItems = styled.div`
+  margin: 0.8rem 0.8rem 0.8rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  color: white;
+
+  &.sub {
+    margin: 0.8rem 0.8rem 0.8rem 0.8rem;
+  }
+`;
+
+export const SignUpSubItem = styled.div`
+  display: flex;
+  &.timer {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #c40000;
+  }
+`;
+
+export const SignUpBox = styled.input`
+  width: 300px;
+  height: 40px;
+  padding-left: 10px;
+  border: 1px solid #a5a5a5;
+  box-shadow: 0.05rem 0.05rem 0.05rem #6969692d;
+  margin-bottom: 0.25rem;
+  &.sub {
+    width: 191px;
+    margin-right: 8px;
+    margin-bottom: 0px;
+  }
+`;
+
+export const SignUpText = styled.div`
+  font-weight: bold;
+
+  &.sub {
+    font-size: 12px;
+    font-weight: 340;
+  }
+
+  span {
+    color: #ff8352;
+  }
+`;
+
+export const SignUpBtn = styled.button`
+  width: 313px;
+  height: 43px;
+  color: white;
+  box-shadow: 1px 1px 1px #696969;
+  border: 0px solid #a5a5a5;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+
+  &.a {
+    margin-top: 1rem;
+    background-color: #5c5c5c;
+  }
+
+  &.b {
+    background-color: #7c7c7c;
+  }
+
+  &.c {
+    width: 100px;
+    background-color: #7c7c7c;
+    margin-bottom: 0rem;
+  }
+`;
+
+export const ErrMsg = styled.div`
+  margin-top: 3px;
+  font-size: 13px;
+  &.err {
+    color: #ff8352;
+  }
+  &.ok {
+    color: #0e7a00;
+  }
+  &.loginErr {
+    color: #ff8352;
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+  &.centered {
+    color: #ff8352;
+    text-align: center;
+  }
+`;

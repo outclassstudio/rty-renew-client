@@ -1,27 +1,26 @@
-import {
-  loginChange,
-  logoutChange,
-  LOG_IN,
-  LOG_OUT,
-} from "../actions/loginActions";
-import { loginInitialState } from "./initialState";
+import { createSlice } from "@reduxjs/toolkit";
 
-type loginAction =
-  | ReturnType<typeof loginChange>
-  | ReturnType<typeof logoutChange>;
+interface loginState {
+  login: boolean;
+}
 
-const loginReducer = (state = loginInitialState, action: loginAction) => {
-  switch (action.type) {
-    case LOG_IN: {
-      return { ...state, login: true };
-    }
-    case LOG_OUT: {
-      return { ...state, login: false };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+const initialState = {
+  login: false,
+} as loginState;
 
-export default loginReducer;
+//로그인 액션 및 리듀서 생성
+const loginSlice = createSlice({
+  name: "login",
+  initialState,
+  reducers: {
+    loginChange(state) {
+      state.login = true;
+    },
+    logoutChange(state) {
+      state.login = false;
+    },
+  },
+});
+
+export const { loginChange, logoutChange } = loginSlice.actions;
+export default loginSlice.reducer;

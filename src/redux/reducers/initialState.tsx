@@ -3,7 +3,3 @@ export const initialState = {
   myThema: "",
   isOpenNewGift: false,
 };
-
-export const loginInitialState = {
-  login: false,
-};

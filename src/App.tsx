@@ -8,8 +8,9 @@ import ShopRoutes from "./routes/ShopRoutes";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { loginChange } from "./redux/actions/loginActions";
+// import { loginChange } from "./redux/actions/loginActions";
 import { useEffect } from "react";
+import { loginChange } from "./redux/reducers/loginReducer";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -23,9 +24,9 @@ function App() {
   };
 
   //화면렌더링시 로그인유지 함수 실행
-  // useEffect(() => {
-  //   keepLogin();
-  // }, []);
+  useEffect(() => {
+    keepLogin();
+  }, []);
 
   return (
     <Router>

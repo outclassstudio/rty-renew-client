@@ -1,9 +1,9 @@
 declare namespace Users {
   interface myinfoDTO {
-    id: string;
-    nickname: string;
+    id: undefined | string;
+    nickname: undefined | string;
     point: number;
-    birth?: string;
+    birth?: undefined | string;
   }
 
   interface loginDTO {

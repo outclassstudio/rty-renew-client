@@ -25,13 +25,16 @@ const createMediaQuery = (mediaPx: number): string => {
   return `@media(max-width: ${mediaPx}px)`;
 };
 
+//미디어쿼리 생성
 export const mediaQuery = {
   mobile: createMediaQuery(LAYOUT_BREAK_POINT.MOBILE),
   mac: createMediaQuery(LAYOUT_BREAK_POINT.MAC),
 };
 
-export const baseColor = "#e8e8e8";
+//기본컬러
+export const baseColor = "#232253";
 
+//페이드 애니메이션
 export const fadeAction = keyframes`
   0% {
     opacity:0
