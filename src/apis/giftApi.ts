@@ -4,7 +4,9 @@ import apiClient from "./index";
 const myId = localStorage.getItem("id");
 
 //gift받아오기
-export const getGift = (): Promise<AxiosResponse<Gift.singleGiftDTO[]>> => {
+export const getGift = async (): Promise<
+  AxiosResponse<Gift.singleGiftDTO[]>
+> => {
   return apiClient()
     .get(`/gift/${myId}`)
     .then((res) => {
