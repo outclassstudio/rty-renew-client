@@ -36,7 +36,7 @@ export default function Canvas() {
   );
 
   const [newList, setNewList] = useState(newGiftLists);
-
+  const [selected, setSelected] = useState(null);
   const draw = () => {
     let myPath: any;
 
@@ -69,6 +69,11 @@ export default function Canvas() {
   const changeThemaHandler = () => {
     dispatch(isThemaModal(true));
   };
+
+  //! 변수
+  let segment: any;
+  let path: any;
+  var selectionRectangle: any;
 
   //drop
   const dropHandler = (e: any) => {
@@ -121,29 +126,83 @@ export default function Canvas() {
         item.onMouseDown = function (e: { delta: any }) {
           item.bounds.selected = true;
         };*/
-        console.log("-===========", item.bounds);
-        var segment: any;
-        var path: any;
+
+        //! make selectionRectangle
+        function makeSelectionRectangle(path: any) {
+          if (selected) {
+            selectionRectangle = selected;
+
+            selectionRectangle.remove();
+          }
+
+          const reset =
+            path.rotation === 0 && path.scaling.x === 1 && path.scaling.y === 1;
+          let bounds;
+          if (reset) {
+            console.log("reset");
+            bounds = path.bounds;
+            path.pInitialBounds = path.bounds;
+          } else {
+            bounds = path.pInitialBounds;
+          }
+          let b = bounds.clone().expand(10, 10);
+          selectionRectangle = new Paper.Path.Rectangle(b);
+          selectionRectangle.pivot = selectionRectangle.position;
+          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top));
+          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top - 25));
+          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top));
+          if (!reset) {
+            selectionRectangle.position = path.bounds.center;
+            selectionRectangle.rotation = path.rotation;
+            selectionRectangle.scaling = path.scaling;
+          }
+          selectionRectangle.strokeWidth = 1;
+          selectionRectangle.strokeColor = "blue";
+          selectionRectangle.name = "selection rectangle";
+          selectionRectangle.selected = true;
+
+          console.log("maked", selectionRectangle);
+          setSelected(selectionRectangle);
+        }
+
+        //! onMouseDown
         item.onMouseDown = function (e: any) {
-          console.log("eeeee", e.point, Paper.project);
+          const itemP = new Paper.Path(item);
+          console.log("??", selectionRectangle);
+          console.log("item segment", itemP, item);
           segment = path = null;
           const hitResult = Paper.project.hitTest(e.point, hitOptions);
 
-          console.log(hitResult, "hit------------", "----", e.modifiers);
+          console.log(
+            hitResult,
+            "hit------------",
+
+            //  hitResult.item,
+            "----",
+            hitResult
+          );
           if (!hitResult) {
+            return;
+          }
+          if (e.modifiers.shift) {
+            if (hitResult.type === "segment") {
+              hitResult.segment.remove();
+            }
             return;
           }
           console.log("tooldown type", hitResult.type);
           if (hitResult) {
             path = hitResult.item;
-            if (hitResult.type === "fill") {
-              item.bounds.selected = true;
+            if (item.contains(e.point)) {
+              //  item.bounds.selected = true;
+              //  Paper.project.activeLayer.addChild(hitResult.item);
               path.data.state = "moving";
+              console.log("path--", path, Paper.project.selectedItems);
             }
             if (hitResult && hitResult.type === "segment") {
               path = Paper.project.selectedItems[0];
               segment = hitResult.segment;
-              console.log("path", path, Paper.project);
+              console.log("path--", path, Paper.project.selectedItems);
               if (e.modifiers.control) {
                 path.data.state = "rotating";
               } else {
@@ -154,7 +213,17 @@ export default function Canvas() {
               console.log(path.data);
             }
           }
+          //! selectionRectangle
+          if (!selectionRectangle) {
+            console.log("만들기");
+            makeSelectionRectangle(item);
+          } else {
+            console.log("있음");
+          }
+          Paper.project.activeLayer.addChild(item);
         };
+
+        //! onMouseDrag
         item.onMouseDrag = function (e: any) {
           console.log("tool dragS");
           if (segment && path.data.state === "rotating") {
@@ -172,7 +241,11 @@ export default function Canvas() {
             //  path.position += e.delta;
             item.position.x += e.delta.x;
             item.position.y += e.delta.y;
-            //  adjustBounds(path);
+            console.log(selectionRectangle, "positioonjkfdnsklfnklsdnfl");
+            selectionRectangle.position.x += e.delta.x;
+            selectionRectangle.position.y += e.delta.y;
+            //      item.bounds.selected = true;
+            //       adjustBounds(item);
           }
         };
         //error
