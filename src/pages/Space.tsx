@@ -5,6 +5,7 @@ import NewGift from "../components/mySpace/NewGift/NewGiftIcon";
 import Canvas from "../components/mySpace/Canvas";
 import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
 import Layout from "./Layout";
+import { Avatar } from "../components/mySpace/Avatar";
 
 export const SpaceContainer = styled.div`
   display: flex;
@@ -18,6 +19,7 @@ export default function Space() {
   return (
     <Layout>
       <SpaceContainer>
+        <Avatar />
         <NewGift />
         <Canvas />
         <NewGiftBox />
