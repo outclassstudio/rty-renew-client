@@ -20,7 +20,7 @@ export const findUser = async (
   return apiClient()
     .get(`/users/find/${data}`)
     .then((res) => {
-      return res.data;
+      return res;
     });
 };
 
