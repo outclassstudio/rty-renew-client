@@ -13,10 +13,17 @@ export const ItemP = styled.p`
 `;
 
 const NewGiftItem = (item: any) => {
-  console.log("list", item);
+  const itemId = item.id;
+
+  const dragStartHandler = (e: any, item: number) => {
+    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("id", item);
+  };
+
   return (
     <>
-      <ItemBox>
+      <ItemBox draggable onDragStart={(e: any) => dragStartHandler(e, itemId)}>
         <ItemP>from. 효영</ItemP>
         <img src={item.url} alt="giftItem" />
       </ItemBox>
