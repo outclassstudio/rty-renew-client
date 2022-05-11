@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import { getUserInfo, logoutUser } from "../apis/userApi";
+import { getUserInfo } from "../apis/userApi";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor, fadeAction } from "../style/global";
 import Layout from "./Layout";
@@ -34,12 +34,13 @@ export default function Userinfo() {
 
   //로그아웃 요청
   const handleLogout = (): void => {
-    logoutUser().then(() => {
-      dispatch(logoutChange());
-      navigate("/");
-      window.localStorage.removeItem("token");
-      window.localStorage.removeItem("id");
-    });
+    // logoutUser().then(() => {
+
+    // });
+    dispatch(logoutChange());
+    navigate("/");
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("id");
   };
 
   return (

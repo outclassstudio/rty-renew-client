@@ -19,10 +19,11 @@ declare namespace Gift {
   }
 
   interface sendGiftDTO {
-    from: string;
-    to: string;
+    userFrom: string | null;
+    userTo: string;
     content: string;
-    svg: number;
-    img: number;
+    svg: string;
+    img: string;
+    nickname?: string;
   }
 }

@@ -3,6 +3,25 @@ import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
 import { fadeAction } from "../style/global";
 
+export default function Login() {
+  const navigate = useNavigate();
+
+  return (
+    <MainContainer>
+      <Logo
+        src="https://i.imgur.com/ITptV6p.png"
+        title="logo_sample(png).png"
+      />
+      <FormWrapper>
+        <LoginForm />
+      </FormWrapper>
+      <SignupText onClick={() => navigate("/signup")}>
+        회원가입 할래요
+      </SignupText>
+    </MainContainer>
+  );
+}
+
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,22 +54,3 @@ const SignupText = styled.div`
     color: #ec047a;
   }
 `;
-
-export default function Login() {
-  const navigate = useNavigate();
-
-  return (
-    <MainContainer>
-      <Logo
-        src="https://i.imgur.com/ITptV6p.png"
-        title="logo_sample(png).png"
-      />
-      <FormWrapper>
-        <LoginForm />
-      </FormWrapper>
-      <SignupText onClick={() => navigate("/signup")}>
-        회원가입 할래요
-      </SignupText>
-    </MainContainer>
-  );
-}

@@ -8,9 +8,9 @@ import ShopRoutes from "./routes/ShopRoutes";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-// import { loginChange } from "./redux/actions/loginActions";
 import { useEffect } from "react";
 import { loginChange } from "./redux/reducers/loginReducer";
+import { setFrom } from "./redux/reducers/sendGiftReducer";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -27,6 +27,16 @@ function App() {
   useEffect(() => {
     keepLogin();
   }, []);
+
+  //선물보내는 사람 업데이트
+  useEffect(() => {
+    if (loginState.login) {
+      let myId = localStorage.getItem("id");
+      dispatch(setFrom(myId));
+    } else {
+      dispatch(setFrom(""));
+    }
+  }, [loginState.login]);
 
   return (
     <Router>

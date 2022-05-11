@@ -26,11 +26,7 @@ export default function Header({ title }: Props) {
 
   //dropdonw on/off
   const handleActiveDropdown = (): void => {
-    if (activeDropdown) {
-      setActiveDropdown(false);
-    } else {
-      setActiveDropdown(true);
-    }
+    setActiveDropdown((prev) => !prev);
   };
 
   const closeDropDown = (): void => {
@@ -58,14 +54,6 @@ export default function Header({ title }: Props) {
             onClick={handleActiveSearch}
             alt=""
           />
-          {/* {activeSearch ? (
-            <SearchBarWrapper>
-              <input type="text" placeholder="친구를 찾아봐요" />
-              <div onClick={handleActiveSearch}>X</div>
-            </SearchBarWrapper>
-          ) : (
-            ""
-          )} */}
           <SearchBarWrapper className={activeSearch ? "slideIn" : "invisible"}>
             <input type="text" placeholder="친구를 찾아봐요" />
             <div onClick={handleActiveSearch}>X</div>
