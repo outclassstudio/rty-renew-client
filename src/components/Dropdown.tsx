@@ -21,6 +21,7 @@ export default function Dropdown({ handleActiveDropdown }: any) {
 
   return (
     <MainDiv>
+      <Menu className="user">{window.localStorage.getItem("id")}님</Menu>
       <Menu onClick={() => navigate("/userinfo")}>나의정보</Menu>
       <Menu onClick={() => navigate("/")}>내공간</Menu>
       <Menu onClick={() => navigate("/send")}>선물보내기</Menu>
@@ -59,4 +60,10 @@ const Menu = styled.div`
   cursor: pointer;
   z-index: 1;
   font-size: 14px;
+
+  &.user {
+    border-bottom: 1px solid #ffffff96;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+  }
 `;
