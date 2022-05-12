@@ -5,7 +5,6 @@ declare namespace Users {
     point: number;
     birth?: undefined | string;
     theme?: number;
-    [key: string]: any;
   }
 
   interface loginDTO {

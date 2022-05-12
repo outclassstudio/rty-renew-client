@@ -38,16 +38,17 @@ export default function Signup() {
 
   //아이디 중복 검사 함수
   const handleIdCheck = (): void => {
-    // axios
-    //   .get(`http://192.168.10.153:8080/users/checkid/${signUpInfo.userId}`)
-    //   .then((res) => {
-    //     setMessageRender(true);
-    //     setErrors({ ...errors, idOverlap: res.data.result });
-    //   })
-    //   .catch(() => {
-    //     setMessageRender(true);
-    //     setErrors({ ...errors, idOverlap: true });
-    //   });
+    axios
+      .get(`http://192.168.10.153:8080/users/checkid/${signUpInfo.userId}`)
+      .then((res) => {
+        console.log(res.data);
+        setMessageRender(true);
+        setErrors({ ...errors, idOverlap: res.data });
+      })
+      .catch(() => {
+        setMessageRender(true);
+        setErrors({ ...errors, idOverlap: true });
+      });
   };
 
   //ID가 이미 존재할 경우 작동하는 함수
@@ -135,6 +136,8 @@ export default function Signup() {
           // });
           navigate("/");
         });
+    } else {
+      alert("입력에 문제가 없는지 확인해주세요");
     }
   };
 
@@ -261,7 +264,7 @@ export const SignUpWrapper = styled.form`
 `;
 
 const SubWrapper = styled.div`
-  padding: 20px 30px 20px 30px;
+  padding: 20px 35px;
   border-radius: 10px;
   flex-direction: column;
   justify-content: center;
@@ -326,7 +329,7 @@ export const ErrMsg = styled.div`
     color: #ff8352;
   }
   &.ok {
-    color: #0e7a00;
+    color: #72b0eb;
   }
   &.loginErr {
     color: #ff8352;

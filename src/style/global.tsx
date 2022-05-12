@@ -12,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     font-family: 'Noto Sans KR', sans-serif;
+    /* background: #f6f6f6 */
     // font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 `;
@@ -41,6 +42,35 @@ export const fadeAction = keyframes`
   }
 
   100% {
+    opacity: 1;
+  }
+`;
+
+export const fadeMoveAction = keyframes`
+  0% {
+    transform: translateY(30px);
+    opacity:0
+  }
+
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+`;
+
+export const fadeMoveAction2 = keyframes`
+  0% {
+    transform: translateY(30px);
+    opacity:0
+  }
+
+  30% {
+    transform: translateY(30px);
+    opacity:0
+  }
+
+  100% {
+    transform: translateY(0px);
     opacity: 1;
   }
 `;
