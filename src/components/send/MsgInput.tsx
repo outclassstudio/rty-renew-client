@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
 import { baseColor } from "../../style/global";
@@ -26,7 +27,12 @@ export default function MsgInput() {
     dispatch(setContent(e.target.value));
 
     if (e.target.value.length >= 100) {
-      alert("더이상 입력할 수 없습니다");
+      Swal.fire({
+        title: "더이상 입력할 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+
       let str = e.target.value.slice(0, -1);
       e.target.value = str;
     }

@@ -8,10 +8,11 @@ import { fadeMoveAction, fadeMoveAction2 } from "../style/global";
 import { sendGift } from "../apis/giftApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMyItems } from "../apis/buyApi";
 import { useDispatch } from "react-redux";
 import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
+import Swal from "sweetalert2";
 
 export default function Send() {
   const dispatch = useDispatch();
@@ -32,18 +33,48 @@ export default function Send() {
     });
   }, []);
 
+  //에러메시지 띄우기
+  const viewErrMsg = (text: string): void => {
+    Swal.fire({
+      title: "선물을 보낼 수 없어요",
+      text: text,
+      icon: "error",
+      confirmButtonText: "닫기",
+    });
+  };
+
+  //에러유형체크
+  const checkSendGift = (): boolean => {
+    if (!giftState.gift.userTo) {
+      viewErrMsg("유저를 선택해주세요");
+      return false;
+    } else if (!giftState.gift.svg) {
+      viewErrMsg("포장을 선택해주세요");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   //선물전송함수
   const handleSendGift = (): void => {
-    if (giftState.gift.userTo) {
+    if (checkSendGift()) {
       sendGift(giftState.gift)
         .then(() => {
-          console.log("전송성공!");
+          // console.log("전송성공!");
+          Swal.fire({
+            title: "선물이 보내졌습니다",
+            icon: "success",
+            confirmButtonText: "닫기",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("/send");
+            }
+          });
         })
         .catch((err) => {
           console.log("실패!", err);
         });
-    } else {
-      alert("보낼사람을 선택해주세요");
     }
   };
 
