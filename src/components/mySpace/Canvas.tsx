@@ -63,6 +63,10 @@ export default function Canvas() {
     dispatch(editThema(themaList[0].url));
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
+
   const canvasRef = useRef(null);
 
   //change Thema
@@ -73,7 +77,8 @@ export default function Canvas() {
   //! 변수
   let segment: any;
   let path: any;
-  var selectionRectangle: any;
+  let selectionRectangle: any;
+  let movePath = false;
 
   //drop
   const dropHandler = (e: any) => {
@@ -131,8 +136,13 @@ export default function Canvas() {
         function makeSelectionRectangle(path: any) {
           if (selected) {
             selectionRectangle = selected;
-
-            selectionRectangle.remove();
+            console.log(
+              "selected################################################",
+              selectionRectangle,
+              selected
+            );
+            selectionRectangle.clear();
+            console.log("지워지냐", selectionRectangle);
           }
 
           const reset =
@@ -156,19 +166,35 @@ export default function Canvas() {
             selectionRectangle.rotation = path.rotation;
             selectionRectangle.scaling = path.scaling;
           }
-          selectionRectangle.strokeWidth = 1;
+          selectionRectangle.strokeWidth = 2;
           selectionRectangle.strokeColor = "blue";
           selectionRectangle.name = "selection rectangle";
           selectionRectangle.selected = true;
 
           console.log("maked", selectionRectangle);
-          setSelected(selectionRectangle);
+          if (selectionRectangle) {
+            console.log("정보 존재");
+            setSelected(selectionRectangle);
+          } else {
+            console.log("여기 올사람");
+            selectionRectangle.remove();
+          }
         }
-
+        console.log("왜사라져ㅑ???", selectionRectangle);
         //! onMouseDown
         item.onMouseDown = function (e: any) {
+          console.log(
+            "_______________________________________________________________________________________",
+            selected,
+            selectionRectangle
+          );
+          if (selectionRectangle) {
+            console.log("remove ?????", selectionRectangle);
+            selectionRectangle.remove();
+            console.log("remove !!!!", selectionRectangle);
+          }
           const itemP = new Paper.Path(item);
-          console.log("??", selectionRectangle);
+
           console.log("item segment", itemP, item);
           segment = path = null;
           const hitResult = Paper.project.hitTest(e.point, hitOptions);
@@ -212,15 +238,22 @@ export default function Canvas() {
               }
               console.log(path.data);
             }
+            //! selectionRectangle
+            if (!selected) {
+              console.log("만들기");
+              makeSelectionRectangle(item);
+            } else {
+              console.log("지우기", selectionRectangle);
+              selectionRectangle = selected;
+              selectionRectangle.remove();
+              setSelected(null);
+              makeSelectionRectangle(item);
+            }
           }
-          //! selectionRectangle
-          if (!selectionRectangle) {
-            console.log("만들기");
-            makeSelectionRectangle(item);
-          } else {
-            console.log("있음");
+          movePath = hitResult.type === "fill";
+          if (movePath) {
+            // Paper.project.activeLayer.addChild(item);
           }
-          Paper.project.activeLayer.addChild(item);
         };
 
         //! onMouseDrag
@@ -245,7 +278,7 @@ export default function Canvas() {
             selectionRectangle.position.x += e.delta.x;
             selectionRectangle.position.y += e.delta.y;
             //      item.bounds.selected = true;
-            //       adjustBounds(item);
+            //  adjustBounds(item);
           }
         };
         //error
