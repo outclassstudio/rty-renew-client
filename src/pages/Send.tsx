@@ -8,23 +8,48 @@ import { fadeMoveAction, fadeMoveAction2 } from "../style/global";
 import { sendGift } from "../apis/giftApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
+import { useEffect } from "react";
+import { getMyItems } from "../apis/buyApi";
+import { useDispatch } from "react-redux";
+import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
 
 export default function Send() {
+  const dispatch = useDispatch();
   const giftState = useSelector((state: RootState) => state.sendGiftReducer);
 
-  const handleSendGift = (): void => {
-    sendGift(giftState.gift)
-      .then(() => {
-        console.log("전송성공!");
-      })
-      .catch((err) => {
-        console.log("실패!", err);
+  //내 아이템 리스트 불러와서 store에 저장
+  useEffect(() => {
+    getMyItems().then((res) => {
+      const imgData = res.data.filter((el) => {
+        return el.type === "img";
       });
+      const svgData = res.data.filter((el) => {
+        return el.type === "svg";
+      });
+
+      dispatch(setGetImg(imgData));
+      dispatch(setGetSvg(svgData));
+    });
+  }, []);
+
+  //선물전송함수
+  const handleSendGift = (): void => {
+    if (giftState.gift.userTo) {
+      sendGift(giftState.gift)
+        .then(() => {
+          console.log("전송성공!");
+        })
+        .catch((err) => {
+          console.log("실패!", err);
+        });
+    } else {
+      alert("보낼사람을 선택해주세요");
+    }
   };
 
   return (
     <Layout title={"선물보내기"}>
-      <MainContainer>
+      <MainContainer className="main">
         <SubContainer>
           <LeftWrapper>
             <FindUser />

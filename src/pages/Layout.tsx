@@ -15,7 +15,12 @@ export default function Layout({ children, title }: Props) {
   );
 }
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+  /* background-image: url("https://static.vecteezy.com/system/resources/previews/001/910/477/original/flat-colorful-space-with-rocket-background-free-vector.jpg");
+  background-position: center;
+  background-size: cover; */
+`;
+
 const ChildrenDiv = styled.div`
   margin-top: 50px;
   display: flex;

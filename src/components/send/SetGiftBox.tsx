@@ -1,18 +1,20 @@
 import styled from "styled-components";
 import { baseColor } from "../../style/global";
 import { useState } from "react";
-import { svgArr } from "./dummy";
 import { useDispatch } from "react-redux";
 import { setSvg } from "../../redux/reducers/sendGiftReducer";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/reducers";
 
 export default function SetGiftBox() {
   const dispatch = useDispatch();
-  const [prvSvg, setPrvSvg] = useState<any>(svgArr[0].svg);
+  const svgState = useSelector((state: RootState) => state.getItemReducer);
+  const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
 
   //선물포장 선택하는 함수
-  const handleSetPrv = (comp: string): void => {
-    setPrvSvg(comp);
-    dispatch(setSvg(comp));
+  const handleSetPrv = (id: number, source: string): void => {
+    setPrvSvg({ id: id, svg: source });
+    dispatch(setSvg(source));
   };
 
   return (
@@ -20,12 +22,16 @@ export default function SetGiftBox() {
       선물포장을 선택해주세요
       <SvgListWrapper>
         <SvgList>
-          {svgArr.map((el, idx) => {
+          {svgState.svg.map((el, idx) => {
+            const svgStr = el.data;
+            const svg = new Blob([svgStr], { type: "image/svg+xml" });
+            const url = URL.createObjectURL(svg);
+
             return (
               <SingleSvg
-                onClick={() => handleSetPrv(el.svg)}
-                className={el.svg === prvSvg ? "active" : ""}
-                src={el.svg}
+                onClick={() => handleSetPrv(el.idx, url)}
+                className={el.idx === prvSvg.id ? "active" : ""}
+                src={url}
                 key={idx}
               />
             );
@@ -33,7 +39,11 @@ export default function SetGiftBox() {
         </SvgList>
       </SvgListWrapper>
       <SvgPrv>
-        <img src={prvSvg} alt="" />
+        {prvSvg.id ? (
+          <img src={prvSvg.svg} alt="" />
+        ) : (
+          <NoneImg>선택된 포장이 없습니다</NoneImg>
+        )}
       </SvgPrv>
     </MainContainer>
   );
@@ -63,6 +73,17 @@ const SvgListWrapper = styled.div`
   /* color: #3f3f3f; */
   color: ${baseColor};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
+`;
+
+const NoneImg = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+  height: 262px;
+  /* padding: 0px; */
+  color: ${baseColor};
+  font-size: 13px;
 `;
 
 const SvgList = styled.div`

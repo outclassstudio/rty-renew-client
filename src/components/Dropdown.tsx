@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor } from "../style/global";
 
@@ -10,13 +11,12 @@ export default function Dropdown({ handleActiveDropdown }: any) {
 
   //로그아웃 요청
   const handleLogout = (): void => {
-    // logoutUser().then(() => {
-
-    // });
     dispatch(logoutChange());
+    dispatch(deleteStoreItems());
     navigate("/");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("id");
+    // window.location.replace("/");
   };
 
   return (
