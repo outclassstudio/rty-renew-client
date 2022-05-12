@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { findUser } from "../../apis/userApi";
 import { baseColor } from "../../style/global";
 import UserlistDropdown from "./UserlistDropdown";
@@ -24,11 +25,19 @@ export default function FindUser() {
           setActiveDropdown(true);
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
-          alert("찾으시는 아이디/닉네임이 없어요");
+          Swal.fire({
+            title: "찾으시는 아이디/닉네임이 없어요",
+            icon: "warning",
+            confirmButtonText: "닫기",
+          });
         }
       });
     } else {
-      alert("아이디나 닉네임을 입력해주세요");
+      Swal.fire({
+        title: "아이디나 닉네임을 입력해주세요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
     }
   };
 
