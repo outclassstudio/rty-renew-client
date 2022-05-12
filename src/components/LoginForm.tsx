@@ -37,7 +37,8 @@ export default function LoginForm() {
         window.localStorage.setItem("token", res.data);
         window.localStorage.setItem("id", loginInfo.id);
         dispatch(loginChange());
-        navigate("/");
+        // navigate("/");
+        window.location.replace("/");
       })
       .catch(() => {
         setIsError(true);

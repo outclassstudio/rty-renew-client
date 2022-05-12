@@ -7,6 +7,7 @@ import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor, fadeAction } from "../style/global";
 import Layout from "./Layout";
 import { NormalBtn } from "../style/btnStyle.style";
+import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 
 export default function Userinfo() {
   const navigate = useNavigate();
@@ -34,10 +35,8 @@ export default function Userinfo() {
 
   //로그아웃 요청
   const handleLogout = (): void => {
-    // logoutUser().then(() => {
-
-    // });
     dispatch(logoutChange());
+    dispatch(deleteStoreItems());
     navigate("/");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("id");

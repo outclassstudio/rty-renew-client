@@ -5,15 +5,13 @@ import styled from "styled-components";
 import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
 import { baseColor } from "../../style/global";
-import { imgArr } from "./dummy";
 
 export default function MsgInput() {
   const dispatch = useDispatch();
   const giftState = useSelector((state: RootState) => state.sendGiftReducer);
+  const itemState = useSelector((state: RootState) => state.getItemReducer);
 
-  const [imgUrl, setImgUrl] = useState<string>(
-    "https://dimg.donga.com/wps/NEWS/IMAGE/2021/02/03/105264221.3.jpg"
-  );
+  const [imgUrl, setImgUrl] = useState<string>("");
   const [letterNum, setLetterNum] = useState<number>(0);
 
   //프리뷰이미지 변경 및 상태변경 함수
@@ -43,19 +41,23 @@ export default function MsgInput() {
         <ImgListWrapper>
           <div>메시지와 함께 보낼 이미지를 선택해주세요</div>
           <ImgList>
-            {imgArr.map((el, idx) => {
+            {itemState.img.map((el, idx) => {
               return (
                 <SingleImg
-                  onClick={() => changeImg(el)}
-                  className={el === imgUrl ? "active" : ""}
-                  src={el}
+                  onClick={() => changeImg(el.data)}
+                  className={el.data === imgUrl ? "active" : ""}
+                  src={el.data}
                   key={idx}
                   alt=""
                 />
               );
             })}
           </ImgList>
-          <ImagePrv src={imgUrl} alt="" />
+          {imgUrl ? (
+            <ImagePrv src={imgUrl} alt="" />
+          ) : (
+            <NoneImg>선택된 이미지가 없습니다</NoneImg>
+          )}
         </ImgListWrapper>
       </SubContainer>
       <SubContainer className="b">
@@ -120,13 +122,22 @@ const ImgListWrapper = styled.div`
 
   div {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
   }
 
   div span:nth-child(2) {
     /* padding: 5px; */
     background: gray;
   }
+`;
+
+const NoneImg = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+  height: 262px;
+  /* padding: 0px; */
 `;
 
 const TableIcon = styled.img`

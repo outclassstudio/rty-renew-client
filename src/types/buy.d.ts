@@ -1,5 +1,6 @@
 declare namespace Buy {
   interface singleItemDTO {
+    idx: number;
     type: string;
     data: string;
     point?: number;
