@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import { getUserInfo } from "../apis/userApi";
+import { getUserInfo, patchUserInfo } from "../apis/userApi";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor, fadeAction } from "../style/global";
 import Layout from "./Layout";
 import { NormalBtn } from "../style/btnStyle.style";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
+import Swal from "sweetalert2";
 
 export default function Userinfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   //유저정보 저장
   const [userInfo, setUserInfo] = useState<any>({
@@ -20,6 +23,8 @@ export default function Userinfo() {
     point: 0,
     birth: "",
   });
+
+  const [newNickname, setNewNickname] = useState<string | undefined>("");
 
   //유저정보 불러오기
   useEffect(() => {
@@ -30,6 +35,7 @@ export default function Userinfo() {
         point: res.data.point,
         birth: res.data.birth,
       });
+      setNewNickname(res.data.nickname);
     });
   }, []);
 
@@ -40,6 +46,53 @@ export default function Userinfo() {
     navigate("/");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("id");
+  };
+
+  const handleUserinfoEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    setNewNickname(userInfo.nickname);
+    setEditMode((prev) => !prev);
+  };
+
+  const handleChangeNickname = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setNewNickname(e.target.value);
+  };
+
+  const handleEditedInfoSend = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    e.preventDefault();
+
+    let data = {
+      id: userInfo.id,
+      point: userInfo.point,
+      birth: userInfo.birth,
+      nickname: newNickname,
+    };
+
+    if (userInfo.nickname === newNickname) {
+      Swal.fire({
+        title: "닉네임이 바뀌지 않았네요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    } else {
+      patchUserInfo(data).then(() => {
+        Swal.fire({
+          title: "수정완료",
+          icon: "success",
+          confirmButtonText: "닫기",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.replace("/userinfo");
+          }
+        });
+      });
+    }
+
+    // setEditMode((prev) => !prev);
   };
 
   return (
@@ -58,7 +111,15 @@ export default function Userinfo() {
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>닉네임</UserinfoText>
-              <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+              {editMode ? (
+                <UserinfoInput
+                  value={newNickname}
+                  type="text"
+                  onChange={(e) => handleChangeNickname(e)}
+                />
+              ) : (
+                <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+              )}
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>생년월일</UserinfoText>
@@ -69,6 +130,37 @@ export default function Userinfo() {
               <UserinfoBox>{userInfo.point}</UserinfoBox>
             </UserinfoItems>
           </SubWrapper>
+
+          {editMode ? (
+            <BtnWrapper>
+              <NormalBtn
+                className="a"
+                width={"155px"}
+                height={"45px"}
+                onClick={(e) => handleUserinfoEdit(e)}
+              >
+                변경취소
+              </NormalBtn>
+              <NormalBtn
+                className="b"
+                width={"155px"}
+                height={"45px"}
+                onClick={(e) => handleEditedInfoSend(e)}
+              >
+                수정완료
+              </NormalBtn>
+            </BtnWrapper>
+          ) : (
+            <NormalBtn
+              className="a"
+              width={"315px"}
+              height={"45px"}
+              onClick={(e) => handleUserinfoEdit(e)}
+            >
+              정보수정
+            </NormalBtn>
+          )}
+
           <NormalBtn
             className="a"
             width={"315px"}
@@ -95,6 +187,7 @@ const MainContainer = styled.div`
   height: calc(100vh - 50px);
   gap: 15px;
   animation: 0.7s ease-in-out ${fadeAction};
+  /* animation-iteration-count: 1; */
 `;
 
 const Logo = styled.img`
@@ -148,6 +241,20 @@ export const UserinfoBox = styled.div`
   }
 `;
 
+const UserinfoInput = styled.input`
+  display: flex;
+  align-items: center;
+  width: 298px;
+  height: 38px;
+  padding-left: 10px;
+  border: 1px solid #a5a5a5;
+  box-shadow: 1px 1px 1px #6969692d;
+  margin-bottom: 4px;
+  background: white;
+  color: ${baseColor};
+  font-size: 16px;
+`;
+
 export const UserinfoText = styled.div`
   font-weight: bold;
 
@@ -159,4 +266,9 @@ export const UserinfoText = styled.div`
   span {
     color: #ff8352;
   }
+`;
+
+export const BtnWrapper = styled.div`
+  display: flex;
+  gap: 5px;
 `;

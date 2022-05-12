@@ -1,11 +1,12 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import apiClient from ".";
+
+let myId = localStorage.getItem("id");
 
 //나의 정보 조회
 export const getUserInfo = async (): Promise<
   AxiosResponse<Users.myinfoDTO>
 > => {
-  let myId = localStorage.getItem("id");
   return apiClient()
     .get(`/users/${myId}`)
     .then((res) => {
@@ -27,4 +28,9 @@ export const findUser = async (
 //로그아웃 요청
 export const logoutUser = (): Promise<AxiosResponse<any>> => {
   return apiClient().delete("/users/logout");
+};
+
+//정보수정 요청
+export const patchUserInfo = (data: any): Promise<AxiosResponse<any>> => {
+  return apiClient().patch(`/users/${myId}`, data);
 };

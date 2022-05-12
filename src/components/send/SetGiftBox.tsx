@@ -12,8 +12,8 @@ export default function SetGiftBox() {
   const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
 
   //선물포장 선택하는 함수
-  const handleSetPrv = (id: number, source: string): void => {
-    setPrvSvg({ id: id, svg: source });
+  const handleSetPrv = (id: number, url: string, source: string): void => {
+    setPrvSvg({ id: id, svg: url });
     dispatch(setSvg(source));
   };
 
@@ -29,7 +29,7 @@ export default function SetGiftBox() {
 
             return (
               <SingleSvg
-                onClick={() => handleSetPrv(el.idx, url)}
+                onClick={() => handleSetPrv(el.idx, url, el.data)}
                 className={el.idx === prvSvg.id ? "active" : ""}
                 src={url}
                 key={idx}
