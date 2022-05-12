@@ -2,13 +2,9 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  editThema,
-  isThemaModal,
-  newGiftList,
-} from "../../redux/actions/index";
+import { editTheme, newGiftList } from "../../redux/actions/index";
 import Background from "./Background";
-import { themaList } from "../../utils/themaList";
+import { themeList } from "../../utils/themaList";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -27,10 +23,10 @@ export const CanvasArea = styled.canvas`
 
 export default function Canvas() {
   const dispatch = useDispatch();
-  const themaModal = useSelector(
-    (state: any) => state.spaceReducer.isThemaModal.boolean
+  const themeModal = useSelector(
+    (state: any) => state.spaceReducer.isThemeModal.boolean
   );
-  const myThema = useSelector((state: any) => state.spaceReducer.myThema.thema);
+  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
   const newGiftLists = useSelector(
     (state: any) => state.spaceReducer.newGiftList
   );
@@ -52,15 +48,20 @@ export default function Canvas() {
   };
 
   useEffect(() => {
-    console.log("thema updated");
+    console.log("theme updated");
     dispatch(newGiftList(newList));
-  }, [dispatch, myThema, newList]);
+  }, [dispatch, myInfo, newList]);
 
   useEffect(() => {
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
     draw();
-    dispatch(editThema(themaList[0].url));
+    async function fetchData() {
+      // You can await here
+      dispatch(await editTheme(themeList[0].url));
+      // ...
+    }
+    fetchData();
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,11 +69,6 @@ export default function Canvas() {
   }, [selected]);
 
   const canvasRef = useRef(null);
-
-  //change Thema
-  const changeThemaHandler = () => {
-    dispatch(isThemaModal(true));
-  };
 
   //! 변수
   let segment: any;
@@ -303,15 +299,12 @@ export default function Canvas() {
       <CanvasArea
         ref={canvasRef}
         id="canvas"
-        color={myThema}
+        color={myInfo.theme}
         draggable
         onDrop={(e: any) => dropHandler(e)}
         onDragOver={(e) => dragOverHandler(e)}
       ></CanvasArea>
-      {themaModal ? <Background /> : null}
-      <button onClick={changeThemaHandler}>테마수정</button>
-      <button>아바타 수정</button>
-      <button>공간 수정</button>
+      {themeModal ? <Background /> : null}
     </CanvasBox>
   );
 }

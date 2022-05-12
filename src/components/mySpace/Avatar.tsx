@@ -1,12 +1,19 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { userInfo } from "../../redux/actions/index";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
+import { changeMsg } from "../../apis/userApi";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const AvatarBox = styled.div`
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
   top: 170px;
   right: 950px;
-  width: 200px;
+  width: 150px;
 `;
 
 export const MsgBox = styled.div`
@@ -25,14 +32,28 @@ export const MsgEditBtn = styled.button`
 `;
 
 export function Avatar() {
-  //avatar icon
+  const dispatch = useDispatch();
+  //user info 가져오기
+  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
 
   //avatar state msg
-  const [stateMsg, setStateMsg] = useState("안녕 만나서 반갑다!");
+  const [stateMsg, setStateMsg] = useState("");
   const [isEditBtn, setIsEditBtn] = useState(false);
+
+  useEffect(() => {
+    console.log("userInfouserInfouserInfouserInfo", myInfo);
+  }, [myInfo]);
 
   const editBtnHandler = () => {
     console.log("editBTn ");
+
+    if (isEditBtn) {
+      changeMsg(stateMsg).then((res) => {
+        let info = res.data;
+        console.log(info, "Avatar");
+        dispatch(userInfo(info));
+      });
+    }
     setIsEditBtn(!isEditBtn);
   };
 
@@ -42,19 +63,24 @@ export function Avatar() {
     //서버에게 user 상태 메세지 변경 post 요청 보내기
   };
   return (
-    <AvatarBox>
-      <MsgBox>
-        {isEditBtn ? (
-          <input onChange={inputChangeHandler} />
-        ) : (
-          <p>{stateMsg}</p>
-        )}
+    <>
+      {myInfo ? (
+        <AvatarBox>
+          <h3>{myInfo.nickname}</h3>
+          <MsgBox>
+            {isEditBtn ? (
+              <input onChange={inputChangeHandler} />
+            ) : (
+              <p>{myInfo.msg}</p>
+            )}
 
-        <MsgEditBtn onClick={editBtnHandler}>
-          {isEditBtn ? "save" : "edit"}
-        </MsgEditBtn>
-      </MsgBox>
-      <MyAvatar />
-    </AvatarBox>
+            <MsgEditBtn onClick={editBtnHandler}>
+              {isEditBtn ? "save" : "edit"}
+            </MsgEditBtn>
+          </MsgBox>
+          <MyAvatar />
+        </AvatarBox>
+      ) : null}
+    </>
   );
 }

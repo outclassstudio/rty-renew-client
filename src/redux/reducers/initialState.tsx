@@ -1,8 +1,9 @@
 import { giftItemList } from "../../utils/giftItemList";
 
 export const initialState = {
-  isThemaModal: false,
-  myThema: "",
+  isThemeModal: false,
+  myTheme: "",
   isOpenNewGift: false,
   newGiftList: giftItemList,
+  userInfo: null,
 };

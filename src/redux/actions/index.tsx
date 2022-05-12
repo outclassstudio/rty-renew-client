@@ -1,11 +1,22 @@
-export const IS_THEMA_MODAL = "IS_THEMA_MODAL";
-export const EDIT_THEMA = "EDIT_THEMA";
+import apiClient from "../../apis";
+
+export const IS_THEME_MODAL = "IS_THEME_MODAL";
+export const EDIT_THEME = "EDIT_THEME";
 export const IS_OPEN_NEW_GIFT_BOX = "IS_OPEN_NEW_GIFT_BOX";
 export const NEW_GIFT_LIST = "NEW_GIFT_LIST";
+export const USER_INFO = "USER_INFO";
 
-export function isThemaModal(boolean: boolean) {
+export function userInfo(user: any) {
+  console.log(user, "uuuuuu");
   return {
-    type: IS_THEMA_MODAL,
+    type: USER_INFO,
+    payload: user,
+  };
+}
+
+export function isThemeModal(boolean: boolean) {
+  return {
+    type: IS_THEME_MODAL,
     payload: {
       boolean,
     },
@@ -21,18 +32,24 @@ export function isOpenNewGift(boolean: boolean) {
   };
 }
 
-export function editThema(thema: string) {
-  console.log("index", thema);
+export async function editTheme(theme: string) {
+  //console.log("index", theme);
+  const myId = localStorage.getItem("id");
+  const themeResult = await apiClient()
+    .patch(`/users/${myId}`, { id: myId, theme: theme })
+    .then((res) => {
+      return res;
+    });
+  console.log(themeResult, "themeResult");
   return {
-    type: EDIT_THEMA,
+    type: EDIT_THEME,
     payload: {
-      thema,
+      theme,
     },
   };
 }
 
 export function newGiftList(item: any) {
-  console.log("index", item);
   return {
     type: NEW_GIFT_LIST,
     payload: item,

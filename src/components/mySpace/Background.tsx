@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { editThema, isThemaModal } from "../../redux/actions/index";
-import { themaList } from "../../utils/themaList";
+import { userInfo, isThemeModal } from "../../redux/actions/index";
+import { themeList } from "../../utils/themaList";
+import { changeTheme } from "../../apis/userApi";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -81,7 +82,6 @@ export const CloseBtn = styled.button`
 export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-  //const [selectThema, setSelectThema] = useState<String>("");
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
@@ -91,26 +91,31 @@ export default function Background() {
     }
   };
 
-  const changeThemaHandler = () => {
+  const changeThemeHandler = async () => {
     if (checkedItem.length !== 0) {
-      dispatch(editThema(checkedItem[0]));
-      dispatch(isThemaModal(false));
+      // dispatch(await editTheme(checkedItem[0]));
+      changeTheme(checkedItem[0]).then((res) => {
+        let info = res.data;
+        console.log(info, "Avatar");
+        dispatch(userInfo(info));
+      });
+      dispatch(isThemeModal(false));
     }
   };
 
-  const closeThemaHandler = () => {
-    dispatch(isThemaModal(false));
+  const closeThemeHandler = () => {
+    dispatch(isThemeModal(false));
   };
 
   return (
     <ModalBackground>
       <ModalView>
         <ImgContainer>
-          {themaList.map((img) => {
+          {themeList.map((img) => {
             return (
               <SelectImg key={img.id}>
                 <ImgBox>
-                  <Img src={img.url} alt="thema" />
+                  <Img src={img.url} alt="theme" />
                 </ImgBox>
                 <ImgName>{img.name}</ImgName>
                 <SelectInput
@@ -127,8 +132,8 @@ export default function Background() {
         </ImgContainer>
 
         <BtnBox>
-          <SaveBtn onClick={changeThemaHandler}>저장</SaveBtn>
-          <CloseBtn onClick={closeThemaHandler}> 닫기</CloseBtn>
+          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
+          <CloseBtn onClick={closeThemeHandler}> 닫기</CloseBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>

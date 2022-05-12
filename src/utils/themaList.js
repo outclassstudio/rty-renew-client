@@ -1,4 +1,4 @@
-export const themaList = [
+export const themeList = [
   {
     id: 0,
     name: "sky",
