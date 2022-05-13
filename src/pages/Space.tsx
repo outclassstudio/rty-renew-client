@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getUserInfo } from "../apis/userApi";
+import { WastebasketIcon } from "../components/mySpace/Wastebasket/WastebasketIcon";
 import NewGift from "../components/mySpace/NewGift/NewGiftIcon";
 import Canvas from "../components/mySpace/Canvas";
 import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
@@ -56,8 +57,10 @@ export default function Space() {
       <SpaceContainer>
         <NewGift />
         <Avatar />
+
         <Canvas giftList={giftList} />
         <NewGiftBox giftList={giftList} />
+        <WastebasketIcon />
         <ThemeBtnBox>
           <button onClick={changeThemeHandler}>테마수정</button>
           <button>아바타 수정</button>

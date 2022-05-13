@@ -2,9 +2,6 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import NewGiftItem from "./NewGiftItem";
 import { useEffect, useState } from "react";
-import { getGift } from "../../../apis/giftApi";
-import { setMyGift } from "../../../redux/reducers/spaceReducer";
-import { useDispatch } from "react-redux";
 
 export const NewGiftContainer = styled.div`
   margin: 50px 20px 0;
@@ -37,7 +34,7 @@ export function NewGiftBox(props: any) {
   );
   useEffect(() => {
     setNewList(giftList);
-  }, []);
+  }, [giftList]);
 
   console.log("giftList", newGiftLists, newList, giftList);
 

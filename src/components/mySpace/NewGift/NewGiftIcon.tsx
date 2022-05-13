@@ -29,14 +29,14 @@ export default function NewGift() {
   const newGiftLists = useSelector(
     (state: any) => state.spaceReducer.newGiftList
   );
-  console.log(isOpenGift);
+
   useEffect(() => {}, [isOpenGift, newGiftLists]);
 
   const openGiftHandler = () => {
     console.log("click new gift");
     dispatch(setOpenNewGift(!isOpenGift));
   };
-  console.log("-------newGiftLists", newGiftLists);
+  //console.log("-------newGiftLists", newGiftLists);
   return (
     <div>
       <GiftIconBox>
