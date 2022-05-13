@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { isOpenNewGift } from "../../../redux/actions/index";
+//import { isOpenNewGift } from "../../../redux/actions/index";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
 import { useEffect } from "react";
+import { setOpenNewGift } from "../../../redux/reducers/spaceReducer";
 
 export const GiftIconBox = styled.div`
   position: absolute;
@@ -23,7 +24,7 @@ export default function NewGift() {
   //선물함을 클릭하면 선물함 리스트 컴포넌트가 보인다.
   const dispatch = useDispatch();
   const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift.boolean
+    (state: any) => state.spaceReducer.isOpenNewGift
   );
   const newGiftLists = useSelector(
     (state: any) => state.spaceReducer.newGiftList
@@ -33,7 +34,7 @@ export default function NewGift() {
 
   const openGiftHandler = () => {
     console.log("click new gift");
-    dispatch(isOpenNewGift(!isOpenGift));
+    dispatch(setOpenNewGift(!isOpenGift));
   };
   console.log("-------newGiftLists", newGiftLists);
   return (
@@ -43,7 +44,6 @@ export default function NewGift() {
           <NewGifIcon1 onClick={openGiftHandler} />
         )}
         {isOpenGift ? "open" : "close"}
-        {/*img src={NewGifts} alt="giftBox" /> */}
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>

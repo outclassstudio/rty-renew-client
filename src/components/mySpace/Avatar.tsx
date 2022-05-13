@@ -66,10 +66,10 @@ export function Avatar() {
     <>
       {myInfo ? (
         <AvatarBox>
-          <h3>{myInfo.nickname}</h3>
+          <h3>내이름은 {myInfo.nickname}!!</h3>
           <MsgBox>
             {isEditBtn ? (
-              <input onChange={inputChangeHandler} />
+              <input type="text" maxLength="10" onChange={inputChangeHandler} />
             ) : (
               <p>{myInfo.msg}</p>
             )}

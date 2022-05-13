@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { userInfo, isThemeModal } from "../../redux/actions/index";
 import { themeList } from "../../utils/themaList";
 import { changeTheme } from "../../apis/userApi";
+import { setModalOpen } from "../../redux/reducers/spaceReducer";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -99,12 +100,13 @@ export default function Background() {
         console.log(info, "Avatar");
         dispatch(userInfo(info));
       });
-      dispatch(isThemeModal(false));
+      // dispatch(setModalOpen(false));
+      window.location.replace("/");
     }
   };
 
   const closeThemeHandler = () => {
-    dispatch(isThemeModal(false));
+    dispatch(setModalOpen(false));
   };
 
   return (

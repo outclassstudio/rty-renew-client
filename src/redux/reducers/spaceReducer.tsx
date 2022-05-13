@@ -1,45 +1,101 @@
-import {
-  IS_THEME_MODAL,
-  IS_OPEN_NEW_GIFT_BOX,
-  NEW_GIFT_LIST,
-  EDIT_THEME,
-  USER_INFO,
-} from "../actions/index";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { initialState } from "./initialState";
+interface spaceState {
+  isThemeModal: boolean;
+  isOpenNewGift: boolean;
+  newGiftList: any;
+  userInfo: Myinfo;
+  myGift: any;
+}
 
-const spaceReducer: any = (
-  state = initialState,
-  action: {
-    type: any;
-    payload: any;
-  }
-) => {
-  const newState = { ...state };
-  switch (action.type) {
-    case IS_THEME_MODAL:
-      return { ...newState, isThemeModal: action.payload };
-      break;
+interface Myinfo {
+  id: undefined | string;
+  nickname: undefined | string;
+  point: number;
+  birth?: undefined | string;
+  theme?: string;
+}
 
-    case IS_OPEN_NEW_GIFT_BOX:
-      return { ...newState, isOpenNewGift: action.payload };
-      break;
+const initialState = {
+  isThemeModal: false,
+  isOpenNewGift: false,
+  newGiftList: "",
+  userInfo: {
+    id: "",
+    nickname: "",
+    point: 0,
+    theme: "https://i.imgur.com/mpT71SX.jpg",
+    msg: "",
+  },
+  myGift: undefined,
+} as spaceState;
 
-    case EDIT_THEME:
-      return { ...newState, myTheme: action.payload };
-      break;
+//로그인 액션 및 리듀서 생성
+const spaceSlice = createSlice({
+  name: "space",
+  initialState,
+  reducers: {
+    setUserInfo(state, action: PayloadAction<any>) {
+      state.userInfo = action.payload;
+    },
+    setModalOpen(state, action: PayloadAction<any>) {
+      state.isThemeModal = action.payload;
+    },
+    setOpenNewGift(state, action: PayloadAction<any>) {
+      state.isOpenNewGift = action.payload;
+    },
+    setMyGift(state, action: PayloadAction<any>) {
+      state.myGift = action.payload;
+    },
+  },
+});
 
-    case NEW_GIFT_LIST:
-      return { ...newState, newGiftList: action.payload };
-      break;
+export const { setUserInfo, setModalOpen, setOpenNewGift, setMyGift } =
+  spaceSlice.actions;
+export default spaceSlice.reducer;
 
-    case USER_INFO:
-      return { ...newState, userInfo: action.payload };
-      break;
+// import {
+//   IS_THEME_MODAL,
+//   IS_OPEN_NEW_GIFT_BOX,
+//   NEW_GIFT_LIST,
+//   EDIT_THEME,
+//   USER_INFO,
+// } from "../actions/index";
 
-    default:
-      return state;
-  }
-};
+// import { initialState } from "./initialState";
 
-export default spaceReducer;
+// const spaceReducer: any = (
+//   state = initialState,
+//   action: {
+//     type: any;
+//     payload: any;
+//   }
+// ) => {
+//   const newState = { ...state };
+//   switch (action.type) {
+//     case IS_THEME_MODAL:
+//       return { ...newState, isThemeModal: action.payload };
+//       break;
+
+//     case IS_OPEN_NEW_GIFT_BOX:
+//       return { ...newState, isOpenNewGift: action.payload };
+//       break;
+
+//     case EDIT_THEME:
+//       return { ...newState, myTheme: action.payload };
+//       break;
+
+//     case NEW_GIFT_LIST:
+//       return { ...newState, newGiftList: action.payload };
+//       break;
+
+//     case USER_INFO:
+//       return { ...newState, userInfo: action.payload };
+//       break;
+
+//     default:
+//       return state;
+//   }
+// };
+
+// export default spaceReducer;

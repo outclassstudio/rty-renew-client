@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-//import { giftItemList } from "../../../utils/giftItemList";
 import NewGiftItem from "./NewGiftItem";
 import { useEffect, useState } from "react";
+import { getGift } from "../../../apis/giftApi";
+import { setMyGift } from "../../../redux/reducers/spaceReducer";
+import { useDispatch } from "react-redux";
 
 export const NewGiftContainer = styled.div`
   margin: 50px 20px 0;
@@ -23,22 +25,25 @@ export const ItemContainer = styled.div`
   align-items: center;
 `;
 
-export function NewGiftBox() {
+export function NewGiftBox(props: any) {
+  console.log("box", props);
+  const giftList = props.giftList;
+  const [newList, setNewList] = useState(giftList);
+
+  const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+
   const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift.boolean
+    (state: any) => state.spaceReducer.isOpenNewGift
   );
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
-  );
-  const [giftList, setGiftList] = useState(newGiftLists);
-  console.log("giftList", newGiftLists.item);
   useEffect(() => {
-    console.log(" 실행?", newGiftLists);
-  }, [newGiftLists]);
+    setNewList(giftList);
+  }, []);
+
+  console.log("giftList", newGiftLists, newList, giftList);
 
   return (
     <div>
-      {isOpenGift && newGiftLists.length !== 0 ? (
+      {isOpenGift ? (
         <>
           <NewGiftContainer>
             <h4>GiftBox Component</h4>

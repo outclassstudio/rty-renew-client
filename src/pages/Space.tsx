@@ -6,8 +6,9 @@ import Canvas from "../components/mySpace/Canvas";
 import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
 import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
-import { isThemeModal, userInfo } from "../redux/actions/index";
 import { useDispatch } from "react-redux";
+import { setModalOpen, setMyGift } from "../redux/reducers/spaceReducer";
+import { getGift } from "../apis/giftApi";
 
 export const SpaceContainer = styled.div`
   display: flex;
@@ -28,27 +29,35 @@ export const Nickname = styled.h2`
 export default function Space() {
   const dispatch = useDispatch();
   const [myInfo, setMyInfo] = useState<any>();
+  const [giftList, setGiftList] = useState<any>();
   useEffect(() => {
     console.log("fiursr");
     // axios.get("엔드포인트", {헤더}, {바디}).then(....)
     getUserInfo().then((res) => {
       let user = res.data;
       setMyInfo(user);
-      userInfo(user);
+    });
+    console.log("fiursr22");
+    getGift().then((res) => {
+      let gift = res.data;
+      setGiftList(gift);
+      dispatch(setMyGift(gift));
+      console.log(gift, "gifttt");
     });
   }, []);
-  console.log("myInfo", myInfo);
+
+  console.log("myInfo", giftList);
   //change Theme
   const changeThemeHandler = () => {
-    dispatch(isThemeModal(true));
+    dispatch(setModalOpen(true));
   };
   return (
     <Layout>
       <SpaceContainer>
         <NewGift />
         <Avatar />
-        <Canvas />
-        <NewGiftBox />
+        <Canvas giftList={giftList} />
+        <NewGiftBox giftList={giftList} />
         <ThemeBtnBox>
           <button onClick={changeThemeHandler}>테마수정</button>
           <button>아바타 수정</button>

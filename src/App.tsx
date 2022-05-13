@@ -11,6 +11,9 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
+import { getUserInfo } from "./apis/userApi";
+import { userInfo } from "./redux/actions";
+import { setUserInfo } from "./redux/reducers/spaceReducer";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);

@@ -2,9 +2,10 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { editTheme, newGiftList } from "../../redux/actions/index";
 import Background from "./Background";
-import { themeList } from "../../utils/themaList";
+import { getUserInfo } from "../../apis/userApi";
+import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
+import { getGift } from "../../apis/giftApi";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -21,17 +22,38 @@ export const CanvasArea = styled.canvas`
   background-repeat: no-repeat;
 `;
 
-export default function Canvas() {
+export default function Canvas(props: any) {
+  console.log("=-=-=-=-=", props.giftList);
   const dispatch = useDispatch();
+
+  const giftList = props.giftList;
+
+  const [newList, setNewList] = useState(giftList);
+
+  const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  //유저정보 불러오기
+  useEffect(() => {
+    console.log("내정보");
+    getUserInfo().then((res) => {
+      dispatch(setUserInfo(res.data));
+    });
+    getGift().then((res) => {
+      let gift = res.data;
+      setNewList(gift);
+      console.log(gift, "gifttt");
+    });
+  }, [dispatch]);
+
+  useEffect(() => {}, [giftList]);
+
   const themeModal = useSelector(
-    (state: any) => state.spaceReducer.isThemeModal.boolean
+    (state: any) => state.spaceReducer.isThemeModal
   );
   const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
-  );
+  //console.log(myInfo, "왜이러냐?? ");
+  //const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
 
-  const [newList, setNewList] = useState(newGiftLists);
+  console.log("new---------", newGiftLists);
   const [selected, setSelected] = useState(null);
   const draw = () => {
     let myPath: any;
@@ -48,9 +70,9 @@ export default function Canvas() {
   };
 
   useEffect(() => {
-    console.log("theme updated");
-    dispatch(newGiftList(newList));
-  }, [dispatch, myInfo, newList]);
+    console.log(" updated", myInfo);
+    // dispatch(newGiftList(newList));
+  }, [dispatch, myInfo, newGiftLists]);
 
   useEffect(() => {
     const canvas: any = canvasRef.current;
@@ -58,7 +80,7 @@ export default function Canvas() {
     draw();
     async function fetchData() {
       // You can await here
-      dispatch(await editTheme(themeList[0].url));
+      //   dispatch(await editTheme(themeList[0].url));
       // ...
     }
     fetchData();
@@ -83,21 +105,26 @@ export default function Canvas() {
 
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
-    const a = newList.filter((el: any) => {
-      return el.id !== Number(targetId);
+    console.log("drop", targetId, "new", newGiftLists);
+    const a = newGiftLists.filter((el: any) => {
+      //   console.log(el, Number(targetId));
+      return el.idx !== Number(targetId);
     });
-    setNewList(a);
-    console.log("drop", newList, "new");
+    console.log("111111", a);
+    dispatch(setMyGift(a));
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
-    // newGiftList에서 targetId와 같은건 삭제한다.
-    const targetItem = newList.filter((el: any) => {
-      return el.id === Number(targetId);
+
+    const targetItem = newGiftLists.filter((el: any) => {
+      return el.idx === Number(targetId);
     });
-    console.log("drop", targetItem, newList, targetId);
+
+    // newGiftList에서 targetId와 같은건 삭제한다.
+
+    console.log("drop", targetItem, newGiftLists, targetId);
     const x = e.clientX - 150;
     const y = e.clientY - 100;
-    const targetSvg = targetItem[0].url;
+    const targetSvg = targetItem[0].svg;
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
       expandShapes: true,
@@ -295,16 +322,18 @@ export default function Canvas() {
   };
 
   return (
-    <CanvasBox>
-      <CanvasArea
-        ref={canvasRef}
-        id="canvas"
-        color={myInfo.theme}
-        draggable
-        onDrop={(e: any) => dropHandler(e)}
-        onDragOver={(e) => dragOverHandler(e)}
-      ></CanvasArea>
-      {themeModal ? <Background /> : null}
-    </CanvasBox>
+    <>
+      <CanvasBox>
+        <CanvasArea
+          ref={canvasRef}
+          id="canvas"
+          color={myInfo.theme}
+          draggable
+          onDrop={(e: any) => dropHandler(e)}
+          onDragOver={(e) => dragOverHandler(e)}
+        ></CanvasArea>
+        {themeModal ? <Background /> : null}
+      </CanvasBox>
+    </>
   );
 }
