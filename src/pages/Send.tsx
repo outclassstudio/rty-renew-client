@@ -51,6 +51,9 @@ export default function Send() {
     } else if (!giftState.gift.svg) {
       viewErrMsg("포장을 선택해주세요");
       return false;
+    } else if (!giftState.gift.content) {
+      viewErrMsg("내용을 입력해주세요");
+      return false;
     } else {
       return true;
     }
@@ -58,10 +61,12 @@ export default function Send() {
 
   //선물전송함수
   const handleSendGift = (): void => {
-    if (checkSendGift()) {
+    if (
+      checkSendGift() &&
+      giftState.gift.userFrom !== window.localStorage.getItem("id")
+    ) {
       sendGift(giftState.gift)
         .then(() => {
-          // console.log("전송성공!");
           Swal.fire({
             title: "선물이 보내졌습니다",
             icon: "success",

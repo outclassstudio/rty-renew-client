@@ -26,6 +26,10 @@ export const NormalBtn = styled.button<Size>`
     background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
   }
 
+  &.c {
+    background: linear-gradient(to right, #45a097 30%, #1b3550 100%);
+  }
+
   :active {
     box-shadow: inset 1px 1px 2px 2px rgba(0, 0, 0, 0.3);
   }

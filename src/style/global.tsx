@@ -1,4 +1,4 @@
-import { createGlobalStyle, keyframes } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
 @font-face {
@@ -73,4 +73,15 @@ export const fadeMoveAction2 = keyframes`
     transform: translateY(0px);
     opacity: 1;
   }
+`;
+
+//드롭다운 배경용
+export const DropdonwBg = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  z-index: -1;
 `;

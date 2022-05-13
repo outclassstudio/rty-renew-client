@@ -14,7 +14,7 @@ export default function SetGiftBox() {
   //선물포장 선택하는 함수
   const handleSetPrv = (id: number, url: string, source: string): void => {
     setPrvSvg({ id: id, svg: url });
-    dispatch(setSvg(source));
+    dispatch(setSvg(id));
   };
 
   return (

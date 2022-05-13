@@ -43,7 +43,7 @@ const DropdonwBg = styled.div`
 const MainDiv = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   background: ${baseColor};
   position: fixed;
   top: 55px;
@@ -62,6 +62,7 @@ const Menu = styled.div`
   font-size: 14px;
 
   &.user {
+    cursor: default;
     border-bottom: 1px solid #ffffff96;
     padding-bottom: 10px;
     margin-bottom: 5px;

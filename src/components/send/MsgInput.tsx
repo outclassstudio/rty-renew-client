@@ -16,8 +16,8 @@ export default function MsgInput() {
   const [letterNum, setLetterNum] = useState<number>(0);
 
   //프리뷰이미지 변경 및 상태변경 함수
-  const changeImg = (url: string): void => {
-    dispatch(setImg(url));
+  const changeImg = (url: string, idx: number): void => {
+    dispatch(setImg(idx));
     setImgUrl(url);
   };
 
@@ -50,7 +50,7 @@ export default function MsgInput() {
             {itemState.img.map((el, idx) => {
               return (
                 <SingleImg
-                  onClick={() => changeImg(el.data)}
+                  onClick={() => changeImg(el.data, el.idx)}
                   className={el.data === imgUrl ? "active" : ""}
                   src={el.data}
                   key={idx}
