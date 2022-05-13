@@ -8,7 +8,7 @@ import { fadeMoveAction, fadeMoveAction2 } from "../style/global";
 import { sendGift } from "../apis/giftApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getMyItems } from "../apis/buyApi";
 import { useDispatch } from "react-redux";
 import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
@@ -61,10 +61,7 @@ export default function Send() {
 
   //선물전송함수
   const handleSendGift = (): void => {
-    if (
-      checkSendGift() &&
-      giftState.gift.userFrom !== window.localStorage.getItem("id")
-    ) {
+    if (checkSendGift()) {
       sendGift(giftState.gift)
         .then(() => {
           Swal.fire({

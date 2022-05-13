@@ -1,4 +1,4 @@
-import { Axios, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import apiClient from ".";
 
 let myId = localStorage.getItem("id");
@@ -33,4 +33,10 @@ export const logoutUser = (): Promise<AxiosResponse<any>> => {
 //정보수정 요청
 export const patchUserInfo = (data: any): Promise<AxiosResponse<any>> => {
   return apiClient().patch(`/users/${myId}`, data);
+};
+
+//회원탈퇴 요청
+
+export const deleteUser = (): Promise<AxiosResponse<any>> => {
+  return apiClient().delete(`/users/${myId}`);
 };

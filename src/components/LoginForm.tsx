@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
@@ -10,7 +10,7 @@ axios.defaults.withCredentials = true;
 
 export default function LoginForm() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

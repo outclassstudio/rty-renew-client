@@ -9,6 +9,8 @@ import { baseColor } from "../../style/global";
 
 export default function MsgInput() {
   const dispatch = useDispatch();
+
+  //스토어에서 상태 호출
   const giftState = useSelector((state: RootState) => state.sendGiftReducer);
   const itemState = useSelector((state: RootState) => state.getItemReducer);
 

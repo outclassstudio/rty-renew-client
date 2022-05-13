@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import { getUserInfo, patchUserInfo } from "../apis/userApi";
+import { deleteUser, getUserInfo, patchUserInfo } from "../apis/userApi";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { baseColor, fadeAction } from "../style/global";
 import Layout from "./Layout";
@@ -14,7 +14,9 @@ export default function Userinfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  //수정모드 on/off상태
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [newNickname, setNewNickname] = useState<string | undefined>("");
 
   //유저정보 저장
   const [userInfo, setUserInfo] = useState<any>({
@@ -23,8 +25,6 @@ export default function Userinfo() {
     point: 0,
     birth: "",
   });
-
-  const [newNickname, setNewNickname] = useState<string | undefined>("");
 
   //유저정보 불러오기
   useEffect(() => {
@@ -48,18 +48,21 @@ export default function Userinfo() {
     window.localStorage.removeItem("id");
   };
 
+  //유저정보 수정모드 on/off
   const handleUserinfoEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     setNewNickname(userInfo.nickname);
     setEditMode((prev) => !prev);
   };
 
+  //닉네임변경
   const handleChangeNickname = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     setNewNickname(e.target.value);
   };
 
+  //닉네임 변경 요청
   const handleEditedInfoSend = (
     e: React.MouseEvent<HTMLButtonElement>
   ): void => {
@@ -91,8 +94,28 @@ export default function Userinfo() {
         });
       });
     }
+  };
 
-    // setEditMode((prev) => !prev);
+  //계정삭제 요청 함수
+  const handleDeleteAcount = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      text: "저장된 작업이 모두 삭제됩니다",
+      icon: "warning",
+      showConfirmButton: false,
+      showDenyButton: true,
+      showCancelButton: true,
+      denyButtonText: "네",
+      cancelButtonText: "취소!",
+    }).then((result) => {
+      if (result.isDenied) {
+        deleteUser().then(() => {
+          handleLogout();
+        });
+      }
+    });
   };
 
   return (
@@ -175,7 +198,12 @@ export default function Userinfo() {
           >
             로그아웃
           </NormalBtn>
-          <NormalBtn className="b" width={"315px"} height={"45px"}>
+          <NormalBtn
+            className="b"
+            width={"315px"}
+            height={"45px"}
+            onClick={(e) => handleDeleteAcount(e)}
+          >
             계정삭제
           </NormalBtn>
         </UserInfoWrapper>
@@ -247,7 +275,7 @@ export const UserinfoBox = styled.div`
   }
 
   &.edit {
-    background: #dbdbdb;
+    background: #c2c2c2;
   }
 `;
 
