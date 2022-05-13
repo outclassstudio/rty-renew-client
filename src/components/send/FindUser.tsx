@@ -48,7 +48,6 @@ export default function FindUser() {
 
   //인풋박스 입력값 상태로 업데이트
   const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    // console.log(e.target.value);
     setFindUserId(e.target.value);
   };
 

@@ -107,7 +107,9 @@ export default function Userinfo() {
           <SubWrapper>
             <UserinfoItems>
               <UserinfoText>아이디</UserinfoText>
-              <UserinfoBox>{userInfo.id}</UserinfoBox>
+              <UserinfoBox className={editMode ? "edit" : ""}>
+                {userInfo.id}
+              </UserinfoBox>
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>닉네임</UserinfoText>
@@ -123,11 +125,15 @@ export default function Userinfo() {
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>생년월일</UserinfoText>
-              <UserinfoBox>{userInfo.birth}</UserinfoBox>
+              <UserinfoBox className={editMode ? "edit" : ""}>
+                {userInfo.birth}
+              </UserinfoBox>
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>나의포인트</UserinfoText>
-              <UserinfoBox>{userInfo.point}</UserinfoBox>
+              <UserinfoBox className={editMode ? "edit" : ""}>
+                {userInfo.point}
+              </UserinfoBox>
             </UserinfoItems>
           </SubWrapper>
 
@@ -142,7 +148,7 @@ export default function Userinfo() {
                 변경취소
               </NormalBtn>
               <NormalBtn
-                className="b"
+                className="c"
                 width={"155px"}
                 height={"45px"}
                 onClick={(e) => handleEditedInfoSend(e)}
@@ -238,6 +244,10 @@ export const UserinfoBox = styled.div`
     width: 191px;
     margin-right: 8px;
     margin-bottom: 0px;
+  }
+
+  &.edit {
+    background: #dbdbdb;
   }
 `;
 
