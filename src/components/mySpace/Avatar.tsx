@@ -18,6 +18,7 @@ export const AvatarBox = styled.div`
 
 export const MsgBox = styled.div`
   display: flex;
+  justify-content: space-between;
   width: 200px;
   height: 50px;
   background-color: green;
@@ -29,6 +30,8 @@ export const MsgBox = styled.div`
 
 export const MsgEditBtn = styled.button`
   background-color: blue;
+  width: 50px;
+  border-radius: 10px;
 `;
 
 export function Avatar() {
@@ -75,7 +78,7 @@ export function Avatar() {
             )}
 
             <MsgEditBtn onClick={editBtnHandler}>
-              {isEditBtn ? "save" : "edit"}
+              {isEditBtn ? "저장" : "수정"}
             </MsgEditBtn>
           </MsgBox>
           <MyAvatar />

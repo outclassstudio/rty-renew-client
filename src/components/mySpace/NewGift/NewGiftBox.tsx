@@ -23,7 +23,6 @@ export const ItemContainer = styled.div`
 `;
 
 export function NewGiftBox(props: any) {
-  console.log("box", props);
   const giftList = props.giftList;
   const [newList, setNewList] = useState(giftList);
 
@@ -36,8 +35,6 @@ export function NewGiftBox(props: any) {
     setNewList(giftList);
   }, [giftList]);
 
-  console.log("giftList", newGiftLists, newList, giftList);
-
   return (
     <div>
       {isOpenGift ? (
@@ -46,8 +43,8 @@ export function NewGiftBox(props: any) {
             <h4>GiftBox Component</h4>
             <h3>New Gift!</h3>
             <ItemContainer>
-              {newGiftLists &&
-                newGiftLists.map((item: any, idx: number) => {
+              {newList &&
+                newList.map((item: any, idx: number) => {
                   return <NewGiftItem {...item} key={idx.toString()} />;
                 })}
             </ItemContainer>

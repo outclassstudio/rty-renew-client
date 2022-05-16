@@ -30,24 +30,27 @@ export const Nickname = styled.h2`
 export default function Space() {
   const dispatch = useDispatch();
   const [myInfo, setMyInfo] = useState<any>();
-  const [giftList, setGiftList] = useState<any>();
+  const [newGiftList, setNewGiftList] = useState<any>();
+  const [spaceGiftList, setSpaceGiftList] = useState<any>();
   useEffect(() => {
-    console.log("fiursr");
-    // axios.get("엔드포인트", {헤더}, {바디}).then(....)
     getUserInfo().then((res) => {
       let user = res.data;
       setMyInfo(user);
     });
-    console.log("fiursr22");
+
     getGift().then((res) => {
       let gift = res.data;
-      setGiftList(gift);
+      const newGift = gift.filter((item) => item.status === "new");
+      const space = gift.filter((item) => item.status === "space");
+      console.log(newGift, ":setNewGiftList");
+      setNewGiftList(newGift);
+      setSpaceGiftList(space);
       dispatch(setMyGift(gift));
       console.log(gift, "gifttt");
     });
   }, []);
 
-  console.log("myInfo", giftList);
+  console.log("new", newGiftList, "space", spaceGiftList, "myInfo", myInfo);
   //change Theme
   const changeThemeHandler = () => {
     dispatch(setModalOpen(true));
@@ -57,9 +60,8 @@ export default function Space() {
       <SpaceContainer>
         <NewGift />
         <Avatar />
-
-        <Canvas giftList={giftList} />
-        <NewGiftBox giftList={giftList} />
+        <Canvas giftList={spaceGiftList} />
+        <NewGiftBox giftList={newGiftList} />
         <WastebasketIcon />
         <ThemeBtnBox>
           <button onClick={changeThemeHandler}>테마수정</button>

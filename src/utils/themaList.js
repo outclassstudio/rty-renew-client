@@ -1,7 +1,7 @@
 export const themeList = [
   {
     id: 0,
-    name: "sky",
+    name: "우주",
     url: "https://i.imgur.com/mpT71SX.jpg",
   },
   {

@@ -11,11 +11,11 @@ declare namespace Gift {
   }
 
   interface attributeDTO {
-    id: number;
-    x: null | number;
-    y: null | number;
-    status: string;
-    angle?: null | number;
+    //idx: number;
+    //x: null | number;
+    //y: null | number;
+    //status: string;
+    //angle?: null | number;
   }
 
   interface sendGiftDTO {

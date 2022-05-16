@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { userInfo, isThemeModal } from "../../redux/actions/index";
+import { userInfo } from "../../redux/actions/index";
 import { themeList } from "../../utils/themaList";
 import { changeTheme } from "../../apis/userApi";
 import { setModalOpen } from "../../redux/reducers/spaceReducer";

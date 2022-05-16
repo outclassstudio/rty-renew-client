@@ -2,10 +2,12 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Gift } from "./Gift/Gift";
 import Background from "./Background";
 import { getUserInfo } from "../../apis/userApi";
 import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
-import { getGift } from "../../apis/giftApi";
+import { getGift, changeGift } from "../../apis/giftApi";
+import { themeList } from "../../utils/themaList";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -23,14 +25,38 @@ export const CanvasArea = styled.canvas`
 `;
 
 export default function Canvas(props: any) {
-  console.log("=-=-=-=-=", props.giftList);
+  console.log(props, "ss");
+
   const dispatch = useDispatch();
 
   const giftList = props.giftList;
 
-  const [newList, setNewList] = useState(giftList);
-
+  const [spaceGift, setSpaceGift] = useState(giftList);
+  const [isOpenGift, setIsOpenGift] = useState(false);
+  const [clickedId, setClickedId] = useState<number>();
+  const [match, setMatch] = useState<any>([]);
   const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  console.log("여기는 캔버스 ", newGiftLists);
+  const userTheme = themeList.filter((el) => el.name === userInfo.theme);
+
+  useEffect(() => {
+    Paper.install(window);
+    const canvas: any = canvasRef.current;
+    Paper.setup(canvas);
+
+    //canvas에 import 하가
+
+    draw();
+
+    console.log("can, import");
+
+    if (spaceGift) {
+      console.log("....");
+      importSvg();
+    }
+  }, [giftList]);
+
   //유저정보 불러오기
   useEffect(() => {
     console.log("내정보");
@@ -39,12 +65,40 @@ export default function Canvas(props: any) {
     });
     getGift().then((res) => {
       let gift = res.data;
-      setNewList(gift);
+      setSpaceGift(gift);
       console.log(gift, "gifttt");
     });
   }, [dispatch]);
 
-  useEffect(() => {}, [giftList]);
+  //space에 저장된 선물 불러오기
+
+  function importSvg() {
+    console.log("import", spaceGift);
+    spaceGift &&
+      spaceGift.forEach((gift: any) => {
+        const svgAttr = JSON.parse(gift.svgAttr);
+
+        console.log(gift, "forEach");
+        Paper.project.importSVG(gift.svg, {
+          onLoad: function (item: any) {
+            // console.log("onload", item.id);
+
+            let obj = { id: item.id, gift: gift };
+            setMatch([...match, obj]);
+            match.push(obj);
+            item.position = new Paper.Point(svgAttr.x, svgAttr.y);
+            if (item.firstChild.size._width < 500) {
+              item.scale(1.5);
+            } else {
+              item.scale(0.15);
+            }
+          },
+        });
+        // setMatch(match);
+        console.log(match, "match");
+      });
+    console.log("spaceGift[ort", giftList);
+  }
 
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
@@ -52,39 +106,72 @@ export default function Canvas(props: any) {
   const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
   //console.log(myInfo, "왜이러냐?? ");
   //const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
-
-  console.log("new---------", newGiftLists);
   const [selected, setSelected] = useState(null);
   const draw = () => {
+    const hitOptions = {
+      segments: true,
+      //  stroke: true,
+      // fill: true,
+
+      tolerance: 5,
+    };
+    //! test
+    /*
+    let tiger;
+    Paper.project.importSVG(
+      `https://s3-us-west-2.amazonaws.com/s.cdpn.io/106114/tiger.svg`,
+      function (item: any) {
+        tiger = item;
+        tiger.scale(0.2);
+        tiger.position = new paper.Point(
+          tiger.bounds.width / 2,
+          tiger.bounds.height / 2
+        );
+      }
+    );*/
+
     let myPath: any;
 
-    Paper.view.onMouseDown = () => {
-      myPath = new Paper.Path();
-      myPath.strokeColor = "yellow";
-      myPath.strokeWidth = 3;
+    //! onClick
+    Paper.view.onClick = (e: any) => {
+      const hitResult = Paper.project.hitTest(e.point);
+      console.log("click", hitResult.item.parent.id);
+      setClickedId(hitResult.item.parent.id);
+      const a = hitResult.item.parent;
+      a.bounds.selected = true;
+      a.onMouseDrag = (e: any) => {
+        console.log("drag", e);
+        a.position.x += e.delta.x;
+        a.position.y += e.delta.y;
+      };
+
+      a.onDoubleClick = (e: any) => {
+        setIsOpenGift(true);
+      };
+      // console.log("click", Paper.project._children);
+      //const clickedItem = Paper.project.getItem({ type: "path" });
+    };
+
+    Paper.view.onMouseDown = (e: any) => {
+      // setIsOpenGift(true);
+      console.log("click tiger", Paper.project);
+      const hitResult = Paper.project.hitTest(e.point, hitOptions);
+      console.log(hitResult);
+      // hitResult.item.selected = true;
+
+      //  myPath = new Paper.Path();
+      // myPath.strokeColor = "yellow";
+      //myPath.strokeWidth = 3;
     };
 
     // Paper.view.onMouseDrag = (event: any) => {
-    //   myPath.add(event.point);
-    // };
+    //  myPath.add(event.point);
+    //};
   };
 
   useEffect(() => {
     console.log(" updated", myInfo);
-    // dispatch(newGiftList(newList));
   }, [dispatch, myInfo, newGiftLists]);
-
-  useEffect(() => {
-    const canvas: any = canvasRef.current;
-    Paper.setup(canvas);
-    draw();
-    async function fetchData() {
-      // You can await here
-      //   dispatch(await editTheme(themeList[0].url));
-      // ...
-    }
-    fetchData();
-  }, [dispatch]);
 
   useEffect(() => {
     console.log(selected);
@@ -106,12 +193,12 @@ export default function Canvas(props: any) {
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
     console.log("drop", targetId, "new", newGiftLists);
-    const a = newGiftLists.filter((el: any) => {
+    const filteredList = newGiftLists.filter((el: any) => {
       //   console.log(el, Number(targetId));
       return el.idx !== Number(targetId);
     });
-    console.log("111111", a);
-    dispatch(setMyGift(a));
+    console.log("111111", filteredList);
+    dispatch(setMyGift(filteredList));
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
 
@@ -125,6 +212,17 @@ export default function Canvas(props: any) {
     const x = e.clientX - 150;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
+
+    // targetItem[0].svgAttr = { x: x, y: y };
+    let svgAttr = JSON.parse(targetItem[0].svgAttr);
+    svgAttr.x = x;
+    svgAttr.y = y;
+    console.log(svgAttr, "targetItem", targetItem[0]);
+    svgAttr = JSON.stringify(svgAttr);
+    const chageData = { idx: targetItem[0].idx, svgAttr, status: "space" };
+    console.log(chageData);
+    //targetItem[0].svgAttr = svgAttr;
+
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
       expandShapes: true,
@@ -144,6 +242,8 @@ export default function Canvas(props: any) {
         } else {
           item.scale(0.15);
         }
+
+        changeGift(chageData).then((res) => console.log(res));
 
         /*/drag event
         item.onMouseDrag = function (e: { delta: any }) {
@@ -279,6 +379,11 @@ export default function Canvas(props: any) {
           }
         };
 
+        item.onDoubleClick = function (e: any) {
+          console.log("hihihi", e);
+          setIsOpenGift(true);
+        };
+
         //! onMouseDrag
         item.onMouseDrag = function (e: any) {
           console.log("tool dragS");
@@ -327,12 +432,15 @@ export default function Canvas(props: any) {
         <CanvasArea
           ref={canvasRef}
           id="canvas"
-          color={myInfo.theme}
+          color="https://i.imgur.com/mpT71SX.jpg"
           draggable
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
         {themeModal ? <Background /> : null}
+        {isOpenGift ? (
+          <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
+        ) : null}
       </CanvasBox>
     </>
   );
