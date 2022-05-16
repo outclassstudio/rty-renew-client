@@ -4,6 +4,7 @@ import Space from "./pages/Space";
 import Signup from "./pages/Signup";
 import Userinfo from "./pages/Userinfo";
 import Send from "./pages/Send";
+import GiftList from "./pages/GiftList";
 import ShopRoutes from "./routes/ShopRoutes";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
@@ -52,6 +53,7 @@ function App() {
         <Route path="/userinfo" element={<Userinfo />} />
         <Route path="/shop/*" element={<ShopRoutes />} />
         <Route path="/send" element={<Send />} />
+        <Route path="/giftlist/" element={<GiftList />} />
       </Routes>
     </Router>
   );

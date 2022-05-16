@@ -8,7 +8,12 @@ import { RootState } from "../../redux/reducers";
 
 export default function SetGiftBox() {
   const dispatch = useDispatch();
-  const svgState = useSelector((state: RootState) => state.getItemReducer);
+  const svgState = useSelector(
+    (state: RootState) => state.getItemReducer,
+    (left, right) => {
+      return left.img === right.img;
+    }
+  );
   const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
 
   //선물포장 선택하는 함수
@@ -23,6 +28,7 @@ export default function SetGiftBox() {
       <SvgListWrapper>
         <SvgList>
           {svgState.svg.map((el, idx) => {
+            // console.log("호출");
             const svgStr = el.data;
             const svg = new Blob([svgStr], { type: "image/svg+xml" });
             const url = URL.createObjectURL(svg);
