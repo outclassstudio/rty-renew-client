@@ -2,13 +2,14 @@ import Layout from "./Layout";
 import FindUser from "../components/send/FindUser";
 import MsgInput from "../components/send/MsgInput";
 import SetGiftBox from "../components/send/SetGiftBox";
+import PreviewModal from "../components/send/PreviewModal";
 import styled from "styled-components";
 import { NormalBtn } from "../style/btnStyle.style";
 import { fadeMoveAction, fadeMoveAction2 } from "../style/global";
 import { sendGift } from "../apis/giftApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMyItems } from "../apis/buyApi";
 import { useDispatch } from "react-redux";
 import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
@@ -17,6 +18,7 @@ import Swal from "sweetalert2";
 export default function Send() {
   const dispatch = useDispatch();
   const giftState = useSelector((state: RootState) => state.sendGiftReducer);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
 
   //내 아이템 리스트 불러와서 store에 저장
   useEffect(() => {
@@ -36,8 +38,8 @@ export default function Send() {
   //에러메시지 띄우기
   const viewErrMsg = (text: string): void => {
     Swal.fire({
-      title: "선물을 보낼 수 없어요",
-      text: text,
+      title: text,
+      // text: text,
       icon: "error",
       confirmButtonText: "닫기",
     });
@@ -59,6 +61,18 @@ export default function Send() {
     }
   };
 
+  //미리보기 열기
+  const handleOpenPreview = () => {
+    if (checkSendGift()) {
+      setOpenPreview(true);
+    }
+  };
+
+  //미리보기 닫기
+  const handleCloseModal = () => {
+    setOpenPreview(false);
+  };
+
   //선물전송함수
   const handleSendGift = (): void => {
     if (checkSendGift()) {
@@ -70,7 +84,7 @@ export default function Send() {
             confirmButtonText: "닫기",
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.replace("/send");
+              window.location.replace("/giftlist");
             }
           });
         })
@@ -94,14 +108,30 @@ export default function Send() {
         </SubContainer>
         <BtnWrapper>
           <NormalBtn
+            onClick={handleOpenPreview}
+            className="c"
+            width="200px"
+            height="45px"
+          >
+            미리보기
+          </NormalBtn>
+          <NormalBtn
             onClick={handleSendGift}
             className="b"
-            width="300px"
+            width="200px"
             height="45px"
           >
             선물보내기
           </NormalBtn>
         </BtnWrapper>
+        {openPreview ? (
+          <PreviewModal
+            data={giftState.gift}
+            handleCloseModal={handleCloseModal}
+          />
+        ) : (
+          ""
+        )}
       </MainContainer>
     </Layout>
   );
@@ -137,4 +167,6 @@ const RightWrapper = styled.div`
 
 const BtnWrapper = styled.div`
   animation: 1.4s ease-out ${fadeMoveAction2};
+  display: flex;
+  gap: 10px;
 `;

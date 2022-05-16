@@ -75,6 +75,19 @@ export const fadeMoveAction2 = keyframes`
   }
 `;
 
+export const fadeExpand = keyframes`
+  0% {
+    transform: scale(0%);
+    opacity:0
+  }
+
+
+  100% {
+    transform: scale(100%);
+    opacity: 1;
+  }
+`;
+
 //드롭다운 배경용
 export const DropdonwBg = styled.div`
   position: fixed;
