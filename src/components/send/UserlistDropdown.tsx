@@ -54,8 +54,6 @@ const DropdonwBg = styled.div`
 
 const MainWrapper = styled.div`
   position: fixed;
-  /* left: 225px; */
-  /* top: 230px; */
   margin-top: 57px;
   margin-left: 55px;
   display: flex;

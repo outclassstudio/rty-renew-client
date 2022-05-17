@@ -5,15 +5,11 @@ import { useDispatch } from "react-redux";
 import { setSvg } from "../../redux/reducers/sendGiftReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/reducers";
+import SendItemListCarousel from "./SendItemListCarousel";
 
 export default function SetGiftBox() {
   const dispatch = useDispatch();
-  const svgState = useSelector(
-    (state: RootState) => state.getItemReducer,
-    (left, right) => {
-      return left.img === right.img;
-    }
-  );
+  const svgState = useSelector((state: RootState) => state.getItemReducer);
   const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
 
   //선물포장 선택하는 함수
@@ -27,21 +23,11 @@ export default function SetGiftBox() {
       선물포장을 선택해주세요
       <SvgListWrapper>
         <SvgList>
-          {svgState.svg.map((el, idx) => {
-            // console.log("호출");
-            const svgStr = el.data;
-            const svg = new Blob([svgStr], { type: "image/svg+xml" });
-            const url = URL.createObjectURL(svg);
-
-            return (
-              <SingleSvg
-                onClick={() => handleSetPrv(el.idx, url, el.data)}
-                className={el.idx === prvSvg.id ? "active" : ""}
-                src={url}
-                key={idx}
-              />
-            );
-          })}
+          <SendItemListCarousel
+            handleSetPrv={handleSetPrv}
+            prvItem={prvSvg}
+            data={svgState.svg}
+          />
         </SvgList>
       </SvgListWrapper>
       <SvgPrv>
@@ -57,15 +43,14 @@ export default function SetGiftBox() {
 
 const MainContainer = styled.div`
   width: 410px;
-  height: 508px;
+  height: 516px;
   display: flex;
   flex-direction: column;
-  /* background: #f6f6f6; */
   background: #4c3e9f;
   color: white;
   padding: 25px 35px 30px 35px;
   border-radius: 10px;
-  gap: 15px;
+  gap: 18px;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;
 `;
 
@@ -73,10 +58,9 @@ const SvgListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
-  padding: 20px 30px;
+  padding: 15px 27px;
   gap: 15px;
   font-size: 13px;
-  /* color: #3f3f3f; */
   color: ${baseColor};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
 `;
@@ -87,42 +71,19 @@ const NoneImg = styled.div`
   align-items: center;
   width: 350px;
   height: 262px;
-  /* padding: 0px; */
   color: ${baseColor};
   font-size: 13px;
 `;
 
 const SvgList = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  /* background: white; */
-
-  div {
-    display: flex;
-  }
-
-  img {
-  }
-`;
-
-const SingleSvg = styled.img`
-  width: 80px;
-  cursor: pointer;
-  border-radius: 7px;
-
-  &.active {
-    outline: 3px solid ${baseColor};
-  }
+  padding: 0px 5px;
 `;
 
 const SvgPrv = styled.div`
   display: flex;
   background: white;
-  /* width: 350px; */
-  height: 290px;
+  height: 298px;
   padding: 20px;
-  /* border-radius: 10px; */
-  /* box-shadow: rgba(0, 0, 0, 1) 0px 30px 30px -35px; */
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
 `;
