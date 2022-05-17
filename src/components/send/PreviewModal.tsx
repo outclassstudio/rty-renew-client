@@ -12,7 +12,6 @@ export default function PreviewModal({ data, handleCloseModal }: any) {
     const url = itemState.img.filter((el) => {
       return el.idx === data.img;
     });
-    // console.log(url[0].data);
     if (url[0]) {
       setPrvUrl(url[0].data);
     }

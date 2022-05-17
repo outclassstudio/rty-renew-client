@@ -246,6 +246,7 @@ const SubWrapper = styled.div`
   align-items: center;
   background: #4c3e9f;
   margin-bottom: 10px;
+  box-shadow: rgba(50, 50, 93, 0.4) 0px 0px 15px 0px;
 `;
 
 export const UserinfoItems = styled.div`

@@ -80,6 +80,7 @@ export default function Send() {
         .then(() => {
           Swal.fire({
             title: "선물이 보내졌습니다",
+            text: "👋100포인트가 추가됩니다!",
             icon: "success",
             confirmButtonText: "닫기",
           }).then((result) => {
@@ -162,11 +163,11 @@ const LeftWrapper = styled.div`
 `;
 
 const RightWrapper = styled.div`
-  animation: 1s ease-out ${fadeMoveAction2};
+  animation: 0.7s ease-out ${fadeMoveAction2};
 `;
 
 const BtnWrapper = styled.div`
-  animation: 1.4s ease-out ${fadeMoveAction2};
+  animation: 1s ease-out ${fadeMoveAction2};
   display: flex;
   gap: 10px;
 `;
