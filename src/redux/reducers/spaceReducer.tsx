@@ -6,6 +6,7 @@ interface spaceState {
   newGiftList: any;
   userInfo: Myinfo;
   myGift: any;
+  isOpenStorage: boolean;
 }
 
 interface Myinfo {
@@ -27,6 +28,7 @@ const initialState = {
     theme: "https://i.imgur.com/mpT71SX.jpg",
     msg: "",
   },
+  isOpenStorage: false,
   myGift: undefined,
 } as spaceState;
 
@@ -47,11 +49,19 @@ const spaceSlice = createSlice({
     setMyGift(state, action: PayloadAction<any>) {
       state.myGift = action.payload;
     },
+    setOpenStorage(state, action: PayloadAction<any>) {
+      state.isOpenStorage = action.payload;
+    },
   },
 });
 
-export const { setUserInfo, setModalOpen, setOpenNewGift, setMyGift } =
-  spaceSlice.actions;
+export const {
+  setUserInfo,
+  setModalOpen,
+  setOpenNewGift,
+  setMyGift,
+  setOpenStorage,
+} = spaceSlice.actions;
 export default spaceSlice.reducer;
 
 // import {

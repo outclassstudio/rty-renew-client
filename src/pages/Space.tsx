@@ -36,6 +36,7 @@ export default function Space() {
   const [spaceGiftList, setSpaceGiftList] = useState<any>();
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
+
   useEffect(() => {
     getUserInfo().then((res) => {
       let user = res.data;

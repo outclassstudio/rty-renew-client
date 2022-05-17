@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Paper from "paper";
-import { DragEvent, useEffect, useRef, useState } from "react";
+import { DragEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Gift } from "./Gift/Gift";
 import Background from "./Background";
@@ -28,24 +28,28 @@ export const CanvasArea = styled.canvas`
 `;
 
 export default function Canvas(props: any) {
-  console.log(props, "ss");
-
   const dispatch = useDispatch();
 
   const editSpace = props.editSpace;
   const giftList = props.giftList;
-  console.log("spaceceee", giftList);
-  const [spaceGift, setSpaceGift] = useState(giftList);
+  const [spaceGift, setSpaceGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
   const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  console.log("여기는 캔버스 ", spaceGift);
+
   const userTheme = themeList.filter((el) => el.name === userInfo.theme);
-  console.log("userTheme", userTheme, userInfo.theme);
+  const themeModal = useSelector(
+    (state: any) => state.spaceReducer.isThemeModal
+  );
+  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+
+  //const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const [selected, setSelected] = useState<any>();
 
   let tool: paper.Tool;
+
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
@@ -57,40 +61,40 @@ export default function Canvas(props: any) {
 
     draw();
 
-    console.log("내정보");
+    console.log("내정보", giftList);
     getUserInfo().then((res) => {
       dispatch(setUserInfo(res.data));
     });
+  }, [editSpace]);
+
+  useEffect(() => {
     getGift().then((res) => {
       let gift = res.data;
       let spaceGifts = gift.filter((el) => el.status === "space");
+      dispatch(setMyGift(gift));
       setSpaceGift(spaceGifts);
-      console.log(gift, "gifttt");
-    });
-    console.log("can, import");
 
-    if (spaceGift) {
-      console.log("....");
-      importSvg();
-    }
-  }, [giftList, editSpace]);
+      console.log(gift, "Allgift", spaceGifts, spaceGift);
+    });
+    importSvg();
+  }, []);
 
   //유저정보 불러오기
-  useEffect(() => {}, [dispatch]);
 
-  //space에 저장된 선물 불러오기
-
+  //! space에 저장된 선물 불러오기
   function importSvg() {
     console.log("import", spaceGift);
-    giftList &&
-      giftList.forEach((gift: any) => {
-        const svgAttr = JSON.parse(gift.svgAttr);
 
-        console.log(gift, "forEach");
+    if (match.legnth !== 0 && match.length <= spaceGift.length) {
+      spaceGift.forEach((gift: any) => {
+        console.log("forEach", gift, spaceGift);
+        const svgAttr = JSON.parse(gift.svgAttr);
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
+            console.log(item, "itemitem");
             let obj = { id: item.id, gift: gift };
-            setMatch([...match, obj]);
+            // setMatch([...match, obj]);
+            console.log("match", match, item);
             match.push(obj);
             item.position = new Paper.Point(svgAttr.x, svgAttr.y);
             if (item.firstChild.size._width < 500) {
@@ -100,26 +104,12 @@ export default function Canvas(props: any) {
             }
           },
         });
-        // setMatch(match);
+        console.log(match, "match", giftList);
       });
-    console.log("spaceGift[ort", giftList);
+    }
   }
 
-  const themeModal = useSelector(
-    (state: any) => state.spaceReducer.isThemeModal
-  );
-  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  //console.log(myInfo, "왜이러냐?? ");
-  //const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  const [selected, setSelected] = useState(null);
   const draw = () => {
-    const hitOptions = {
-      segments: true,
-      //  stroke: true,
-      // fill: true,
-
-      tolerance: 5,
-    };
     //! test
     /*
     let tiger;
@@ -135,26 +125,60 @@ export default function Canvas(props: any) {
       }
     );*/
 
-    let myPath: any;
     let a: any;
     //! onClick
+    console.log(Paper.view, "Paper.view");
     Paper.view.onClick = (e: any) => {
-      const hitResult = Paper.project.hitTest(e.point);
-      console.log("click", hitResult, e.point.x, e.point.y);
+      // const hitResult = Paper.project.hitTest(e.point, hitOptions);
 
-      a = hitResult.item.parent;
-      a.bounds.selected = true;
+      const test = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
+      if (test) {
+        test.bounds.selected = true;
+        setSelected(test);
+        a = test;
+        setClickedId(a.id);
+      } else {
+        console.log("null", a, selected);
+        //  a = selected;
+        //  a.bounds.selected = false;
+      }
+
+      console.log("Test", test, match, selected);
+
+      //a.bounds.selected = true;
+
+      a.onDoubleClick = (e: any) => {
+        setIsOpenGift(true);
+      };
 
       a.onMouseDrag = (e: any) => {
         a.position.x += e.delta.x;
         a.position.y += e.delta.y;
         if (e.point.x < 90 && e.point.y > 640) {
-          alert("delete?");
+          alert("Remove selected");
+          const removeId = match.filter((el: any) => el.id === a.id);
+          console.log(match, removeId, "removeId");
+          deleteGift(removeId[0].gift.idx).then((res) =>
+            console.log(res, "removeddddddd")
+          );
           a.remove();
         }
         if (e.point.x > 1100 && e.point.y > 600) {
           alert("save?");
+
           //storage 저장 api  호출
+
+          const editItem = match.filter((el: any) => el.id === a.id);
+          console.log("editItem", match, clickedId, editItem);
+          const chageData = {
+            idx: editItem[0].gift.idx,
+            status: "storage",
+          };
+
+          changeGift(chageData).then((res) => console.log(res, "resss"));
+          a.remove();
         }
 
         if (editSpace) {
@@ -175,23 +199,12 @@ export default function Canvas(props: any) {
 
           //해당 item  위치 변경 api  호출
           changeGift(chageData).then((res) => console.log(res, "resss"));
+          console.log("click", clickedId);
         }
       };
-      if (!hitResult) {
-        console.log("null");
-        a.bounds.selected = false;
-      } else {
-        setClickedId(hitResult.item.parent.id);
-      }
-      a.onDoubleClick = (e: any) => {
-        setIsOpenGift(true);
-      };
-
-      // console.log("click", Paper.project._children);
-      //const clickedItem = Paper.project.getItem({ type: "path" });
     };
 
-    // Your code;
+    //! delete item key
     tool.onKeyDown = function (e: any) {
       console.log(e, "tool");
       if (e.key === "d") {
@@ -204,33 +217,7 @@ export default function Canvas(props: any) {
         a.remove();
       }
     };
-
-    function onKeyDown(e: any) {}
-
-    Paper.view.onMouseDown = (e: any) => {
-      // setIsOpenGift(true);
-      console.log("click tiger", Paper.project);
-      const hitResult = Paper.project.hitTest(e.point, hitOptions);
-      console.log(hitResult);
-      // hitResult.item.selected = true;
-
-      //  myPath = new Paper.Path();
-      // myPath.strokeColor = "yellow";
-      //myPath.strokeWidth = 3;
-    };
-
-    // Paper.view.onMouseDrag = (event: any) => {
-    //  myPath.add(event.point);
-    //};
   };
-
-  useEffect(() => {
-    console.log(" updated", myInfo);
-  }, [dispatch, myInfo, newGiftLists]);
-
-  useEffect(() => {
-    console.log(selected);
-  }, [selected]);
 
   const canvasRef = useRef(null);
 
@@ -240,43 +227,42 @@ export default function Canvas(props: any) {
   let selectionRectangle: any;
   let movePath = false;
 
-  //drop
+  //! dropHandler
   const dropHandler = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
-    console.log("drop", targetId, "new", newGiftLists);
+
+    // newGiftList에서 targetId와 같은건 삭제한다.
     const filteredList = newGiftLists.filter((el: any) => {
-      //   console.log(el, Number(targetId));
       return el.idx !== Number(targetId);
     });
-    console.log("111111", filteredList);
-    dispatch(setMyGift(filteredList));
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
-
     const targetItem = newGiftLists.filter((el: any) => {
       return el.idx === Number(targetId);
     });
+    console.log("111111", filteredList, targetId);
 
-    // newGiftList에서 targetId와 같은건 삭제한다.
+    dispatch(setMyGift(filteredList));
 
     console.log("drop", targetItem, newGiftLists, targetId);
     const x = e.clientX - 150;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
 
-    // targetItem[0].svgAttr = { x: x, y: y };
+    //! svg 속성 값 바꾸기
     let svgAttr = JSON.parse(targetItem[0].svgAttr);
     svgAttr.x = x;
     svgAttr.y = y;
-    console.log(svgAttr, "targetItem", targetItem[0]);
     svgAttr = JSON.stringify(svgAttr);
     const chageData = { idx: targetItem[0].idx, svgAttr, status: "space" };
     console.log(chageData);
-    //targetItem[0].svgAttr = svgAttr;
+
+    let obj = { id: targetItem[0].id, gift: targetItem[0].gift };
+    setMatch([...match, obj]);
 
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
@@ -290,7 +276,7 @@ export default function Canvas(props: any) {
           tolerance: 5,
         };
         //  const tool = new Paper.Tool();
-
+        console.log("dropppp", item);
         item.position = new Paper.Point(x, y);
         if (item.firstChild.size._width < 500) {
           item.scale(1.5);
@@ -298,7 +284,7 @@ export default function Canvas(props: any) {
           item.scale(0.15);
         }
 
-        changeGift(chageData).then((res) => console.log(res));
+        changeGift(chageData).then((res) => console.log(res, "changeGift"));
 
         /*/drag event
         item.onMouseDrag = function (e: { delta: any }) {
@@ -309,7 +295,7 @@ export default function Canvas(props: any) {
         item.onMouseDown = function (e: { delta: any }) {
           item.bounds.selected = true;
         };*/
-
+        /*
         //! make selectionRectangle
         function makeSelectionRectangle(path: any) {
           if (selected) {
@@ -464,7 +450,7 @@ export default function Canvas(props: any) {
             //  adjustBounds(item);
           }
         };
-        //error
+        //error*/
       },
     });
     function adjustBounds(o: any) {
@@ -479,10 +465,6 @@ export default function Canvas(props: any) {
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     e.stopPropagation();
-  };
-
-  const handleKeyPress = (e: any) => {
-    console.log(e.key, "key");
   };
 
   return (
