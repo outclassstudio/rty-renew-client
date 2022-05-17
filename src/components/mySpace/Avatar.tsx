@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { userInfo } from "../../redux/actions/index";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
-import { changeMsg } from "../../apis/userApi";
+import { changeMsg, getUserInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
@@ -19,33 +19,39 @@ export const AvatarBox = styled.div`
 export const MsgBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 200px;
+  width: 210px;
   height: 50px;
   background-color: green;
   border-radius: 10px;
   margin: 10px;
   padding: 6px;
-  cursor: pointer;
 `;
 
 export const MsgEditBtn = styled.button`
   background-color: blue;
   width: 50px;
   border-radius: 10px;
+  cursor: pointer;
 `;
 
-export function Avatar() {
+export function Avatar(props: any) {
   const dispatch = useDispatch();
   //user info 가져오기
-  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-
+  // const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
   const [stateMsg, setStateMsg] = useState("");
   const [isEditBtn, setIsEditBtn] = useState(false);
 
+  const editType = props.editAvatar;
+  const setEdit = props.setEditAvatar;
   useEffect(() => {
-    console.log("userInfouserInfouserInfouserInfo", myInfo);
-  }, [myInfo]);
+    getUserInfo().then((res) => {
+      let user = res.data;
+      setMyInfo(user);
+      //dispatch(userInfo(user));
+    });
+  }, [dispatch, myInfo]);
 
   const editBtnHandler = () => {
     console.log("editBTn ");
@@ -53,11 +59,14 @@ export function Avatar() {
     if (isEditBtn) {
       changeMsg(stateMsg).then((res) => {
         let info = res.data;
-        console.log(info, "Avatar");
+        setMyInfo(info);
         dispatch(userInfo(info));
+        console.log(info, "Avatar", myInfo);
       });
     }
+
     setIsEditBtn(!isEditBtn);
+    setEdit(!setEdit);
   };
 
   const inputChangeHandler = (e: any) => {
@@ -76,7 +85,6 @@ export function Avatar() {
             ) : (
               <p>{myInfo.msg}</p>
             )}
-
             <MsgEditBtn onClick={editBtnHandler}>
               {isEditBtn ? "저장" : "수정"}
             </MsgEditBtn>

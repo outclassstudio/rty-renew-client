@@ -4,9 +4,9 @@ import styled from "styled-components";
 export const WastebasketIconBox = styled.div`
   width: 100px;
   height: 150px;
-  position: absolute;
+  position: fixed;
   top: 650px;
-  right: 1400px;
+  right: 1600px;
 `;
 
 export function WastebasketIcon() {

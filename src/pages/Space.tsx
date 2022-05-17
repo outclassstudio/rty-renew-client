@@ -10,10 +10,12 @@ import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
 import { setModalOpen, setMyGift } from "../redux/reducers/spaceReducer";
 import { getGift } from "../apis/giftApi";
+import { userInfo } from "../redux/actions";
 
 export const SpaceContainer = styled.div`
   display: flex;
   flex-direction: row;
+  position: fixed;
 `;
 export const ThemeBtnBox = styled.div``;
 
@@ -32,10 +34,13 @@ export default function Space() {
   const [myInfo, setMyInfo] = useState<any>();
   const [newGiftList, setNewGiftList] = useState<any>();
   const [spaceGiftList, setSpaceGiftList] = useState<any>();
+  const [editAvatar, setEditAvatar] = useState(false);
+  const [editSpace, setEditSpace] = useState(false);
   useEffect(() => {
     getUserInfo().then((res) => {
       let user = res.data;
       setMyInfo(user);
+      dispatch(userInfo(user));
     });
 
     getGift().then((res) => {
@@ -55,18 +60,34 @@ export default function Space() {
   const changeThemeHandler = () => {
     dispatch(setModalOpen(true));
   };
+
+  const editHandler = () => {
+    setEditAvatar(!editAvatar);
+  };
+
+  const editSpaceHandler = () => {
+    //editSpace 가  true일 때만
+    //canvas에 붙은 svg 값을 보낸다.
+    setEditSpace(!editSpace);
+  };
   return (
     <Layout>
       <SpaceContainer>
         <NewGift />
-        <Avatar />
-        <Canvas giftList={spaceGiftList} />
+        <Avatar
+          editAvatar={editAvatar}
+          setEditAvatar={setEditAvatar}
+          myInfo={myInfo}
+        />
+        <Canvas giftList={spaceGiftList} editSpace={editSpace} />
         <NewGiftBox giftList={newGiftList} />
-        <WastebasketIcon />
+
         <ThemeBtnBox>
           <button onClick={changeThemeHandler}>테마수정</button>
-          <button>아바타 수정</button>
-          <button>공간 수정</button>
+          <button onClick={editHandler}>아바타 수정</button>
+          <button onClick={editSpaceHandler}>
+            {editSpace ? "완료" : "공간 수정"}
+          </button>
         </ThemeBtnBox>
       </SpaceContainer>
     </Layout>

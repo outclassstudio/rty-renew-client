@@ -6,8 +6,11 @@ import { Gift } from "./Gift/Gift";
 import Background from "./Background";
 import { getUserInfo } from "../../apis/userApi";
 import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
-import { getGift, changeGift } from "../../apis/giftApi";
+import { getGift, changeGift, deleteGift } from "../../apis/giftApi";
 import { themeList } from "../../utils/themaList";
+import { tool } from "paper/dist/paper-core";
+import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
+import { Storage } from "./Storage/Storage";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -29,60 +32,63 @@ export default function Canvas(props: any) {
 
   const dispatch = useDispatch();
 
+  const editSpace = props.editSpace;
   const giftList = props.giftList;
-
+  console.log("spaceceee", giftList);
   const [spaceGift, setSpaceGift] = useState(giftList);
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
   const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  console.log("여기는 캔버스 ", newGiftLists);
+  console.log("여기는 캔버스 ", spaceGift);
   const userTheme = themeList.filter((el) => el.name === userInfo.theme);
+  console.log("userTheme", userTheme, userInfo.theme);
 
+  let tool: paper.Tool;
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    tool = new paper.Tool();
+    tool.activate();
     //canvas에 import 하가
 
     draw();
 
-    console.log("can, import");
-
-    if (spaceGift) {
-      console.log("....");
-      importSvg();
-    }
-  }, [giftList]);
-
-  //유저정보 불러오기
-  useEffect(() => {
     console.log("내정보");
     getUserInfo().then((res) => {
       dispatch(setUserInfo(res.data));
     });
     getGift().then((res) => {
       let gift = res.data;
-      setSpaceGift(gift);
+      let spaceGifts = gift.filter((el) => el.status === "space");
+      setSpaceGift(spaceGifts);
       console.log(gift, "gifttt");
     });
-  }, [dispatch]);
+    console.log("can, import");
+
+    if (spaceGift) {
+      console.log("....");
+      importSvg();
+    }
+  }, [giftList, editSpace]);
+
+  //유저정보 불러오기
+  useEffect(() => {}, [dispatch]);
 
   //space에 저장된 선물 불러오기
 
   function importSvg() {
     console.log("import", spaceGift);
-    spaceGift &&
-      spaceGift.forEach((gift: any) => {
+    giftList &&
+      giftList.forEach((gift: any) => {
         const svgAttr = JSON.parse(gift.svgAttr);
 
         console.log(gift, "forEach");
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
-            // console.log("onload", item.id);
-
             let obj = { id: item.id, gift: gift };
             setMatch([...match, obj]);
             match.push(obj);
@@ -95,7 +101,6 @@ export default function Canvas(props: any) {
           },
         });
         // setMatch(match);
-        console.log(match, "match");
       });
     console.log("spaceGift[ort", giftList);
   }
@@ -131,26 +136,76 @@ export default function Canvas(props: any) {
     );*/
 
     let myPath: any;
-
+    let a: any;
     //! onClick
     Paper.view.onClick = (e: any) => {
       const hitResult = Paper.project.hitTest(e.point);
-      console.log("click", hitResult.item.parent.id);
-      setClickedId(hitResult.item.parent.id);
-      const a = hitResult.item.parent;
+      console.log("click", hitResult, e.point.x, e.point.y);
+
+      a = hitResult.item.parent;
       a.bounds.selected = true;
+
       a.onMouseDrag = (e: any) => {
-        console.log("drag", e);
         a.position.x += e.delta.x;
         a.position.y += e.delta.y;
-      };
+        if (e.point.x < 90 && e.point.y > 640) {
+          alert("delete?");
+          a.remove();
+        }
+        if (e.point.x > 1100 && e.point.y > 600) {
+          alert("save?");
+          //storage 저장 api  호출
+        }
 
+        if (editSpace) {
+          console.log("edit");
+          //match arr 에서 clickedId 찾기
+          const editItem = match.filter((el: any) => el.id === clickedId);
+          console.log(editItem[0].gift, "editItem");
+          let svgAttr = JSON.parse(editItem[0].gift.svgAttr);
+          svgAttr.x = a.position.x;
+          svgAttr.y = a.position.y;
+
+          svgAttr = JSON.stringify(svgAttr);
+          const chageData = {
+            idx: editItem[0].gift.idx,
+            svgAttr,
+            status: "space",
+          };
+
+          //해당 item  위치 변경 api  호출
+          changeGift(chageData).then((res) => console.log(res, "resss"));
+        }
+      };
+      if (!hitResult) {
+        console.log("null");
+        a.bounds.selected = false;
+      } else {
+        setClickedId(hitResult.item.parent.id);
+      }
       a.onDoubleClick = (e: any) => {
         setIsOpenGift(true);
       };
+
       // console.log("click", Paper.project._children);
       //const clickedItem = Paper.project.getItem({ type: "path" });
     };
+
+    // Your code;
+    tool.onKeyDown = function (e: any) {
+      console.log(e, "tool");
+      if (e.key === "d") {
+        alert("Remove selected");
+        const removeId = match.filter((el: any) => el.id === a.id);
+        console.log(removeId, "removeId");
+        deleteGift(removeId[0].gift.idx).then((res) =>
+          console.log(res, "removeddddddd")
+        );
+        a.remove();
+      }
+    };
+
+    function onKeyDown(e: any) {}
 
     Paper.view.onMouseDown = (e: any) => {
       // setIsOpenGift(true);
@@ -426,6 +481,10 @@ export default function Canvas(props: any) {
     e.stopPropagation();
   };
 
+  const handleKeyPress = (e: any) => {
+    console.log(e.key, "key");
+  };
+
   return (
     <>
       <CanvasBox>
@@ -437,6 +496,8 @@ export default function Canvas(props: any) {
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
+        <WastebasketIcon />
+        <Storage />
         {themeModal ? <Background /> : null}
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />

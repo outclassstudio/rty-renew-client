@@ -51,7 +51,6 @@ export function Gift(props: any) {
   const newGifts = props.item;
   const id = props.id;
   console.log(newGifts, "선물 줘", id);
-  const clickedGift = props.item[0];
 
   const openGiftArr = newGifts.filter((item: any) => {
     return item.id === id;
