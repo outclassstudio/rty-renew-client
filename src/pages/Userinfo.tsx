@@ -4,11 +4,12 @@ import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { deleteUser, getUserInfo, patchUserInfo } from "../apis/userApi";
 import { logoutChange } from "../redux/reducers/loginReducer";
-import { baseColor, fadeAction } from "../style/global";
+import { baseColor, DropdonwBg, fadeAction } from "../style/global";
 import Layout from "./Layout";
 import { NormalBtn } from "../style/btnStyle.style";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import Swal from "sweetalert2";
+import MyPicker from "../components/MyPicker";
 
 export default function Userinfo() {
   const navigate = useNavigate();
@@ -17,6 +18,10 @@ export default function Userinfo() {
   //수정모드 on/off상태
   const [editMode, setEditMode] = useState<boolean>(false);
   const [newNickname, setNewNickname] = useState<string | undefined>("");
+  const [newBirth, setNewBirth] = useState<string>("");
+
+  //데이트피커 on/off상태
+  const [activePicker, setActivePicker] = useState(false);
 
   //유저정보 저장
   const [userInfo, setUserInfo] = useState<any>({
@@ -51,6 +56,8 @@ export default function Userinfo() {
   //유저정보 수정모드 on/off
   const handleUserinfoEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
+
+    setNewBirth(userInfo.birth);
     setNewNickname(userInfo.nickname);
     setEditMode((prev) => !prev);
   };
@@ -71,13 +78,13 @@ export default function Userinfo() {
     let data = {
       id: userInfo.id,
       point: userInfo.point,
-      birth: userInfo.birth,
+      birth: newBirth,
       nickname: newNickname,
     };
 
-    if (userInfo.nickname === newNickname) {
+    if (userInfo.nickname === newNickname && userInfo.birth === newBirth) {
       Swal.fire({
-        title: "닉네임이 바뀌지 않았네요",
+        title: "변경된 정보가 없어요",
         icon: "warning",
         confirmButtonText: "닫기",
       });
@@ -118,6 +125,15 @@ export default function Userinfo() {
     });
   };
 
+  //날짜선택 on/off함수
+  const handleAcitvePicker = () => {
+    setActivePicker((prev) => !prev);
+  };
+
+  const handleDateValue = (date: string) => {
+    setNewBirth(date);
+  };
+
   return (
     <Layout title={"나의 정보"}>
       <MainContainer>
@@ -127,6 +143,17 @@ export default function Userinfo() {
           onClick={() => navigate("/")}
         />
         <UserInfoWrapper>
+          {activePicker ? (
+            <PickerWrapper>
+              <MyPicker
+                handleAcitvePicker={handleAcitvePicker}
+                handleDateValue={handleDateValue}
+              />
+              <DropdonwBg onClick={handleAcitvePicker} />
+            </PickerWrapper>
+          ) : (
+            ""
+          )}
           <SubWrapper>
             <UserinfoItems>
               <UserinfoText>아이디</UserinfoText>
@@ -148,9 +175,21 @@ export default function Userinfo() {
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>생년월일</UserinfoText>
-              <UserinfoBox className={editMode ? "edit" : ""}>
-                {userInfo.birth}
-              </UserinfoBox>
+              {editMode ? (
+                <BtnWrapper>
+                  <UserinfoBox className="sub">{newBirth}</UserinfoBox>
+                  <BtnDiv
+                    height={"42px"}
+                    width={"95px"}
+                    onClick={handleAcitvePicker}
+                    className="a"
+                  >
+                    날짜선택
+                  </BtnDiv>
+                </BtnWrapper>
+              ) : (
+                <UserinfoBox>{userInfo.birth}</UserinfoBox>
+              )}
             </UserinfoItems>
             <UserinfoItems>
               <UserinfoText>나의포인트</UserinfoText>
@@ -159,7 +198,6 @@ export default function Userinfo() {
               </UserinfoBox>
             </UserinfoItems>
           </SubWrapper>
-
           {editMode ? (
             <BtnWrapper>
               <NormalBtn
@@ -189,7 +227,6 @@ export default function Userinfo() {
               정보수정
             </NormalBtn>
           )}
-
           <NormalBtn
             className="a"
             width={"315px"}
@@ -234,7 +271,7 @@ export const UserInfoWrapper = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   margin-bottom: 20px;
 `;
 
@@ -272,7 +309,7 @@ export const UserinfoBox = styled.div`
   &.sub {
     width: 191px;
     margin-right: 8px;
-    margin-bottom: 0px;
+    /* margin-bottom: 0px; */
   }
 
   &.edit {
@@ -310,4 +347,47 @@ export const UserinfoText = styled.div`
 export const BtnWrapper = styled.div`
   display: flex;
   gap: 5px;
+`;
+
+const PickerWrapper = styled.div`
+  position: fixed;
+  margin-top: 223px;
+  margin-left: 690px;
+  z-index: 1;
+`;
+
+interface Size {
+  width?: string;
+  height?: string;
+}
+
+const BtnDiv = styled.div<Size>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+
+  &.a {
+    background: linear-gradient(90deg, #ffca60 0%, #fb834c 58.85%);
+  }
+
+  &.b {
+    background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
+  }
+
+  &.c {
+    background: linear-gradient(to right, #45a097 30%, #1b3550 100%);
+  }
+
+  :active {
+    box-shadow: inset 1px 1px 2px 2px rgba(0, 0, 0, 0.3);
+  }
 `;

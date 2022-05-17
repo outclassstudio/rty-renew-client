@@ -13,7 +13,7 @@ export default function SetGiftBox() {
   const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
 
   //선물포장 선택하는 함수
-  const handleSetPrv = (id: number, url: string, source: string): void => {
+  const handleSetPrv = (id: number, url: string): void => {
     setPrvSvg({ id: id, svg: url });
     dispatch(setSvg(id));
   };

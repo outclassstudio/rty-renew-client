@@ -79,11 +79,7 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
     if (myIdList.includes(item.idx)) {
-      Swal.fire({
-        title: "이미 구입하신 아이템입니다",
-        icon: "info",
-        confirmButtonText: "아하!",
-      });
+      return;
     } else {
       if (myData.point < item.point) {
         Swal.fire({
@@ -135,9 +131,12 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
         <Wrapper key={idx}>
           <ImageWrapper>
             <SingleImage src={url} alt="" onClick={() => openModal(el)} />
-            <Text onClick={() => handleDirectBuy(el)}>
+            <Text>
               <SubText className="a">{el.name}</SubText>
-              <SubText className="b">
+              <SubText
+                className={el.point === 0 ? "b" : "c"}
+                onClick={() => handleDirectBuy(el)}
+              >
                 {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
               </SubText>
             </Text>
@@ -183,7 +182,6 @@ const Wrapper = styled.div`
 
 const ImageWrapper = styled.div`
   width: 217px;
-  /* height: 167px; */
   display: flex;
   flex-direction: column;
   background: white;
@@ -207,23 +205,10 @@ const Text = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background: ${baseColor}; */
   color: white;
   font-size: 16px;
   font-weight: bold;
-  /* padding: 10px 0px 10px 0px; */
   border-radius: 0px 0px 10px 10px;
-
-  /* div:nth-child(2) {
-    font-size: 13px;
-    color: #ffffffb5;
-    font-weight: 200;
-  } */
-
-  :hover {
-    /* opacity: 1; */
-    background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
-  }
 `;
 
 const SubText = styled.div`
@@ -232,18 +217,33 @@ const SubText = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 13px 0px 13px 0px;
+  padding: 14px 0px 14px 0px;
+  font-size: 14px;
+  cursor: default;
 
   &.a {
-    /* background: linear-gradient(90deg, #ffca60 0%, #fb834c 58.85%); */
     background: ${baseColor};
     border-radius: 0px 0px 0px 10px;
   }
 
   &.b {
-    background: linear-gradient(to right, #ec047a 30%, #b22490 100%);
+    background: #b22490;
     border-radius: 0px 0px 10px 0px;
-    /* opacity: 0.7; */
+  }
+
+  &.c {
+    background: #b22490;
+    border-radius: 0px 0px 10px 0px;
+    cursor: pointer;
+  }
+
+  &.c:hover {
+    background: linear-gradient(to right, #ec047a 40%, #b22490 100%);
+    font-size: 0;
+  }
+  &.c:hover:before {
+    content: "구매하기";
+    font-size: 14px;
   }
 `;
 
@@ -253,7 +253,7 @@ const OverwrapText = styled.div`
   align-items: center;
   position: fixed;
   color: #ffffff;
-  background: #9e9e9e99;
+  background: #8383839e;
   width: 217px;
   height: 167px;
   border-radius: 10px 10px 0px 0px;

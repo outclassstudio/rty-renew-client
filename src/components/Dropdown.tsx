@@ -16,7 +16,6 @@ export default function Dropdown({ handleActiveDropdown }: any) {
     navigate("/");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("id");
-    // window.location.replace("/");
   };
 
   return (
@@ -27,7 +26,9 @@ export default function Dropdown({ handleActiveDropdown }: any) {
       <Menu onClick={() => navigate("/giftlist")}>선물리스트</Menu>
       <Menu onClick={() => navigate("/shop")}>상점</Menu>
       <Menu onClick={() => navigate("/userinfo")}>나의정보</Menu>
-      <Menu onClick={handleLogout}>로그아웃</Menu>
+      <Menu className="logout" onClick={handleLogout}>
+        로그아웃
+      </Menu>
       <DropdonwBg onClick={handleActiveDropdown} />
     </MainDiv>
   );
@@ -50,7 +51,7 @@ const MainDiv = styled.div`
   position: fixed;
   top: 55px;
   right: 10px;
-  padding: 10px 15px 10px 15px;
+  padding: 10px 22px 10px 22px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 4px;
 `;
@@ -68,5 +69,11 @@ const Menu = styled.div`
     border-bottom: 1px solid #ffffff96;
     padding-bottom: 10px;
     margin-bottom: 5px;
+  }
+
+  &.logout {
+    border-top: 1px solid #ffffff96;
+    padding-top: 10px;
+    margin-top: 5px;
   }
 `;
