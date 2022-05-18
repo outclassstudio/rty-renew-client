@@ -8,7 +8,7 @@ declare namespace Buy {
   }
 
   interface buyItemReqDTO {
-    userId: strin | null;
+    userId: string | null;
     itemIdx: number | null;
     point: number;
     name: string;

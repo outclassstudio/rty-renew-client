@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import styled, { keyframes } from "styled-components";
-import { baseColor } from "../style/global";
+import { colorSet } from "../style/global";
 import Dropdown from "./Dropdown";
 
 interface Props {
@@ -115,7 +115,7 @@ const HeaderDiv = styled.header`
   left: 0;
   right: 0;
   z-index: 2;
-  background-color: ${baseColor};
+  background-color: ${colorSet.base};
   box-shadow: none;
 `;
 
@@ -136,6 +136,8 @@ const HeaderCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Hanna", sans-serif;
+  font-size: 17px;
 `;
 
 const HeaderRight = styled.div`

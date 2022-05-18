@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { fadeAction } from "../../style/global";
+import { colorSet, fadeAction } from "../../style/global";
 
 export default function MyPoint({ myData }: any) {
   return (
@@ -11,10 +11,10 @@ export default function MyPoint({ myData }: any) {
 
 const PointWrapper = styled.div`
   box-shadow: rgba(50, 50, 93, 0.3) 0px 0px 15px 0px;
-  background: #4c3e9f;
+  background: ${colorSet.purple};
   border-radius: 10px;
   padding: 22px 30px;
   color: white;
-  animation: 0.7s ease-in-out ${fadeAction};
+  animation: 0.6s ease-in-out ${fadeAction};
   font-size: 17px;
 `;

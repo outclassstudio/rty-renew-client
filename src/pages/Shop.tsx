@@ -4,14 +4,16 @@ import MyPoint from "../components/shop/MyPoint";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getItems, getMyItems } from "../apis/buyApi";
-import { baseColor, fadeMoveAction, fadeMoveAction2 } from "../style/global";
+import { colorSet, fadeMoveAction, fadeMoveActionDelay } from "../style/global";
 import { getUserInfo } from "../apis/userApi";
+import Loading from "../components/Loading";
 
 export default function Shop() {
   const [img, setImg] = useState<any>([]);
   const [svg, setSvg] = useState<any>([]);
   const [myIdList, setmyIdList] = useState<any>([]);
   const [myData, setMyData] = useState<any>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //유저정보 불러오기
   useEffect(() => {
@@ -23,6 +25,8 @@ export default function Shop() {
   //아이템 불러와서 타입별로 분류
   useEffect(() => {
     getItems().then((res) => {
+      setIsLoading(false);
+
       const img = res.data.filter((el) => {
         return el.type === "img";
       });
@@ -45,21 +49,25 @@ export default function Shop() {
 
   return (
     <Layout title={"상점"}>
-      <MainContainer>
-        <MyPoint myData={myData} />
-        <SubContainer className="a">
-          <Text>🎁선물 포장 구입하기</Text>
-          <CarouselWrapper>
-            <ItemListCarousel myData={myData} myIdList={myIdList} img={svg} />
-          </CarouselWrapper>
-        </SubContainer>
-        <SubContainer className="b">
-          <Text>📸이미지 구입하기</Text>
-          <CarouselWrapper>
-            <ItemListCarousel myData={myData} myIdList={myIdList} img={img} />
-          </CarouselWrapper>
-        </SubContainer>
-      </MainContainer>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <MainContainer>
+          <MyPoint myData={myData} />
+          <SubContainer className="a">
+            <Text>🎁선물 포장 구입하기</Text>
+            <CarouselWrapper>
+              <ItemListCarousel myData={myData} myIdList={myIdList} img={svg} />
+            </CarouselWrapper>
+          </SubContainer>
+          <SubContainer className="b">
+            <Text>📸이미지 구입하기</Text>
+            <CarouselWrapper>
+              <ItemListCarousel myData={myData} myIdList={myIdList} img={img} />
+            </CarouselWrapper>
+          </SubContainer>
+        </MainContainer>
+      )}
     </Layout>
   );
 }
@@ -79,11 +87,11 @@ const SubContainer = styled.div`
   flex-direction: column;
 
   &.a {
-    animation: 0.7s ease-in-out ${fadeMoveAction};
+    animation: 0.6s ease-in-out ${fadeMoveAction};
   }
 
   &.b {
-    animation: 0.7s ease-in-out ${fadeMoveAction2};
+    animation: 0.7s ease-in-out ${fadeMoveActionDelay};
   }
 `;
 
@@ -96,6 +104,6 @@ const CarouselWrapper = styled.div`
 const Text = styled.div`
   font-size: 25px;
   font-weight: bold;
-  color: ${baseColor};
+  color: ${colorSet.base};
   margin-bottom: 15px;
 `;

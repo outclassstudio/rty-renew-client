@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSvg } from "../../redux/reducers/sendGiftReducer";
@@ -46,7 +46,7 @@ const MainContainer = styled.div`
   height: 516px;
   display: flex;
   flex-direction: column;
-  background: #4c3e9f;
+  background: ${colorSet.purple};
   color: white;
   padding: 25px 35px 30px 35px;
   border-radius: 10px;
@@ -61,7 +61,7 @@ const SvgListWrapper = styled.div`
   padding: 15px 27px;
   gap: 15px;
   font-size: 13px;
-  color: ${baseColor};
+  color: ${colorSet.base};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
 `;
 
@@ -71,7 +71,7 @@ const NoneImg = styled.div`
   align-items: center;
   width: 350px;
   height: 262px;
-  color: ${baseColor};
+  color: ${colorSet.base};
   font-size: 13px;
 `;
 

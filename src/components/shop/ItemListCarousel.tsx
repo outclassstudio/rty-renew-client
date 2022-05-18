@@ -2,7 +2,7 @@ import Slider from "react-slick";
 import "./slick.css";
 import "./slick-theme.css";
 import styled from "styled-components";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 import { useState } from "react";
 import ImageModal from "./ImageModal";
 import { buyItem } from "../../apis/buyApi";
@@ -185,13 +185,13 @@ const ImageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
-  color: ${baseColor};
+  color: ${colorSet.base};
   border-radius: 11px 11px 11px 11px;
   box-shadow: rgba(50, 50, 93, 0.5) 0px 0px 10px 0px;
   cursor: pointer;
 
   :hover {
-    outline: 3px solid #b22490;
+    outline: 3px solid ${colorSet.darkPink};
   }
 `;
 
@@ -222,17 +222,17 @@ const SubText = styled.div`
   cursor: default;
 
   &.a {
-    background: ${baseColor};
+    background: ${colorSet.base};
     border-radius: 0px 0px 0px 10px;
   }
 
   &.b {
-    background: #b22490;
+    background: ${colorSet.darkPink};
     border-radius: 0px 0px 10px 0px;
   }
 
   &.c {
-    background: #b22490;
+    background: ${colorSet.darkPink};
     border-radius: 0px 0px 10px 0px;
     cursor: pointer;
   }

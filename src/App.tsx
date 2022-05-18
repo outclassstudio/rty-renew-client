@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
+import Loading from "./components/Loading";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -53,7 +54,8 @@ function App() {
         <Route path="/userinfo" element={<Userinfo />} />
         <Route path="/shop/*" element={<ShopRoutes />} />
         <Route path="/send" element={<Send />} />
-        <Route path="/giftlist/" element={<GiftList />} />
+        <Route path="/giftlist" element={<GiftList />} />
+        <Route path="/loading" element={<Loading />} />
       </Routes>
     </Router>
   );

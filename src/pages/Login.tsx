@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
-import { fadeAction } from "../style/global";
+import { colorSet, fadeAction } from "../style/global";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -51,6 +51,6 @@ const SignupText = styled.div`
   cursor: pointer;
 
   :hover {
-    color: #ec047a;
+    color: ${colorSet.pink};
   }
 `;

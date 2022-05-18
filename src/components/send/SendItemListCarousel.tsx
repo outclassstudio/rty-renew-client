@@ -2,7 +2,7 @@ import Slider from "react-slick";
 // import "./send-slick.css";
 // import "./send-slick-theme.css";
 import styled from "styled-components";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 
 export default function SendItemListCarousel({
   data,
@@ -66,6 +66,6 @@ const SingleSvg = styled.img`
   border-radius: 7px;
 
   &.active {
-    outline: 3px solid ${baseColor};
+    outline: 3px solid ${colorSet.base};
   }
 `;
