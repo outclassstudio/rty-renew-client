@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { findUser } from "../../apis/userApi";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 import UserlistDropdown from "./UserlistDropdown";
 
 export default function FindUser() {
@@ -79,7 +79,7 @@ const MainContainer = styled.div`
   width: 420px;
   padding: 20px 30px 30px 30px;
   gap: 10px;
-  background: ${baseColor};
+  background: ${colorSet.base};
   border-radius: 10px;
   color: white;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;

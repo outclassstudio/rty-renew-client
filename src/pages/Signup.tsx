@@ -3,9 +3,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { NormalBtn } from "../style/btnStyle.style";
-import { baseColor, DropdonwBg, fadeAction } from "../style/global";
+import { colorSet, DropdonwBg, fadeAction } from "../style/global";
 import MyPicker from "../components/MyPicker";
 import Swal from "sweetalert2";
+import { idCheck, strongPassword } from "../hooks/validation";
 
 axios.defaults.withCredentials = true;
 
@@ -82,20 +83,12 @@ export default function Signup() {
     }
   };
 
+  //아이디 유효성 검사 에러 메시지
   const renderIdValidCheckMsg = () => {
     if (signUpInfo.userId !== "" && !idCheck(signUpInfo.userId)) {
       return <ErrMsg className="err">유효하지 않은 아이디 입니다</ErrMsg>;
     }
   };
-
-  //아이디 유효성 검사
-  const idCheck = (str: string): boolean => {
-    return /^((?=.*[A-Za-z])|(?=.*\d))[A-Za-z\d]{4,}$/.test(str);
-  };
-
-  // const nickNameCheck = (str: string): boolean => {
-  //   return /^(?=.*\s)[\s]{1,3}$/.test(str);
-  // };
 
   //닉네임유효성 검사 결과 렌더링하는 함수
   // const renderNicknameValidCheckMessage = () => {
@@ -103,11 +96,6 @@ export default function Signup() {
   //     return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
   //   }
   // };
-
-  //비밀번호 유효성 검사 함수
-  const strongPassword = (str: string): boolean => {
-    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(str);
-  };
 
   //비밀번호 유효성 검사 결과 렌더링하는 함수
   const renderValidationCheckMessage = () => {
@@ -378,7 +366,7 @@ const SignUpDiv = styled.div`
   box-shadow: 0.05rem 0.05rem 0.05rem #6969692d;
   margin-bottom: 0.25rem;
   background: white;
-  color: ${baseColor};
+  color: ${colorSet.base};
 
   &.sub {
     width: 191px;

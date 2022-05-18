@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
+import { colorSet } from "../../style/global";
 
 export default function UserlistDropdown({ userList, closeDropdown }: any) {
   const dispatch = useDispatch();
@@ -83,6 +84,6 @@ const SingleUser = styled.div`
   }
 
   :hover {
-    background: #72b0eb;
+    background: ${colorSet.skyBlue};
   }
 `;

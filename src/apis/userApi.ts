@@ -35,8 +35,19 @@ export const patchUserInfo = (data: any): Promise<AxiosResponse<any>> => {
   return apiClient().patch(`/users/${myId}`, data);
 };
 
-//회원탈퇴 요청
+//비밀번호 확인
+export const checkPassowrd = (data: any): Promise<AxiosResponse<boolean>> => {
+  return apiClient().post(`/users/pwdcheck`, data);
+};
 
+//비밀번호 변경 요청
+export const changePassoword = (
+  data: Users.changePwDTO
+): Promise<AxiosResponse<any>> => {
+  return apiClient().post(`/users/updatepwd`, data);
+};
+
+//회원탈퇴 요청
 export const deleteUser = (): Promise<AxiosResponse<any>> => {
   return apiClient().delete(`/users/${myId}`);
 };

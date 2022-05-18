@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import { logoutChange } from "../redux/reducers/loginReducer";
-import { baseColor } from "../style/global";
+import { colorSet } from "../style/global";
 
 export default function Dropdown({ handleActiveDropdown }: any) {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const MainDiv = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background: ${baseColor};
+  background: ${colorSet.base};
   position: fixed;
   top: 55px;
   right: 10px;

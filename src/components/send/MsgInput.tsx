@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Swal from "sweetalert2";
 import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 import SendItemListCarousel from "./SendItemListCarousel";
 
 export default function MsgInput() {
@@ -15,6 +15,7 @@ export default function MsgInput() {
   const giftState = useSelector((state: RootState) => state.sendGiftReducer);
   const itemState = useSelector((state: RootState) => state.getItemReducer);
 
+  //각종상태
   const [prvItem, setPrvItem] = useState<any>({ id: null, url: "" });
   const [letterNum, setLetterNum] = useState<number>(0);
 
@@ -29,7 +30,7 @@ export default function MsgInput() {
     setLetterNum(e.target.value.length);
     dispatch(setContent(e.target.value));
 
-    if (e.target.value.length >= 100) {
+    if (e.target.value.length >= 150) {
       Swal.fire({
         title: "더이상 입력할 수 없어요",
         icon: "warning",
@@ -49,11 +50,13 @@ export default function MsgInput() {
         </Receiver>
         <ImgListWrapper>
           <div>메시지와 함께 보낼 이미지를 선택해주세요</div>
-          <SendItemListCarousel
-            handleSetPrv={changeImg}
-            prvItem={prvItem}
-            data={itemState.img}
-          />
+          <ImgList>
+            <SendItemListCarousel
+              handleSetPrv={changeImg}
+              prvItem={prvItem}
+              data={itemState.img}
+            />
+          </ImgList>
           {prvItem.url ? (
             <ImagePrv src={prvItem.url} alt="" />
           ) : (
@@ -63,7 +66,7 @@ export default function MsgInput() {
       </SubContainer>
       <SubContainer className="b">
         <BoxWrapper>
-          <div>마음을 담은 메시지를 작성해보세요 ({letterNum}/100)</div>
+          <div>마음을 담은 메시지를 작성해보세요 ({letterNum}/150)</div>
           <MsgInputBox onChange={(e) => calcLetterNum(e)} />
         </BoxWrapper>
       </SubContainer>
@@ -72,6 +75,7 @@ export default function MsgInput() {
 }
 
 const MainContainer = styled.div`
+  width: 480px;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -80,8 +84,7 @@ const MainContainer = styled.div`
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* background: #f6f6f6; */
-  background: #4c3e9f;
+  background: ${colorSet.purple};
   color: white;
   padding: 25px 35px 30px 35px;
   border-radius: 10px;
@@ -89,7 +92,7 @@ const SubContainer = styled.div`
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;
 
   &.b {
-    background: ${baseColor};
+    background: ${colorSet.base};
   }
 `;
 
@@ -114,12 +117,13 @@ const ImgListWrapper = styled.div`
   padding: 20px 30px;
   gap: 15px;
   font-size: 13px;
-  color: ${baseColor};
+  color: ${colorSet.base};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
+`;
 
-  div span:nth-child(2) {
-    background: gray;
-  }
+const ImgList = styled.div`
+  display: flex;
+  padding: 0px 5px;
 `;
 
 const NoneImg = styled.div`

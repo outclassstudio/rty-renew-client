@@ -95,13 +95,10 @@ const OverwrapText = styled.div`
 `;
 
 const NameText = styled.div`
-  /* position: fixed; */
-  /* bottom: 200px; */
   margin-top: 20px;
   margin-bottom: 10px;
   color: white;
   font-size: 25px;
   font-weight: bold;
-  /* -webkit-text-stroke: 2px rgba(0, 0, 0, 1); */
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 1);
 `;

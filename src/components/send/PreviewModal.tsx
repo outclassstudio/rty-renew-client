@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../../redux/reducers";
-import { baseColor, fadeAction, fadeExpand } from "../../style/global";
+import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
 export default function PreviewModal({ data, handleCloseModal }: any) {
   const itemState = useSelector((state: RootState) => state.getItemReducer);
   const [prvUrl, setPrvUrl] = useState<string>("");
 
+  //프리뷰할 이미지 세팅
   useEffect(() => {
     const url = itemState.img.filter((el) => {
       return el.idx === data.img;
@@ -24,7 +25,9 @@ export default function PreviewModal({ data, handleCloseModal }: any) {
           <Text>to. {data.userTo}</Text>
           {prvUrl ? <img src={prvUrl} alt="" /> : ""}
           <Content>
-            <div>{data.content}</div>
+            <ContentImg>
+              <div>{data.content}</div>
+            </ContentImg>
             {/* <div>{data.date}에 보낸 선물입니다.</div> */}
           </Content>
         </PrvBoxWrapper>
@@ -64,7 +67,7 @@ const PrvBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
-  color: ${baseColor};
+  color: ${colorSet.base};
   width: 500px;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
   padding: 0px;
@@ -90,7 +93,9 @@ const Text = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
   border-radius: 0px 0px 10px 10px;
 
   div:nth-child(2) {
@@ -98,5 +103,23 @@ const Content = styled.div`
     font-size: 12px;
     font-weight: 200;
     color: #555555;
+  }
+`;
+
+const ContentImg = styled.div`
+  width: 450px;
+  min-height: 130px;
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976274844536676382/letterbg.png");
+  background-position: center;
+  background-size: cover;
+  /* filter: drop-shadow(0px 0px 3px rgba(50, 50, 93, 0.1)); */
+
+  div {
+    padding: 27px 25px 10px 34px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #424242;
+    line-height: 22px;
+    font-family: "Yeon Sung", cursive;
   }
 `;

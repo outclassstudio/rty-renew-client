@@ -5,7 +5,7 @@ import SetGiftBox from "../components/send/SetGiftBox";
 import PreviewModal from "../components/send/PreviewModal";
 import styled from "styled-components";
 import { NormalBtn } from "../style/btnStyle.style";
-import { fadeMoveAction, fadeMoveAction2 } from "../style/global";
+import { fadeMoveAction, fadeMoveActionDelay } from "../style/global";
 import { sendGift } from "../apis/giftApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
@@ -159,15 +159,15 @@ const LeftWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 25px;
-  animation: 0.7s ease-in-out ${fadeMoveAction};
+  animation: 0.6s ease-in-out ${fadeMoveAction};
 `;
 
 const RightWrapper = styled.div`
-  animation: 0.7s ease-out ${fadeMoveAction2};
+  animation: 0.7s ease-out ${fadeMoveActionDelay};
 `;
 
 const BtnWrapper = styled.div`
-  animation: 1s ease-out ${fadeMoveAction2};
+  animation: 0.8s ease-out ${fadeMoveActionDelay};
   display: flex;
   gap: 10px;
 `;

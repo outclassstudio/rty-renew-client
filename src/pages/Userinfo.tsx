@@ -2,14 +2,35 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import { deleteUser, getUserInfo, patchUserInfo } from "../apis/userApi";
+import {
+  changePassoword,
+  checkPassowrd,
+  deleteUser,
+  getUserInfo,
+  patchUserInfo,
+} from "../apis/userApi";
 import { logoutChange } from "../redux/reducers/loginReducer";
-import { baseColor, DropdonwBg, fadeAction } from "../style/global";
+import { colorSet, DropdonwBg, fadeAction, fadeSlide } from "../style/global";
 import Layout from "./Layout";
 import { NormalBtn } from "../style/btnStyle.style";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import Swal from "sweetalert2";
 import MyPicker from "../components/MyPicker";
+import { strongPassword } from "../hooks/validation";
+import { ErrMsg } from "./Signup";
+
+interface UserInfo {
+  id: string | undefined;
+  nickname: string | undefined;
+  point: number;
+  birth: string | undefined;
+}
+
+interface PwInfo {
+  current: string;
+  password: string;
+  passwordCheck: string;
+}
 
 export default function Userinfo() {
   const navigate = useNavigate();
@@ -17,18 +38,35 @@ export default function Userinfo() {
 
   //수정모드 on/off상태
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [pwChangeMode, setPwChangeMode] = useState<boolean>(false);
   const [newNickname, setNewNickname] = useState<string | undefined>("");
-  const [newBirth, setNewBirth] = useState<string>("");
+  const [newBirth, setNewBirth] = useState<string | undefined>("");
 
   //데이트피커 on/off상태
   const [activePicker, setActivePicker] = useState(false);
 
   //유저정보 저장
-  const [userInfo, setUserInfo] = useState<any>({
+  const [userInfo, setUserInfo] = useState<UserInfo>({
     id: "",
     nickname: "",
     point: 0,
     birth: "",
+  });
+
+  //비밀번호 변경 정보
+  const [changePwdInfo, setChangePwdInfo] = useState<PwInfo>({
+    current: "",
+    password: "",
+    passwordCheck: "",
+  });
+
+  //비밀번호 확인 여부
+  const [checkPw, setCheckPw] = useState<boolean>(false);
+
+  //에러상태묶음
+  const [errors, setErrors] = useState<any>({
+    emptyBoxCheck: false,
+    pwCheck: false,
   });
 
   //유저정보 불러오기
@@ -56,10 +94,21 @@ export default function Userinfo() {
   //유저정보 수정모드 on/off
   const handleUserinfoEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
-
     setNewBirth(userInfo.birth);
     setNewNickname(userInfo.nickname);
     setEditMode((prev) => !prev);
+  };
+
+  //비번변경모드 on/off
+  const handlePwChange = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    setPwChangeMode((prev) => !prev);
+    setChangePwdInfo({
+      current: "",
+      password: "",
+      passwordCheck: "",
+    });
+    setCheckPw(false);
   };
 
   //닉네임변경
@@ -130,8 +179,96 @@ export default function Userinfo() {
     setActivePicker((prev) => !prev);
   };
 
+  //날짜변경 상태 업데이트
   const handleDateValue = (date: string) => {
     setNewBirth(date);
+  };
+
+  //비밀번호 유효성 검사 결과 렌더링하는 함수
+  const renderValidationCheckMessage = () => {
+    if (
+      changePwdInfo.password !== "" &&
+      !strongPassword(changePwdInfo.password)
+    ) {
+      return <ErrMsg className="err">유효하지 않은 비밀번호입니다</ErrMsg>;
+    }
+  };
+
+  //비밀번호 정보 상태 저장
+  const handlePwValue =
+    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setChangePwdInfo({ ...changePwdInfo, [key]: e.target.value });
+      // console.log(signUpInfo);
+    };
+
+  //비밀번호 불일치 오류메세지를 렌더하는 함수
+  const renderFeedbackMessage = () => {
+    if (changePwdInfo.password !== changePwdInfo.passwordCheck) {
+      return <ErrMsg className="err">패스워드가 일치하지 않습니다</ErrMsg>;
+    }
+  };
+
+  //빈칸있을 경우 메시지 렌더 함수
+  const renderEmptyBoxCheck = () => {
+    return <ErrMsg className="err">빈칸은 안돼요</ErrMsg>;
+  };
+
+  //비밀번호 확인 요청
+  const handleCheckPw = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const data = {
+      id: window.localStorage.getItem("id"),
+      pwd: changePwdInfo.current,
+    };
+
+    checkPassowrd(data)
+      .then((res) => {
+        setCheckPw(res.data);
+        setErrors({ ...errors, pwCheck: false });
+      })
+      .catch((err) => {
+        console.log("비번잘못됨", err);
+        setErrors({ ...errors, pwCheck: true });
+      });
+  };
+
+  //비밀번호 변경 요청
+  const handleChangedPwSend = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const data = {
+      id: window.localStorage.getItem("id"),
+      npwd: changePwdInfo.password,
+    };
+
+    if (
+      changePwdInfo.password !== "" &&
+      changePwdInfo.passwordCheck !== "" &&
+      changePwdInfo.password === changePwdInfo.passwordCheck
+    ) {
+      changePassoword(data)
+        .then(() => {
+          Swal.fire({
+            title: "비밀번호가 성공적으로 변경되었습니다",
+            icon: "success",
+            confirmButtonText: "닫기",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("/userinfo");
+            }
+          });
+        })
+        .catch((err) => {
+          console.log("비번틀림", err);
+        });
+    } else {
+      Swal.fire({
+        title: "입력을 다시 확인해주세요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+      setErrors({ ...errors, emptyBoxCheck: true });
+    }
   };
 
   return (
@@ -154,51 +291,124 @@ export default function Userinfo() {
           ) : (
             ""
           )}
-          <SubWrapper>
-            <UserinfoItems>
-              <UserinfoText>아이디</UserinfoText>
-              <UserinfoBox className={editMode ? "edit" : ""}>
-                {userInfo.id}
-              </UserinfoBox>
-            </UserinfoItems>
-            <UserinfoItems>
-              <UserinfoText>닉네임</UserinfoText>
-              {editMode ? (
+          {pwChangeMode ? (
+            <SubWrapper className="change-mode">
+              <UserinfoItems>
+                <UserinfoText>현재비밀번호</UserinfoText>
                 <UserinfoInput
-                  value={newNickname}
-                  type="text"
-                  onChange={(e) => handleChangeNickname(e)}
-                />
+                  type="password"
+                  onChange={handlePwValue("current")}
+                ></UserinfoInput>
+                {errors.emptyBoxCheck
+                  ? changePwdInfo.current === ""
+                    ? renderEmptyBoxCheck()
+                    : ""
+                  : ""}
+                {checkPw ? (
+                  ""
+                ) : (
+                  <BtnWrapper className="row">
+                    <NormalBtn
+                      className="a"
+                      width={"312px"}
+                      height={"45px"}
+                      onClick={(e) => handleCheckPw(e)}
+                    >
+                      비밀번호 확인
+                    </NormalBtn>
+                    {errors.pwCheck ? (
+                      <ErrMsg className="err">비밀번호가 잘못됐습니다</ErrMsg>
+                    ) : (
+                      ""
+                    )}
+                  </BtnWrapper>
+                )}
+              </UserinfoItems>
+              {checkPw ? (
+                <>
+                  <UserinfoItems className="change-pw">
+                    <UserinfoText>변경할 비밀번호</UserinfoText>
+                    <UserinfoText className="sub">
+                      * 6자 이상, 영어, 숫자를 포함한 비밀번호
+                    </UserinfoText>
+                    <UserinfoInput
+                      type="password"
+                      onChange={handlePwValue("password")}
+                    ></UserinfoInput>
+                    {renderValidationCheckMessage()}
+                    {errors.emptyBoxCheck
+                      ? changePwdInfo.password === ""
+                        ? renderEmptyBoxCheck()
+                        : ""
+                      : ""}
+                  </UserinfoItems>
+                  <UserinfoItems>
+                    <UserinfoText>변경할 비밀번호 확인</UserinfoText>
+                    <UserinfoInput
+                      type="password"
+                      onChange={handlePwValue("passwordCheck")}
+                    ></UserinfoInput>
+                    {renderFeedbackMessage()}
+                    {errors.emptyBoxCheck
+                      ? changePwdInfo.passwordCheck === ""
+                        ? renderEmptyBoxCheck()
+                        : ""
+                      : ""}
+                  </UserinfoItems>
+                </>
               ) : (
-                <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+                ""
               )}
-            </UserinfoItems>
-            <UserinfoItems>
-              <UserinfoText>생년월일</UserinfoText>
-              {editMode ? (
-                <BtnWrapper>
-                  <UserinfoBox className="sub">{newBirth}</UserinfoBox>
-                  <BtnDiv
-                    height={"42px"}
-                    width={"95px"}
-                    onClick={handleAcitvePicker}
-                    className="a"
-                  >
-                    날짜선택
-                  </BtnDiv>
-                </BtnWrapper>
-              ) : (
-                <UserinfoBox>{userInfo.birth}</UserinfoBox>
-              )}
-            </UserinfoItems>
-            <UserinfoItems>
-              <UserinfoText>나의포인트</UserinfoText>
-              <UserinfoBox className={editMode ? "edit" : ""}>
-                {userInfo.point}
-              </UserinfoBox>
-            </UserinfoItems>
-          </SubWrapper>
-          {editMode ? (
+            </SubWrapper>
+          ) : (
+            <SubWrapper>
+              <UserinfoItems>
+                <UserinfoText>아이디</UserinfoText>
+                <UserinfoBox className={editMode ? "edit" : ""}>
+                  {userInfo.id}
+                </UserinfoBox>
+              </UserinfoItems>
+              <UserinfoItems>
+                <UserinfoText>닉네임</UserinfoText>
+                {editMode ? (
+                  <UserinfoInput
+                    value={newNickname}
+                    type="text"
+                    onChange={(e) => handleChangeNickname(e)}
+                  />
+                ) : (
+                  <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+                )}
+              </UserinfoItems>
+              <UserinfoItems>
+                <UserinfoText>생년월일</UserinfoText>
+                {editMode ? (
+                  <BtnWrapper>
+                    <UserinfoBox className="sub">{newBirth}</UserinfoBox>
+                    <BtnDiv
+                      height={"42px"}
+                      width={"95px"}
+                      onClick={handleAcitvePicker}
+                      className="a"
+                    >
+                      날짜선택
+                    </BtnDiv>
+                  </BtnWrapper>
+                ) : (
+                  <UserinfoBox>{userInfo.birth}</UserinfoBox>
+                )}
+              </UserinfoItems>
+              <UserinfoItems>
+                <UserinfoText>나의포인트</UserinfoText>
+                <UserinfoBox className={editMode ? "edit" : ""}>
+                  {userInfo.point}
+                </UserinfoBox>
+              </UserinfoItems>
+            </SubWrapper>
+          )}
+          {pwChangeMode ? (
+            ""
+          ) : editMode ? (
             <BtnWrapper>
               <NormalBtn
                 className="a"
@@ -219,7 +429,7 @@ export default function Userinfo() {
             </BtnWrapper>
           ) : (
             <NormalBtn
-              className="a"
+              className="c"
               width={"315px"}
               height={"45px"}
               onClick={(e) => handleUserinfoEdit(e)}
@@ -227,6 +437,39 @@ export default function Userinfo() {
               정보수정
             </NormalBtn>
           )}
+
+          {editMode ? (
+            ""
+          ) : pwChangeMode ? (
+            <BtnWrapper>
+              <NormalBtn
+                className="a"
+                width={"155px"}
+                height={"45px"}
+                onClick={(e) => handlePwChange(e)}
+              >
+                변경취소
+              </NormalBtn>
+              <NormalBtn
+                className="c"
+                width={"155px"}
+                height={"45px"}
+                onClick={(e) => handleChangedPwSend(e)}
+              >
+                변경완료
+              </NormalBtn>
+            </BtnWrapper>
+          ) : (
+            <NormalBtn
+              className="c"
+              width={"315px"}
+              height={"45px"}
+              onClick={(e) => handlePwChange(e)}
+            >
+              비밀번호변경
+            </NormalBtn>
+          )}
+
           <NormalBtn
             className="a"
             width={"315px"}
@@ -257,8 +500,7 @@ const MainContainer = styled.div`
   width: 100vw;
   height: calc(100vh - 50px);
   gap: 15px;
-  animation: 0.7s ease-in-out ${fadeAction};
-  /* animation-iteration-count: 1; */
+  animation: 0.5s ease-in-out ${fadeAction};
 `;
 
 const Logo = styled.img`
@@ -281,9 +523,14 @@ const SubWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #4c3e9f;
+  background: ${colorSet.purple};
   margin-bottom: 10px;
   box-shadow: rgba(50, 50, 93, 0.4) 0px 0px 15px 0px;
+  animation: 0.5s ease-in-out ${fadeAction};
+
+  &.change-mode {
+    animation: 0.2s ease-out ${fadeSlide};
+  }
 `;
 
 export const UserinfoItems = styled.div`
@@ -292,6 +539,11 @@ export const UserinfoItems = styled.div`
   flex-direction: column;
   justify-content: center;
   color: white;
+
+  &.change-pw {
+    border-top: 1px solid #ffffff44;
+    padding-top: 10px;
+  }
 `;
 
 export const UserinfoBox = styled.div`
@@ -304,12 +556,11 @@ export const UserinfoBox = styled.div`
   box-shadow: 1px 1px 1px #6969692d;
   margin-bottom: 4px;
   background: white;
-  color: ${baseColor};
+  color: ${colorSet.base};
 
   &.sub {
     width: 191px;
     margin-right: 8px;
-    /* margin-bottom: 0px; */
   }
 
   &.edit {
@@ -327,7 +578,7 @@ const UserinfoInput = styled.input`
   box-shadow: 1px 1px 1px #6969692d;
   margin-bottom: 4px;
   background: white;
-  color: ${baseColor};
+  color: ${colorSet.base};
   font-size: 16px;
 `;
 
@@ -346,7 +597,13 @@ export const UserinfoText = styled.div`
 
 export const BtnWrapper = styled.div`
   display: flex;
+  justify-content: center;
   gap: 5px;
+
+  &.row {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const PickerWrapper = styled.div`
