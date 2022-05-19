@@ -11,6 +11,7 @@ interface spaceState {
   isConfirmRes: boolean;
   isOpenGiftBox: boolean;
   clickGiftBox: string;
+  clickBtn: string;
 }
 
 interface Myinfo {
@@ -38,6 +39,7 @@ const initialState = {
   isConfirmRes: false,
   isOpenGiftBox: false,
   clickGiftBox: "",
+  clickBtn: "",
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -72,6 +74,9 @@ const spaceSlice = createSlice({
     setClickGiftBox(state, action: PayloadAction<any>) {
       state.clickGiftBox = action.payload;
     },
+    setClickBtn(state, action: PayloadAction<any>) {
+      state.clickBtn = action.payload;
+    },
   },
 });
 
@@ -85,5 +90,6 @@ export const {
   setConfirmRes,
   setOpenGiftBox,
   setClickGiftBox,
+  setClickBtn,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;

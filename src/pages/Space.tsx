@@ -6,7 +6,7 @@ import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
 import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
-import { setModalOpen } from "../redux/reducers/spaceReducer";
+import { setClickBtn, setModalOpen } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
 import { NormalBtn } from "../style/btnStyle.style";
@@ -21,7 +21,7 @@ export const ThemeBtnBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 50px;
+  margin-top: 30px;
 `;
 
 export const Button = styled.button`
@@ -84,7 +84,7 @@ export default function Space() {
       setIsEachGift(true);
     }
     // dispatch(setMyGift(gift));
-  }, [userGiftList]);
+  }, [dispatch, userGiftList]);
 
   console.log("new", newGiftList, "space", spaceGiftList, "myInfo", myInfo);
   //change Theme
@@ -100,17 +100,20 @@ export default function Space() {
     //editSpace 가  true일 때만
     //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
+    dispatch(setClickBtn("editSpace"));
   };
 
   const editMoveHandler = () => {
-    console.log("move", editMove);
     setEditMove(!editMove);
+    console.log("moveeditttt");
+    dispatch(setClickBtn("editMove"));
   };
 
   const saveSpaceHandler = () => {
     console.log("clickssss");
     setSaveSpace(true);
   };
+  console.log("moveeditttt", editMove);
   return (
     <Layout title={"내공간"}>
       <MainContainer>
@@ -138,36 +141,36 @@ export default function Space() {
         <ThemeBtnBox>
           <NormalBtn
             className="a"
-            width={"250px"}
-            height={"40px"}
+            width={"300px"}
+            height={"50px"}
             onClick={changeThemeHandler}
           >
             테마수정
           </NormalBtn>
           <NormalBtn
             className="a"
-            width={"250px"}
-            height={"40px"}
+            width={"300px"}
+            height={"50px"}
             onClick={editAvatarHandler}
           >
-            아바타 수정
+            {editAvatar ? "수정 중" : "아바타 수정"}
           </NormalBtn>
           <NormalBtn
             className={editSpace ? "b" : "a"}
-            width={"250px"}
-            height={"40px"}
+            width={"300px"}
+            height={"50px"}
             onClick={editSpaceHandler}
           >
-            {editSpace ? "완료" : "공간 수정"}
+            {editSpace ? "완료" : "선물 수정"}
           </NormalBtn>
 
           <NormalBtn
             className="a"
-            width={"250px"}
-            height={"40px"}
+            width={"300px"}
+            height={"50px"}
             onClick={editMoveHandler}
           >
-            배치 수정
+            공간 수정
           </NormalBtn>
         </ThemeBtnBox>
       </MainContainer>
