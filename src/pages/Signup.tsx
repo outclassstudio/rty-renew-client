@@ -6,7 +6,7 @@ import { NormalBtn } from "../style/btnStyle.style";
 import { colorSet, DropdonwBg, fadeAction } from "../style/global";
 import MyPicker from "../components/MyPicker";
 import Swal from "sweetalert2";
-import { idCheck, strongPassword } from "../hooks/validation";
+import { idCheck, strongPassword, nickNameCheck } from "../hooks/validation";
 
 axios.defaults.withCredentials = true;
 
@@ -25,8 +25,8 @@ export default function Signup() {
   //에러상태묶음
   const [errors, setErrors] = useState({
     idOverlap: true,
-    permitSignUpBtn: false,
     emptyBoxCheck: false,
+    nickNameLength: false,
   });
 
   //메세지 렌더링 상태
@@ -39,7 +39,12 @@ export default function Signup() {
   const handleSignUpValue =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setSignUpInfo({ ...signUpInfo, [key]: e.target.value });
-      // console.log(signUpInfo);
+
+      if (signUpInfo.nickname.length > 12) {
+        setErrors({ ...errors, nickNameLength: true });
+      } else {
+        setErrors({ ...errors, nickNameLength: false });
+      }
     };
 
   //날짜를 변경하는 함수
@@ -91,11 +96,14 @@ export default function Signup() {
   };
 
   //닉네임유효성 검사 결과 렌더링하는 함수
-  // const renderNicknameValidCheckMessage = () => {
-  //   if (signUpInfo.nickname !== "" && nickNameCheck(signUpInfo.nickname)) {
-  //     return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
-  //   }
-  // };
+  const renderNicknameValidCheckMessage = () => {
+    if (
+      (signUpInfo.nickname !== "" && nickNameCheck(signUpInfo.nickname)) ||
+      signUpInfo.nickname.length > 8
+    ) {
+      return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
+    }
+  };
 
   //비밀번호 유효성 검사 결과 렌더링하는 함수
   const renderValidationCheckMessage = () => {
@@ -124,7 +132,8 @@ export default function Signup() {
       strongPassword(signUpInfo.password) &&
       signUpInfo.password !== "" &&
       signUpInfo.passwordCheck !== "" &&
-      signUpInfo.password === signUpInfo.passwordCheck
+      signUpInfo.password === signUpInfo.passwordCheck &&
+      !errors.nickNameLength
     ) {
       axios
         .post("http://192.168.10.153:8080/users/signup", {
@@ -180,7 +189,7 @@ export default function Signup() {
               아이디 <span>*</span>
             </SignUpText>
             <SignUpText className="sub">
-              * 4자 이상 영어 또는 숫자를 포함한 아이디
+              * 4자 이상 12자 이하의 영어 또는 숫자를 포함한 아이디
             </SignUpText>
             <SignUpSubItem>
               <SignUpBox
@@ -221,6 +230,7 @@ export default function Signup() {
             <SignUpText>
               닉네임 <span>*</span>
             </SignUpText>
+            <SignUpText className="sub">* 12자 이하의 닉네임</SignUpText>
             <SignUpBox
               type="text"
               onChange={handleSignUpValue("nickname")}
@@ -230,7 +240,7 @@ export default function Signup() {
                 ? renderEmptyBoxCheck()
                 : ""
               : ""}
-            {/* {renderNicknameValidCheckMessage()} */}
+            {renderNicknameValidCheckMessage()}
           </SignUpItems>
           <SignUpItems>
             <SignUpText>
@@ -296,12 +306,15 @@ const MainContainer = styled.div`
   width: 100vw;
   height: 100vh;
   gap: 10px;
-  animation: 0.7s ease-in-out ${fadeAction};
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976650594225909760/background3.png");
+  background-position: center;
+  background-size: cover;
 `;
 
 const Logo = styled.img`
   width: 320px;
   cursor: pointer;
+  animation: 0.7s ease-in-out ${fadeAction};
 `;
 
 export const SignUpWrapper = styled.form`
@@ -309,6 +322,7 @@ export const SignUpWrapper = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: 0.7s ease-in-out ${fadeAction};
 `;
 
 const SubWrapper = styled.div`

@@ -30,9 +30,9 @@ const MainContainer = styled.div`
   width: 100vw;
   height: 100vh;
   animation: 0.7s ease-in-out ${fadeAction};
-  /* background-image: url("https://i.imgur.com/8d2hJfL.jpg");
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976650594225909760/background3.png");
   background-position: center;
-  background-size: cover; */
+  background-size: cover;
 `;
 
 const Logo = styled.img`
