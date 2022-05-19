@@ -27,6 +27,7 @@ export const CanvasArea = styled.canvas`
   background-image: url(${(props) => props.color});
   background-size: 100%;
   background-repeat: no-repeat;
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
 `;
 
 export default function Canvas(props: any) {
@@ -532,6 +533,9 @@ export default function Canvas(props: any) {
   return (
     <>
       <CanvasBox>
+        <NewGiftIcon />
+        <WastebasketIcon />
+        <Storage />
         <CanvasArea
           ref={canvasRef}
           id="canvas"
@@ -540,9 +544,7 @@ export default function Canvas(props: any) {
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
-        <NewGiftIcon />
-        <WastebasketIcon />
-        <Storage />
+
         {themeModal ? <Background /> : null}
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />

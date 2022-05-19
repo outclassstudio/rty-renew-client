@@ -13,8 +13,10 @@ export const StorageContainer = styled.div`
   width: 100px;
   height: 150px;
   position: fixed;
-  top: 700px;
-  left: 1340px;
+  /* top: 700px; */
+  /* left: 1340px; */
+  margin-top: 595px;
+  margin-left: 1130px;
   cursor: pointer;
 `;
 

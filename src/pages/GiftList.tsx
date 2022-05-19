@@ -42,7 +42,9 @@ export default function GistList() {
   );
 }
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+  height: calc(100vh - 50px);
+`;
 
 const SubContainer = styled.div`
   min-width: 715px;

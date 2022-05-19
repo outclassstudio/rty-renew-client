@@ -16,10 +16,9 @@ export default function Layout({ children, title }: Props) {
 }
 
 const MainContainer = styled.div`
-  /* background-image: url("https://i.imgur.com/J8Wn1dk.png");
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976719965279363142/background7.png");
   background-position: center;
-  background-size: cover; */
-  /* min-height: 100vh; */
+  background-size: cover;
 `;
 
 const ChildrenDiv = styled.div`

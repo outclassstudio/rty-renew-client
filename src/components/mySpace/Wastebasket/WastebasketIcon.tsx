@@ -5,8 +5,10 @@ export const WastebasketIconBox = styled.div`
   width: 100px;
   height: 150px;
   position: fixed;
-  top: 710px;
-  left: 220px;
+  /* top: 710px;
+  left: 220px; */
+  margin-top: 600px;
+  margin-left: 20px;
   cursor: pointer;
 `;
 

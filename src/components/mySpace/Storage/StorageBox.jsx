@@ -14,6 +14,7 @@ export const NewGiftContainer = styled.div`
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
     display: none;
+  }
 `;
 
 export const ItemContainer = styled.div`

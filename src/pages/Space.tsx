@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { setModalOpen } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
+import { NormalBtn } from "../style/btnStyle.style";
+import { fadeAction } from "../style/global";
 
 export const SpaceContainer = styled.div`
   display: flex;
@@ -18,8 +20,8 @@ export const SpaceContainer = styled.div`
 export const ThemeBtnBox = styled.div`
   display: flex;
   justify-content: center;
-  top: 840px;
-  left: 200px;
+  gap: 10px;
+  margin-top: 50px;
 `;
 
 export const Button = styled.button`
@@ -99,30 +101,59 @@ export default function Space() {
   };
   return (
     <>
-      <Layout> </Layout>
-      <SpaceContainer>
-        <Avatar
-          editAvatar={editAvatar}
-          setEditAvatar={setEditAvatar}
-          myInfo={myInfo}
-        />
-        {isEachGift ? (
-          <>
-            <Canvas giftList={spaceGiftList} editSpace={editSpace} />
-            <NewGiftBox
-              newGiftList={newGiftList}
-              storageGiftList={storageGiftList}
+      <Layout title={"내공간"}>
+        <MainContainer>
+          <SpaceContainer>
+            <Avatar
+              editAvatar={editAvatar}
+              setEditAvatar={setEditAvatar}
+              myInfo={myInfo}
             />
-          </>
-        ) : null}
-      </SpaceContainer>
-      <ThemeBtnBox>
-        <Button onClick={changeThemeHandler}>테마수정</Button>
-        <Button onClick={editAvatarHandler}>아바타 수정</Button>
-        <Button onClick={editSpaceHandler}>
-          {editSpace ? "완료" : "공간 수정"}
-        </Button>
-      </ThemeBtnBox>
+            {isEachGift ? (
+              <>
+                <Canvas giftList={spaceGiftList} editSpace={editSpace} />
+                <NewGiftBox
+                  newGiftList={newGiftList}
+                  storageGiftList={storageGiftList}
+                />
+              </>
+            ) : null}
+          </SpaceContainer>
+          <ThemeBtnBox>
+            <NormalBtn
+              className="a"
+              width={"250px"}
+              height={"40px"}
+              onClick={changeThemeHandler}
+            >
+              테마수정
+            </NormalBtn>
+            <NormalBtn
+              className="a"
+              width={"250px"}
+              height={"40px"}
+              onClick={editAvatarHandler}
+            >
+              아바타 수정
+            </NormalBtn>
+            <NormalBtn
+              className={editSpace ? "b" : "a"}
+              width={"250px"}
+              height={"40px"}
+              onClick={editSpaceHandler}
+            >
+              {editSpace ? "완료" : "공간 수정"}
+            </NormalBtn>
+          </ThemeBtnBox>
+        </MainContainer>
+      </Layout>
     </>
   );
 }
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  animation: ${fadeAction} 0.6s ease-in-out;
+  height: calc(100vh - 50px);
+`;

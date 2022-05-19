@@ -74,12 +74,13 @@ export default function Shop() {
 
 const MainContainer = styled.div`
   width: 100vw;
+  height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
-  margin-top: 30px;
+  gap: 20px;
+  /* margin-top: 30px; */
 `;
 
 const SubContainer = styled.div`
