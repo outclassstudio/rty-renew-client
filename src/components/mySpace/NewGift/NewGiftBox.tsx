@@ -44,7 +44,7 @@ export function NewGiftBox(props: any) {
     setStorageList(storageGiftList);
   }, [newGiftList, storageGiftList]);
 
-  console.log("newGiftBox", isOpenGiftBox, clickGiftBox);
+  console.log("newGiftBox", isOpenGiftBox, clickGiftBox, storageList);
 
   //newGift icon click modal msg new Gift, data newList
   //storage icon click modal msg storage Gift, data storageList

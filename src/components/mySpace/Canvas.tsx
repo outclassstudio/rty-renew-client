@@ -105,14 +105,6 @@ export default function Canvas(props: any) {
     }
   }, [isEditSpace]);
 
-  {
-    /** 
-     *  useEffect(() => {
-    console.log(isConfirmRes, "isConfirmRes");
-  }, [isConfirmRes]);
-    */
-  }
-
   console.log(
     "canvas",
     "props",
@@ -218,7 +210,9 @@ export default function Canvas(props: any) {
           );
           editClickedItem.remove();
         }
+
         if (e.point.x > 1100 && e.point.y > 600) {
+          setIsSave(true);
           console.log("pppppp12");
           //! 확인 모달 띄우기
           //   dispatch(setConfirmModal(true));
@@ -230,20 +224,23 @@ export default function Canvas(props: any) {
             (el: any) => el.id === editClickedItem.id
           );
           //  console.log("editClickedItem", match, clickedId, editClickedItem);
+
           const chageData = {
             idx: editItem[0].gift.idx,
+
             status: "storage",
           };
 
           changeGift(chageData).then((res) => {
+            console.log("savesave", res);
             if (res.status === 201) {
               editClickedItem.remove();
             }
           });
         }
 
-        if (isEditSpace) {
-          console.log("pppppp");
+        if (isEditSpace && !isSave) {
+          console.log("pppppp", isSave);
           //match arr 에서 clickedId 찾기
           const editItem = match.filter(
             (el: any) => el.id === editClickedItem.id
