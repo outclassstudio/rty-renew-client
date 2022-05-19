@@ -66,7 +66,7 @@ export function NewGiftBox(props: any) {
     <div>
       {isOpenGiftBox ? (
         <>
-          {clickGiftBox === "new" ? (
+          {clickGiftBox === "new" && newGiftList.length !== 0 ? (
             <>
               <NewGiftContainer>
                 <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
@@ -79,7 +79,7 @@ export function NewGiftBox(props: any) {
               </NewGiftContainer>
             </>
           ) : null}
-          {clickGiftBox === "storage" ? (
+          {clickGiftBox === "storage" && storageGiftList.length !== 0 ? (
             <>
               <NewGiftContainer>
                 <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>

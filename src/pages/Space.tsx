@@ -25,7 +25,7 @@ export const ThemeBtnBox = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 400px;
+  width: 290px;
   height: 70px;
   margin: 15px;
   cursor: pointer;
@@ -57,6 +57,8 @@ export default function Space() {
   const [storageGiftList, setStorageGiftList] = useState<any>();
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
+  const [editMove, setEditMove] = useState(false);
+  const [saveSpace, setSaveSpace] = useState(false);
 
   useEffect(() => {
     getUserInfo().then((res) => {
@@ -99,55 +101,77 @@ export default function Space() {
     //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
   };
+
+  const editMoveHandler = () => {
+    console.log("move", editMove);
+    setEditMove(!editMove);
+  };
+
+  const saveSpaceHandler = () => {
+    console.log("clickssss");
+    setSaveSpace(true);
+  };
   return (
-    <>
-      <Layout title={"내공간"}>
-        <MainContainer>
-          <SpaceContainer>
-            <Avatar
-              editAvatar={editAvatar}
-              setEditAvatar={setEditAvatar}
-              myInfo={myInfo}
-            />
-            {isEachGift ? (
-              <>
-                <Canvas giftList={spaceGiftList} editSpace={editSpace} />
-                <NewGiftBox
-                  newGiftList={newGiftList}
-                  storageGiftList={storageGiftList}
-                />
-              </>
-            ) : null}
-          </SpaceContainer>
-          <ThemeBtnBox>
-            <NormalBtn
-              className="a"
-              width={"250px"}
-              height={"40px"}
-              onClick={changeThemeHandler}
-            >
-              테마수정
-            </NormalBtn>
-            <NormalBtn
-              className="a"
-              width={"250px"}
-              height={"40px"}
-              onClick={editAvatarHandler}
-            >
-              아바타 수정
-            </NormalBtn>
-            <NormalBtn
-              className={editSpace ? "b" : "a"}
-              width={"250px"}
-              height={"40px"}
-              onClick={editSpaceHandler}
-            >
-              {editSpace ? "완료" : "공간 수정"}
-            </NormalBtn>
-          </ThemeBtnBox>
-        </MainContainer>
-      </Layout>
-    </>
+    <Layout title={"내공간"}>
+      <MainContainer>
+        <SpaceContainer>
+          <Avatar
+            editAvatar={editAvatar}
+            setEditAvatar={setEditAvatar}
+            myInfo={myInfo}
+          />
+          {isEachGift ? (
+            <>
+              <Canvas
+                giftList={spaceGiftList}
+                editSpace={editSpace}
+                editMove={editMove}
+                saveSpace={saveSpace}
+              />
+              <NewGiftBox
+                newGiftList={newGiftList}
+                storageGiftList={storageGiftList}
+              />
+            </>
+          ) : null}
+        </SpaceContainer>
+        <ThemeBtnBox>
+          <NormalBtn
+            className="a"
+            width={"250px"}
+            height={"40px"}
+            onClick={changeThemeHandler}
+          >
+            테마수정
+          </NormalBtn>
+          <NormalBtn
+            className="a"
+            width={"250px"}
+            height={"40px"}
+            onClick={editAvatarHandler}
+          >
+            아바타 수정
+          </NormalBtn>
+          <NormalBtn
+            className={editSpace ? "b" : "a"}
+            width={"250px"}
+            height={"40px"}
+            onClick={editSpaceHandler}
+          >
+            {editSpace ? "완료" : "공간 수정"}
+          </NormalBtn>
+
+          <NormalBtn
+            className="a"
+            width={"250px"}
+            height={"40px"}
+            onClick={editMoveHandler}
+          >
+            배치 수정
+          </NormalBtn>
+        </ThemeBtnBox>
+      </MainContainer>
+    </Layout>
   );
 }
 

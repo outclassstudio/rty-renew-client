@@ -29,7 +29,12 @@ export const getSentGift = async (): Promise<
 export const changeGift = (
   data: any //Gift.attributeDTO
 ): Promise<AxiosResponse<any>> => {
-  return apiClient().patch(`/gift/${data.idx}`, data);
+  return apiClient()
+    .patch(`/gift/${data.idx}`, data)
+    .then((res) => {
+      console.log(res, "giftres");
+      return res;
+    });
 };
 
 //gift삭제
