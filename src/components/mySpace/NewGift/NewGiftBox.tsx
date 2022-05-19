@@ -63,7 +63,7 @@ export function NewGiftBox(props: any) {
   //newGift icon click modal msg new Gift, data newList
   //storage icon click modal msg storage Gift, data storageList
   return (
-    <div>
+    <MainContainer>
       {isOpenGiftBox ? (
         <>
           {clickGiftBox === "new" && newGiftList.length !== 0 ? (
@@ -94,6 +94,11 @@ export function NewGiftBox(props: any) {
           ) : null}
         </>
       ) : null}
-    </div>
+    </MainContainer>
   );
 }
+
+const MainContainer = styled.div`
+  position: fixed;
+  margin-left: 1530px;
+`;

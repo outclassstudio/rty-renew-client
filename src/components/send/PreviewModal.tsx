@@ -28,6 +28,7 @@ export default function PreviewModal({ data, handleCloseModal }: any) {
             <ContentImg>
               <div>{data.content}</div>
             </ContentImg>
+            <div>from . {data.userFrom}</div>
             {/* <div>{data.date}에 보낸 선물입니다.</div> */}
           </Content>
         </PrvBoxWrapper>
@@ -72,6 +73,7 @@ const PrvBoxWrapper = styled.div`
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
   padding: 0px;
   border-radius: 11px;
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976382563788673124/pexels-george-dolgikh-giftpunditscom-1303092.jpg");
 
   img {
     margin-bottom: 5px;
@@ -100,7 +102,7 @@ const Content = styled.div`
 
   div:nth-child(2) {
     margin-top: 20px;
-    font-size: 12px;
+    font-size: 17px;
     font-weight: 200;
     color: #555555;
   }

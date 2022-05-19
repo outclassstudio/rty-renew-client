@@ -393,7 +393,7 @@ export default function Canvas(props: any) {
     dispatch(setMyGift(filteredList));
 
     console.log("drop", targetItem, dropGift, targetId);
-    const x = e.clientX - 150;
+    const x = e.clientX - 320;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
 
@@ -632,7 +632,6 @@ export default function Canvas(props: any) {
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
-
         {themeModal ? <Background /> : null}
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
