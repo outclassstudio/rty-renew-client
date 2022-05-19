@@ -1,4 +1,6 @@
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { setConfirmModal, setConfirmRes } from "../redux/reducers/spaceReducer";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -14,7 +16,7 @@ export const ModalView = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: 600px;
+  width: 450px;
   padding: 2rem 1rem 2rem;
   top: 50%;
   left: 50%;
@@ -27,15 +29,43 @@ export const ModalView = styled.div`
   }
 `;
 
-export function ConfirmModal() {
+export const ContentBox = styled.div`
+  width: 500px;
+  display: flex;
+  justify-content: center;
+`;
+
+export const Button = styled.button`
+  width: 90px;
+  height: 40px;
+  margin: 5px;
+`;
+
+export function ConfirmModal(props: any) {
+  const dispatch = useDispatch();
+
+  const setIsConfirmRes = props.setIsConfirmRes;
+  const okModalHandler = () => {
+    console.log("okokok", setIsConfirmRes);
+    //dispatch(setConfirmRes(true));
+    setIsConfirmRes(true);
+  };
+
+  const cancleModalHandler = () => {
+    console.log("nono");
+    dispatch(setConfirmModal(false));
+  };
+
   return (
     <ModalBackground>
       <ModalView>
-        <div>
-          <p>저장 하시겠습니까?</p>
-          <button>OK</button>
-          <button>NO</button>
-        </div>
+        <ContentBox>
+          <div>
+            <p>저장 또는 삭제 하시겠습니까?</p>
+            <Button onClick={okModalHandler}>OK</Button>
+            <Button onClick={cancleModalHandler}>NO</Button>
+          </div>
+        </ContentBox>
       </ModalView>
     </ModalBackground>
   );

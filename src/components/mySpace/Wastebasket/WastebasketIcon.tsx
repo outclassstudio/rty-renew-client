@@ -5,14 +5,14 @@ export const WastebasketIconBox = styled.div`
   width: 100px;
   height: 150px;
   position: fixed;
-  top: 650px;
-  right: 1600px;
+  top: 710px;
+  left: 220px;
+  cursor: pointer;
 `;
 
 export function WastebasketIcon() {
   return (
     <WastebasketIconBox>
-      <h3>쓰레기통</h3>
       <GarbageTrash />
     </WastebasketIconBox>
   );

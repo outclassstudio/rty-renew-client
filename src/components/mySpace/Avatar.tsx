@@ -19,7 +19,7 @@ export const AvatarBox = styled.div`
 export const MsgBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 210px;
+  width: 220px;
   height: 50px;
   background-color: green;
   border-radius: 10px;
@@ -28,10 +28,20 @@ export const MsgBox = styled.div`
 `;
 
 export const MsgEditBtn = styled.button`
-  background-color: blue;
-  width: 50px;
-  border-radius: 10px;
+  border: 1px solid;
+  background-color: transparent;
+  width: 36px;
   cursor: pointer;
+  margin: 5px;
+  border-radius: 10px;
+`;
+
+export const H3 = styled.h3`
+  margin: 0px;
+`;
+
+export const Input = styled.input`
+  margin: 2px;
 `;
 
 export function Avatar(props: any) {
@@ -51,17 +61,14 @@ export function Avatar(props: any) {
       setMyInfo(user);
       //dispatch(userInfo(user));
     });
-  }, [dispatch, myInfo]);
+  }, [dispatch]);
 
   const editBtnHandler = () => {
-    console.log("editBTn ");
-
     if (isEditBtn) {
       changeMsg(stateMsg).then((res) => {
         let info = res.data;
         setMyInfo(info);
         dispatch(userInfo(info));
-        console.log(info, "Avatar", myInfo);
       });
     }
 
@@ -74,20 +81,38 @@ export function Avatar(props: any) {
     setStateMsg(e.target.value);
     //서버에게 user 상태 메세지 변경 post 요청 보내기
   };
+
+  const clickAvatarHandler = () => {
+    console.log("clicked avatar");
+  };
   return (
     <>
       {myInfo ? (
-        <AvatarBox>
-          <h3>내이름은 {myInfo.nickname}!!</h3>
+        <AvatarBox onClick={clickAvatarHandler}>
+          <H3>내이름은 {myInfo.nickname}!!</H3>
           <MsgBox>
-            {isEditBtn ? (
-              <input type="text" maxLength="10" onChange={inputChangeHandler} />
+            {editType ? (
+              <>
+                <input
+                  type="text"
+                  maxLength="10"
+                  onChange={inputChangeHandler}
+                />
+                <MsgEditBtn onClick={editBtnHandler}>
+                  <svg
+                    width="24"
+                    height="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
+                  </svg>
+                </MsgEditBtn>
+              </>
             ) : (
               <p>{myInfo.msg}</p>
             )}
-            <MsgEditBtn onClick={editBtnHandler}>
-              {isEditBtn ? "저장" : "수정"}
-            </MsgEditBtn>
           </MsgBox>
           <MyAvatar />
         </AvatarBox>

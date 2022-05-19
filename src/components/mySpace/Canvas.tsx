@@ -1,16 +1,23 @@
 import styled from "styled-components";
 import Paper from "paper";
-import { DragEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Gift } from "./Gift/Gift";
 import Background from "./Background";
 import { getUserInfo } from "../../apis/userApi";
-import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
+import {
+  setConfirmModal,
+  setMyGift,
+  setUserInfo,
+} from "../../redux/reducers/spaceReducer";
 import { getGift, changeGift, deleteGift } from "../../apis/giftApi";
 import { themeList } from "../../utils/themaList";
 import { tool } from "paper/dist/paper-core";
 import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
 import { Storage } from "./Storage/Storage";
+import { NewGiftBox } from "./NewGift/NewGiftBox";
+import NewGiftIcon from "./NewGift/NewGiftIcon";
+import { ConfirmModal } from "../ConfirmModal";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -31,21 +38,25 @@ export default function Canvas(props: any) {
   const dispatch = useDispatch();
 
   const editSpace = props.editSpace;
-  const giftList = props.giftList;
+  const spaceGiftList = props.giftList;
   const [spaceGift, setSpaceGift] = useState<any>([]);
+  const [dropGift, setDropGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
-  const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const isConfirmModal = useSelector(
+    (state: any) => state.spaceReducer.isConfirmModal
+  );
+
+  const [isConfirmRes, setIsConfirmRes] = useState(false);
 
   const userTheme = themeList.filter((el) => el.name === userInfo.theme);
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
   );
-  const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
 
-  //const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const [selected, setSelected] = useState<any>();
 
   let tool: paper.Tool;
@@ -57,107 +68,158 @@ export default function Canvas(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     tool = new paper.Tool();
     tool.activate();
+
+    const DropList = userGiftList.filter(
+      (item: any) => item.status !== "space"
+    );
+    console.log(DropList, "newLLL");
+    setDropGift(DropList);
+
     //canvas에 import 하가
 
-    draw();
+    like();
 
-    console.log("내정보", giftList);
-    getUserInfo().then((res) => {
-      dispatch(setUserInfo(res.data));
-    });
+    if (spaceGiftList.length !== 0) {
+      importSvg();
+    }
+
+    async function getUserGift() {
+      console.log("start");
+      const userGiftRes = await getGift();
+      if (userGiftRes.status === 200) {
+        const spaceGifts = userGiftRes.data.filter(
+          (el) => el.status === "space"
+        );
+        console.log("start2");
+        setSpaceGift(spaceGifts);
+        dispatch(setMyGift(userGiftRes.data));
+        console.log("spaceGifts123", spaceGiftList);
+      }
+    }
+    async function getUser() {
+      const userData = await getUserInfo();
+      dispatch(setUserInfo(userData.data));
+      console.log(userData, "userData");
+    }
+    getUserGift();
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (editSpace) {
+      draw();
+    } else {
+      return;
+    }
   }, [editSpace]);
 
   useEffect(() => {
-    getGift().then((res) => {
-      let gift = res.data;
-      let spaceGifts = gift.filter((el) => el.status === "space");
-      dispatch(setMyGift(gift));
-      setSpaceGift(spaceGifts);
+    console.log(isConfirmRes, "isConfirmRes");
+  }, [isConfirmRes]);
 
-      console.log(gift, "Allgift", spaceGifts, spaceGift);
-    });
-    importSvg();
-  }, []);
+  console.log(
+    "canvas",
+    "props",
+    props,
+    "selecotr",
+
+    "userInfo",
+    userInfo,
+    "userGiftList",
+    userGiftList
+  );
 
   //유저정보 불러오기
 
   //! space에 저장된 선물 불러오기
   function importSvg() {
-    console.log("import", spaceGift);
+    //console.log("import", spaceGiftList.length, match.length);
 
-    if (match.legnth !== 0 && match.length <= spaceGift.length) {
-      spaceGift.forEach((gift: any) => {
-        console.log("forEach", gift, spaceGift);
+    if (match.length <= spaceGiftList.length) {
+      spaceGiftList.forEach((gift: any) => {
         const svgAttr = JSON.parse(gift.svgAttr);
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
-            console.log(item, "itemitem");
+            //     console.log(item, "itemitem");
             let obj = { id: item.id, gift: gift };
             // setMatch([...match, obj]);
-            console.log("match", match, item);
+            //   console.log("match", match, item);
             match.push(obj);
             item.position = new Paper.Point(svgAttr.x, svgAttr.y);
-            if (item.firstChild.size._width < 500) {
+            if (item.firstChild.size._width < 300) {
               item.scale(1.5);
             } else {
               item.scale(0.15);
             }
           },
         });
-        console.log(match, "match", giftList);
+        // draw();
+        //     console.log(match, "match", spaceGiftList);
       });
+    } else {
+      return;
     }
   }
 
+  const like = () => {
+    Paper.view.onDoubleClick = (e: any) => {
+      const hitItem = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
+      if (hitItem) {
+        setClickedId(hitItem.id);
+        setIsOpenGift(true);
+      }
+    };
+  };
+
   const draw = () => {
     //! test
-    /*
-    let tiger;
-    Paper.project.importSVG(
-      `https://s3-us-west-2.amazonaws.com/s.cdpn.io/106114/tiger.svg`,
-      function (item: any) {
-        tiger = item;
-        tiger.scale(0.2);
-        tiger.position = new paper.Point(
-          tiger.bounds.width / 2,
-          tiger.bounds.height / 2
-        );
-      }
-    );*/
 
     let a: any;
     //! onClick
     console.log(Paper.view, "Paper.view");
+
     Paper.view.onClick = (e: any) => {
       // const hitResult = Paper.project.hitTest(e.point, hitOptions);
 
       const test = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
       );
+
       if (test) {
-        test.bounds.selected = true;
-        setSelected(test);
-        a = test;
-        setClickedId(a.id);
+        if (!a) {
+          a = test;
+          a.bounds.selected = true;
+          setSelected(a);
+          setClickedId(a.id);
+        } else {
+          a.bounds.selected = false;
+          a = test;
+          a.bounds.selected = true;
+          setClickedId(a.id);
+        }
       } else {
-        console.log("null", a, selected);
-        //  a = selected;
-        //  a.bounds.selected = false;
+        a.bounds.selected = false;
+        a = null;
       }
 
       console.log("Test", test, match, selected);
-
-      //a.bounds.selected = true;
 
       a.onDoubleClick = (e: any) => {
         setIsOpenGift(true);
       };
 
       a.onMouseDrag = (e: any) => {
+        console.log(editSpace, "뭐냐");
         a.position.x += e.delta.x;
         a.position.y += e.delta.y;
         if (e.point.x < 90 && e.point.y > 640) {
-          alert("Remove selected");
+          //! 확인 모달 띄우기
+          //dispatch(setConfirmModal(true));
+          alert("remove?");
+
+          //! 응답이 ture라면 삭제하기
           const removeId = match.filter((el: any) => el.id === a.id);
           console.log(match, removeId, "removeId");
           deleteGift(removeId[0].gift.idx).then((res) =>
@@ -166,9 +228,12 @@ export default function Canvas(props: any) {
           a.remove();
         }
         if (e.point.x > 1100 && e.point.y > 600) {
+          //! 확인 모달 띄우기
+          //   dispatch(setConfirmModal(true));
           alert("save?");
-
+          //! 응답이 ture라면 저장하기
           //storage 저장 api  호출
+          console.log("isConfirmRes", isConfirmRes);
 
           const editItem = match.filter((el: any) => el.id === a.id);
           console.log("editItem", match, clickedId, editItem);
@@ -179,13 +244,15 @@ export default function Canvas(props: any) {
 
           changeGift(chageData).then((res) => console.log(res, "resss"));
           a.remove();
+          //   dispatch(setConfirmModal(false));
         }
 
-        if (editSpace) {
-          console.log("edit");
+        if (editSpace && !isConfirmRes) {
+          console.log("drag", clickedId);
+
           //match arr 에서 clickedId 찾기
-          const editItem = match.filter((el: any) => el.id === clickedId);
-          console.log(editItem[0].gift, "editItem");
+          const editItem = match.filter((el: any) => el.id === a.id);
+          console.log(editItem, "editItem", clickedId);
           let svgAttr = JSON.parse(editItem[0].gift.svgAttr);
           svgAttr.x = a.position.x;
           svgAttr.y = a.position.y;
@@ -199,12 +266,11 @@ export default function Canvas(props: any) {
 
           //해당 item  위치 변경 api  호출
           changeGift(chageData).then((res) => console.log(res, "resss"));
-          console.log("click", clickedId);
         }
       };
     };
 
-    //! delete item key
+    /* //! delete item key
     tool.onKeyDown = function (e: any) {
       console.log(e, "tool");
       if (e.key === "d") {
@@ -216,9 +282,8 @@ export default function Canvas(props: any) {
         );
         a.remove();
       }
-    };
+    };*/
   };
-
   const canvasRef = useRef(null);
 
   //! 변수
@@ -236,19 +301,19 @@ export default function Canvas(props: any) {
     const targetId = e.dataTransfer.getData("id");
 
     // newGiftList에서 targetId와 같은건 삭제한다.
-    const filteredList = newGiftLists.filter((el: any) => {
+    const filteredList = dropGift.filter((el: any) => {
       return el.idx !== Number(targetId);
     });
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
-    const targetItem = newGiftLists.filter((el: any) => {
+    const targetItem = dropGift.filter((el: any) => {
       return el.idx === Number(targetId);
     });
     console.log("111111", filteredList, targetId);
 
     dispatch(setMyGift(filteredList));
 
-    console.log("drop", targetItem, newGiftLists, targetId);
+    console.log("drop", targetItem, dropGift, targetId);
     const x = e.clientX - 150;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
@@ -261,13 +326,10 @@ export default function Canvas(props: any) {
     const chageData = { idx: targetItem[0].idx, svgAttr, status: "space" };
     console.log(chageData);
 
-    let obj = { id: targetItem[0].id, gift: targetItem[0].gift };
-    setMatch([...match, obj]);
-
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
       expandShapes: true,
-      //load
+
       onLoad: function (item: any) {
         const hitOptions = {
           segments: true,
@@ -275,12 +337,17 @@ export default function Canvas(props: any) {
           fill: true,
           tolerance: 5,
         };
-        //  const tool = new Paper.Tool();
-        console.log("dropppp", item);
+        let obj = { id: item.id, gift: targetItem[0] };
+        // setMatch([...match, obj]);
+        console.log("svgSize", item.firstChild.size._width);
+        match.push(obj);
         item.position = new Paper.Point(x, y);
-        if (item.firstChild.size._width < 500) {
+
+        if (item.firstChild.size._width < 300) {
+          console.log("300");
           item.scale(1.5);
         } else {
+          console.log("400");
           item.scale(0.15);
         }
 
@@ -473,16 +540,20 @@ export default function Canvas(props: any) {
         <CanvasArea
           ref={canvasRef}
           id="canvas"
-          color="https://i.imgur.com/mpT71SX.jpg"
+          color={userInfo.theme}
           draggable
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
+        <NewGiftIcon />
         <WastebasketIcon />
         <Storage />
         {themeModal ? <Background /> : null}
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
+        ) : null}
+        {isConfirmModal ? (
+          <ConfirmModal setIsConfirmRes={setIsConfirmRes} />
         ) : null}
       </CanvasBox>
     </>

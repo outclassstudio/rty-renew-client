@@ -6,7 +6,7 @@ import StorageItem from "../Storage/StorageItem";
 import { getGift } from "../../../apis/giftApi";
 
 export const NewGiftContainer = styled.div`
-  margin: 50px 20px 0;
+  margin: 50px 10px 0;
   width: 200px;
   height: 720px;
   background-color: #f9f9f9;
@@ -25,59 +25,62 @@ export const ItemContainer = styled.div`
 `;
 
 export function NewGiftBox(props: any) {
-  const giftList = props.giftList;
-  const [newList, setNewList] = useState(giftList);
+  const newGiftList = props.newGiftList;
+  const storageGiftList = props.storageGiftList;
 
-  const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  const isOpenStorage = useSelector(
-    (state: any) => state.spaceReducer.isOpenStorage
+  const [newList, setNewList] = useState(newGiftList);
+  const [storageList, setStorageList] = useState<any>([]);
+  // const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+
+  const isOpenGiftBox = useSelector(
+    (state: any) => state.spaceReducer.isOpenGiftBox
+  );
+  const clickGiftBox = useSelector(
+    (state: any) => state.spaceReducer.clickGiftBox
   );
   const isOpenGift = useSelector(
     (state: any) => state.spaceReducer.isOpenNewGift
   );
 
-  const [storageList, setStorageList] = useState<any>();
-  //get Item status가 storage인것만 가져오기
   useEffect(() => {
-    getGift().then((res) => {
-      const allData = res.data;
-      const storageData = allData.filter((el) => el.status === "storage");
-      console.log(storageData, "storageData", allData);
-      setStorageList(storageData);
-    });
-  }, []);
-  useEffect(() => {
-    setNewList(giftList);
-  }, [giftList]);
+    setNewList(newGiftList);
+    setStorageList(storageGiftList);
+  }, [newGiftList, storageGiftList]);
 
+  console.log("newGiftBox", isOpenGiftBox, clickGiftBox);
+
+  //newGift icon click modal msg new Gift, data newList
+  //storage icon click modal msg storage Gift, data storageList
   return (
     <div>
-      {isOpenGift ? (
+      {isOpenGiftBox ? (
         <>
-          <NewGiftContainer>
-            <h4>GiftBox Component</h4>
-            <h3>New Gift!</h3>
-            <ItemContainer>
-              {newList &&
-                newList.map((item: any, idx: number) => {
-                  return <NewGiftItem {...item} key={idx.toString()} />;
-                })}
-            </ItemContainer>
-          </NewGiftContainer>
-        </>
-      ) : null}
-      {isOpenStorage ? (
-        <>
-          <NewGiftContainer>
-            <h4>Storage Component</h4>
-            <h3>Storage Gift!</h3>
-            <ItemContainer>
-              {storageList &&
-                storageList.map((item: any, idx: number) => {
-                  return <StorageItem item={item} key={idx} />;
-                })}
-            </ItemContainer>
-          </NewGiftContainer>
+          {clickGiftBox === "new" ? (
+            <>
+              <NewGiftContainer>
+                <h3>New Gift!</h3>
+                <ItemContainer>
+                  {newList &&
+                    newList.map((item: any, idx: number) => {
+                      return <NewGiftItem {...item} key={idx.toString()} />;
+                    })}
+                </ItemContainer>
+              </NewGiftContainer>
+            </>
+          ) : null}
+          {clickGiftBox === "storage" ? (
+            <>
+              <NewGiftContainer>
+                <h3>Storage Gift!</h3>
+                <ItemContainer>
+                  {storageList &&
+                    storageList.map((item: any, idx: number) => {
+                      return <NewGiftItem {...item} key={idx.toString()} />;
+                    })}
+                </ItemContainer>
+              </NewGiftContainer>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>

@@ -116,17 +116,15 @@ export default function Background() {
           {themeList.map((img) => {
             return (
               <SelectImg key={img.id}>
-                <ImgBox>
-                  <Img src={img.url} alt="theme" />
-                </ImgBox>
+                <ImgBox>{/**  <Img src={img.url} alt="theme" />*/}</ImgBox>
                 <ImgName>{img.name}</ImgName>
                 <SelectInput
                   type="checkbox"
-                  value={img.url}
+                  value={img.name}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(img.url) ? true : false}
+                  checked={checkedItem.includes(img.name) ? true : false}
                 ></SelectInput>
               </SelectImg>
             );

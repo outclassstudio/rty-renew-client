@@ -3,7 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 //import { isOpenNewGift } from "../../../redux/actions/index";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
 import { useEffect } from "react";
-import { setOpenNewGift } from "../../../redux/reducers/spaceReducer";
+import {
+  setClickGiftBox,
+  setOpenGiftBox,
+  setOpenNewGift,
+} from "../../../redux/reducers/spaceReducer";
+import { NewGiftBox } from "./NewGiftBox";
 
 export const GiftIconBox = styled.div`
   position: absolute;
@@ -18,6 +23,14 @@ export const GiftBox = styled.div`
   background-color: red;
 `;
 
+export const GiftCount = styled.p`
+  margin: 0px;
+  font-weight: 900;
+  font-size: larger;
+  color: red;
+}
+`;
+
 export default function NewGift() {
   // new giftbox의 길이가 0이 아닐 때
   //새로 받은 선물함 아이콘이 있다.
@@ -26,24 +39,26 @@ export default function NewGift() {
   const isOpenGift = useSelector(
     (state: any) => state.spaceReducer.isOpenNewGift
   );
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
+  const isOpenGiftBox = useSelector(
+    (state: any) => state.spaceReducer.isOpenGiftBox
   );
-
-  useEffect(() => {}, [isOpenGift, newGiftLists]);
+  const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const newGiftLists = giftLists.filter((el: any) => el.status === "new");
+  useEffect(() => {}, [isOpenGift, giftLists]);
 
   const openGiftHandler = () => {
-    console.log("click new gift");
-    dispatch(setOpenNewGift(!isOpenGift));
+    dispatch(setOpenGiftBox(!isOpenGiftBox));
+    dispatch(setClickGiftBox("new"));
   };
-  //console.log("-------newGiftLists", newGiftLists);
+  console.log("isOpenGift", isOpenGift);
+
   return (
     <div>
       <GiftIconBox>
+        <GiftCount>{newGiftLists.length}</GiftCount>
         {newGiftLists && !newGiftLists.length ? null : (
           <NewGifIcon1 onClick={openGiftHandler} />
         )}
-        {isOpenGift ? "open" : "close"}
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>

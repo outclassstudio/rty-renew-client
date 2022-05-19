@@ -7,6 +7,10 @@ interface spaceState {
   userInfo: Myinfo;
   myGift: any;
   isOpenStorage: boolean;
+  isConfirmModal: boolean;
+  isConfirmRes: boolean;
+  isOpenGiftBox: boolean;
+  clickGiftBox: string;
 }
 
 interface Myinfo {
@@ -30,6 +34,10 @@ const initialState = {
   },
   isOpenStorage: false,
   myGift: undefined,
+  isConfirmModal: false,
+  isConfirmRes: false,
+  isOpenGiftBox: false,
+  clickGiftBox: "",
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -52,6 +60,18 @@ const spaceSlice = createSlice({
     setOpenStorage(state, action: PayloadAction<any>) {
       state.isOpenStorage = action.payload;
     },
+    setConfirmModal(state, action: PayloadAction<any>) {
+      state.isConfirmModal = action.payload;
+    },
+    setConfirmRes(state, action: PayloadAction<any>) {
+      state.isConfirmRes = action.payload;
+    },
+    setOpenGiftBox(state, action: PayloadAction<any>) {
+      state.isOpenGiftBox = action.payload;
+    },
+    setClickGiftBox(state, action: PayloadAction<any>) {
+      state.clickGiftBox = action.payload;
+    },
   },
 });
 
@@ -61,51 +81,9 @@ export const {
   setOpenNewGift,
   setMyGift,
   setOpenStorage,
+  setConfirmModal,
+  setConfirmRes,
+  setOpenGiftBox,
+  setClickGiftBox,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;
-
-// import {
-//   IS_THEME_MODAL,
-//   IS_OPEN_NEW_GIFT_BOX,
-//   NEW_GIFT_LIST,
-//   EDIT_THEME,
-//   USER_INFO,
-// } from "../actions/index";
-
-// import { initialState } from "./initialState";
-
-// const spaceReducer: any = (
-//   state = initialState,
-//   action: {
-//     type: any;
-//     payload: any;
-//   }
-// ) => {
-//   const newState = { ...state };
-//   switch (action.type) {
-//     case IS_THEME_MODAL:
-//       return { ...newState, isThemeModal: action.payload };
-//       break;
-
-//     case IS_OPEN_NEW_GIFT_BOX:
-//       return { ...newState, isOpenNewGift: action.payload };
-//       break;
-
-//     case EDIT_THEME:
-//       return { ...newState, myTheme: action.payload };
-//       break;
-
-//     case NEW_GIFT_LIST:
-//       return { ...newState, newGiftList: action.payload };
-//       break;
-
-//     case USER_INFO:
-//       return { ...newState, userInfo: action.payload };
-//       break;
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export default spaceReducer;

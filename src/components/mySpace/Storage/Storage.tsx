@@ -4,15 +4,17 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { getGift } from "../../../apis/giftApi";
 import { ReactComponent as StorageICon } from "../../../assets/images/svg/storage.svg";
-import { setOpenStorage } from "../../../redux/reducers/spaceReducer";
-import { StorageBox } from "./StorageBox";
+import {
+  setClickGiftBox,
+  setOpenGiftBox,
+} from "../../../redux/reducers/spaceReducer";
 
 export const StorageContainer = styled.div`
   width: 100px;
   height: 150px;
   position: fixed;
   top: 700px;
-  left: 1550px;
+  left: 1340px;
   cursor: pointer;
 `;
 
@@ -27,20 +29,23 @@ export function Storage() {
     getGift().then((res) => {
       const allData = res.data;
       const storageData = allData.filter((el) => el.status === "storage");
-      console.log(storageData, "storageData", allData);
+      //  console.log(storageData, "storageData", allData);
       setStorageList(storageData);
     });
   }, []);
+
+  const isOpenGiftBox = useSelector(
+    (state: any) => state.spaceReducer.isOpenGiftBox
+  );
   const isOpenStorage = useSelector(
     (state: any) => state.spaceReducer.isOpenStorage
   );
+
   const isOpenHandler = () => {
-    //setIsOpenStorage(!isOpenStorage);
-    dispatch(setOpenStorage(!isOpenStorage));
-    console.log("sotrage oepen", isOpenStorage, storageList);
+    dispatch(setOpenGiftBox(!isOpenGiftBox));
+    dispatch(setClickGiftBox("storage"));
   };
 
-  console.log(isOpenStorage, "isOpenStorage");
   return (
     <StorageContainer onClick={isOpenHandler}>
       <StorageICon />
