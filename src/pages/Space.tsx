@@ -23,7 +23,7 @@ export const ThemeBtnBox = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 400px;
+  width: 290px;
   height: 70px;
   margin: 15px;
   cursor: pointer;
@@ -55,6 +55,8 @@ export default function Space() {
   const [storageGiftList, setStorageGiftList] = useState<any>();
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
+  const [editMove, setEditMove] = useState(false);
+  const [saveSpace, setSaveSpace] = useState(false);
 
   useEffect(() => {
     getUserInfo().then((res) => {
@@ -97,6 +99,16 @@ export default function Space() {
     //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
   };
+
+  const editMoveHandler = () => {
+    console.log("move", editMove);
+    setEditMove(!editMove);
+  };
+
+  const saveSpaceHandler = () => {
+    console.log("clickssss");
+    setSaveSpace(true);
+  };
   return (
     <>
       <Layout> </Layout>
@@ -108,7 +120,12 @@ export default function Space() {
         />
         {isEachGift ? (
           <>
-            <Canvas giftList={spaceGiftList} editSpace={editSpace} />
+            <Canvas
+              giftList={spaceGiftList}
+              editSpace={editSpace}
+              editMove={editMove}
+              saveSpace={saveSpace}
+            />
             <NewGiftBox
               newGiftList={newGiftList}
               storageGiftList={storageGiftList}
@@ -119,9 +136,15 @@ export default function Space() {
       <ThemeBtnBox>
         <Button onClick={changeThemeHandler}>테마수정</Button>
         <Button onClick={editAvatarHandler}>아바타 수정</Button>
-        <Button onClick={editSpaceHandler}>
-          {editSpace ? "완료" : "공간 수정"}
-        </Button>
+        {editSpace ? (
+          <>
+            <Button onClick={saveSpaceHandler}>완료</Button>
+          </>
+        ) : (
+          <Button onClick={editSpaceHandler}>공간 수정</Button>
+        )}
+
+        <Button onClick={editMoveHandler}>배치 수정</Button>
       </ThemeBtnBox>
     </>
   );

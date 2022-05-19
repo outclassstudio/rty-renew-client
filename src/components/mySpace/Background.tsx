@@ -83,9 +83,15 @@ export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
   const [themeList, setThemeList] = useState<Array<any>>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   useEffect(() => {
-    getThemeList().then((res) => setThemeList(res.data));
+    getThemeList().then((res) => {
+      if (res.status === 200) {
+        setThemeList(res.data);
+        setIsLoading(true);
+      }
+    });
   }, []);
 
   console.log("themeList", themeList);
@@ -123,7 +129,6 @@ export default function Background() {
             return (
               <SelectImg key={idx}>
                 <ImgBox>
-                  {" "}
                   <Img src={theme.url} alt="theme" />
                 </ImgBox>
                 <ImgName>{theme.name}</ImgName>

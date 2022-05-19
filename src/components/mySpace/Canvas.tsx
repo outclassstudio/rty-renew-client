@@ -34,6 +34,8 @@ export default function Canvas(props: any) {
 
   const isEditSpace = props.editSpace;
   const spaceGiftList = props.giftList;
+  const isEditMove = props.editMove;
+  const saveSpace = props.saveSpace;
   const [spaceGift, setSpaceGift] = useState<any>([]);
   const [dropGift, setDropGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
@@ -100,10 +102,18 @@ export default function Canvas(props: any) {
   useEffect(() => {
     if (isEditSpace) {
       edit();
-    } else {
-      saveSpace();
+      console.log("editmove");
     }
-  }, [isEditSpace]);
+    if (isEditMove) {
+      move();
+      console.log("moveedit");
+    }
+    if (saveSpace) {
+      saveSpace1();
+      console.log("saveS");
+    }
+    console.log(isEditMove, "moves", isEditSpace);
+  }, [isEditSpace, isEditMove]);
 
   console.log(
     "canvas",
@@ -158,6 +168,68 @@ export default function Canvas(props: any) {
     };
   };
 
+  //! item move
+  const move = () => {
+    console.log("movemovefunction");
+    console.log("move 왜안찍혀");
+    let editClickedItem: any;
+
+    Paper.view.onClick = (e: any) => {
+      const test = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
+
+      if (test) {
+        if (!editClickedItem) {
+          editClickedItem = test;
+          editClickedItem.bounds.selected = true;
+          setSelected(editClickedItem);
+          setClickedId(editClickedItem.id);
+        } else {
+          editClickedItem.bounds.selected = false;
+          editClickedItem = test;
+          editClickedItem.bounds.selected = true;
+          setClickedId(editClickedItem.id);
+        }
+      } else {
+        editClickedItem.bounds.selected = false;
+        editClickedItem = null;
+      }
+
+      editClickedItem.onDoubleClick = (e: any) => {
+        setIsOpenGift(true);
+      };
+
+      editClickedItem.onMouseDrag = (e: any) => {
+        editClickedItem.position.x += e.delta.x;
+        editClickedItem.position.y += e.delta.y;
+
+        if (isEditMove) {
+          //match arr 에서 clickedId 찾기
+          const editItem = match.filter(
+            (el: any) => el.id === editClickedItem.id
+          );
+          console.log(editClickedItem, "editClickedItem", clickedId);
+
+          let svgAttr = JSON.parse(editItem[0].gift.svgAttr);
+          svgAttr.x = editClickedItem.position.x;
+          svgAttr.y = editClickedItem.position.y;
+
+          svgAttr = JSON.stringify(svgAttr);
+          const chageData = {
+            idx: editItem[0].gift.idx,
+            svgAttr,
+            status: "space",
+            userTo: window.localStorage.getItem("id"),
+          };
+
+          //해당 item  위치 변경 api  호출
+          changeGift(chageData).then((res) => console.log(res, "movesss"));
+        }
+      };
+    };
+  };
+
   const edit = () => {
     //! test
     let editClickedItem: any;
@@ -165,6 +237,7 @@ export default function Canvas(props: any) {
     // console.log(Paper.view, "Paper.view");
 
     Paper.view.onClick = (e: any) => {
+      console.log("eidtfunction");
       const test = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
       );
@@ -212,8 +285,6 @@ export default function Canvas(props: any) {
         }
 
         if (e.point.x > 1100 && e.point.y > 600) {
-          setIsSave(true);
-          console.log("pppppp12");
           //! 확인 모달 띄우기
           //   dispatch(setConfirmModal(true));
           alert("save?");
@@ -227,19 +298,30 @@ export default function Canvas(props: any) {
 
           const chageData = {
             idx: editItem[0].gift.idx,
-
             status: "storage",
+            userTo: window.localStorage.getItem("id"),
           };
-
+          console.log("pppppp12", isSave, chageData, editItem);
           changeGift(chageData).then((res) => {
             console.log("savesave", res);
-            if (res.status === 201) {
+            if (res.status === 200) {
               editClickedItem.remove();
             }
           });
         }
 
-        if (isEditSpace && !isSave) {
+        //! 움직인걸 찾아라!
+        const editItem = match.filter(
+          (el: any) => el.id === editClickedItem.id
+        );
+        let svgAttr = JSON.parse(editItem[0].gift.svgAttr);
+        svgAttr.x = editClickedItem.position.x;
+        svgAttr.y = editClickedItem.position.y;
+
+        svgAttr = JSON.stringify(svgAttr);
+        console.log("움직인걸 찾아라", svgAttr, editItem[0].id);
+
+        /*if (isEditSpace) {
           console.log("pppppp", isSave);
           //match arr 에서 clickedId 찾기
           const editItem = match.filter(
@@ -259,11 +341,7 @@ export default function Canvas(props: any) {
 
           //해당 item  위치 변경 api  호출
           changeGift(chageData).then((res) => console.log(res, "resss"));
-        }
-
-        if (isSave) {
-          console.log("도장");
-        }
+        }*/
       };
     };
 
@@ -319,7 +397,12 @@ export default function Canvas(props: any) {
     svgAttr.x = x;
     svgAttr.y = y;
     svgAttr = JSON.stringify(svgAttr);
-    const chageData = { idx: targetItem[0].idx, svgAttr, status: "space" };
+    const chageData = {
+      idx: targetItem[0].idx,
+      svgAttr,
+      status: "space",
+      userTo: window.localStorage.getItem("id"),
+    };
 
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
@@ -523,12 +606,13 @@ export default function Canvas(props: any) {
 
   console.log("canvas2", match, isEditSpace);
 
-  function saveSpace() {
+  function saveSpace1() {
     if (!isEditSpace) {
       console.log("실행", match);
     }
   }
 
+  const cleanSpace = () => {};
   return (
     <>
       <CanvasBox>
