@@ -1,4 +1,4 @@
-import { createGlobalStyle, keyframes } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
 @font-face {
@@ -32,8 +32,14 @@ export const mediaQuery = {
   mac: createMediaQuery(LAYOUT_BREAK_POINT.MAC),
 };
 
-//기본컬러
-export const baseColor = "#232253";
+//컬러셋
+export const colorSet = {
+  base: "#232253",
+  purple: "#4c3e9f",
+  pink: "#ec047a",
+  darkPink: "#b22490",
+  skyBlue: "#72b0eb",
+};
 
 //페이드 애니메이션
 export const fadeAction = keyframes`
@@ -46,6 +52,7 @@ export const fadeAction = keyframes`
   }
 `;
 
+//페이드+위로 움직임
 export const fadeMoveAction = keyframes`
   0% {
     transform: translateY(30px);
@@ -58,7 +65,8 @@ export const fadeMoveAction = keyframes`
   }
 `;
 
-export const fadeMoveAction2 = keyframes`
+//페이드+위로 움직임+딜레이
+export const fadeMoveActionDelay = keyframes`
   0% {
     transform: translateY(30px);
     opacity:0
@@ -73,4 +81,54 @@ export const fadeMoveAction2 = keyframes`
     transform: translateY(0px);
     opacity: 1;
   }
+`;
+
+//페이드+확장
+export const fadeExpand = keyframes`
+  0% {
+    transform: scale(0%);
+    opacity:0
+  }
+
+
+  100% {
+    transform: scale(100%);
+    opacity: 1;
+  }
+`;
+
+//페이드+오른쪽에서이동
+export const fadeSlide = keyframes`
+  0% {
+    transform: translateX(60%);
+    opacity:0
+  }
+
+
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+`;
+
+//페이드아웃
+export const fadeOut = keyframes`
+  0% {
+    opacity:1
+  }
+
+  100% {
+    opacity: 0;
+  }
+`;
+
+//드롭다운 배경용
+export const DropdonwBg = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  z-index: -1;
 `;

@@ -14,6 +14,17 @@ export const getGift = async (): Promise<
     });
 };
 
+//보낸선물조회
+export const getSentGift = async (): Promise<
+  AxiosResponse<Gift.singleGiftDTO[]>
+> => {
+  return apiClient()
+    .get(`/gift/send/${myId}`)
+    .then((res) => {
+      return res;
+    });
+};
+
 //space에 배치된 gift의 타입 및 속성값 변경
 export const changeGift = (
   data: any //Gift.attributeDTO

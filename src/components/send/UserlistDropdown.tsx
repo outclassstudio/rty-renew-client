@@ -1,15 +1,25 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
+import { colorSet } from "../../style/global";
 
 export default function UserlistDropdown({ userList, closeDropdown }: any) {
   const dispatch = useDispatch();
 
   //선택한 아이디로 상태업데이트
   const handleSetToUser = (id: string, nickname: string): void => {
-    dispatch(setTo(id));
-    dispatch(setNickname(nickname));
-    closeDropdown();
+    if (id === window.localStorage.getItem("id")) {
+      Swal.fire({
+        title: "자신에게는 보낼 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    } else {
+      dispatch(setTo(id));
+      dispatch(setNickname(nickname));
+      closeDropdown();
+    }
   };
 
   return (
@@ -45,8 +55,6 @@ const DropdonwBg = styled.div`
 
 const MainWrapper = styled.div`
   position: fixed;
-  /* left: 225px; */
-  /* top: 230px; */
   margin-top: 57px;
   margin-left: 55px;
   display: flex;
@@ -76,6 +84,6 @@ const SingleUser = styled.div`
   }
 
   :hover {
-    background: #72b0eb;
+    background: ${colorSet.skyBlue};
   }
 `;

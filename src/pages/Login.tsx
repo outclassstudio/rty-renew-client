@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
-import { fadeAction } from "../style/global";
+import { colorSet, fadeAction } from "../style/global";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ const MainContainer = styled.div`
   width: 100vw;
   height: 100vh;
   animation: 0.7s ease-in-out ${fadeAction};
-  /* background-image: url("https://i.imgur.com/8d2hJfL.jpg");
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976650594225909760/background3.png");
   background-position: center;
-  background-size: cover; */
+  background-size: cover;
 `;
 
 const Logo = styled.img`
@@ -51,6 +51,6 @@ const SignupText = styled.div`
   cursor: pointer;
 
   :hover {
-    color: #ec047a;
+    color: ${colorSet.pink};
   }
 `;

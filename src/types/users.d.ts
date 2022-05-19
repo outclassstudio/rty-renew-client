@@ -11,4 +11,9 @@ declare namespace Users {
     id: string;
     pw: string;
   }
+
+  interface changePwDTO {
+    id: string | null;
+    npwd: string;
+  }
 }

@@ -9,9 +9,9 @@ export const getItems = async (): Promise<
   AxiosResponse<Buy.singleItemDTO[]>
 > => {
   return apiClient()
-    .get("/buy/items")
+    .get("/item/items")
     .then((res) => {
-      return res.data;
+      return res;
     });
 };
 
@@ -20,7 +20,7 @@ export const getMyItems = async (): Promise<
   AxiosResponse<Buy.singleItemDTO[]>
 > => {
   return apiClient()
-    .get(`/buy/${myId}`)
+    .get(`/item/${myId}`)
     .then((res) => {
       return res;
     });
@@ -31,7 +31,7 @@ export const buyItem = async (
   data: Buy.buyItemReqDTO
 ): Promise<AxiosResponse<Buy.buyItemResDTO>> => {
   return apiClient()
-    .post(`/buy/${myId}`, data)
+    .post(`/item/${myId}`, data)
     .then((res) => {
       return res;
     });

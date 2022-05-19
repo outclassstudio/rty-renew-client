@@ -1,13 +1,17 @@
 declare namespace Buy {
   interface singleItemDTO {
+    idx: number;
     type: string;
     data: string;
     point?: number;
+    name?: string;
   }
 
   interface buyItemReqDTO {
-    type: string;
-    id: number;
+    userId: string | null;
+    itemIdx: number | null;
+    point: number;
+    name: string;
   }
 
   interface buyItemResDTO {

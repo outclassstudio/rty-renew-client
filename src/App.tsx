@@ -4,6 +4,7 @@ import Space from "./pages/Space";
 import Signup from "./pages/Signup";
 import Userinfo from "./pages/Userinfo";
 import Send from "./pages/Send";
+import GiftList from "./pages/GiftList";
 import ShopRoutes from "./routes/ShopRoutes";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
@@ -11,10 +12,9 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
-import { getUserInfo } from "./apis/userApi";
-import { userInfo } from "./redux/actions";
-import { setMyGift, setUserInfo } from "./redux/reducers/spaceReducer";
+import { setMyGift } from "./redux/reducers/spaceReducer";
 import { getGift } from "./apis/giftApi";
+import Loading from "./components/Loading";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -70,6 +70,8 @@ function App() {
         <Route path="/userinfo" element={<Userinfo />} />
         <Route path="/shop/*" element={<ShopRoutes />} />
         <Route path="/send" element={<Send />} />
+        <Route path="/giftlist" element={<GiftList />} />
+        <Route path="/loading" element={<Loading />} />
       </Routes>
     </Router>
   );

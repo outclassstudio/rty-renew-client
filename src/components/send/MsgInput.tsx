@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
-import { baseColor } from "../../style/global";
-import { imgArr } from "./dummy";
+import { colorSet } from "../../style/global";
+import SendItemListCarousel from "./SendItemListCarousel";
 
 export default function MsgInput() {
   const dispatch = useDispatch();
-  const giftState = useSelector((state: RootState) => state.sendGiftReducer);
 
-  const [imgUrl, setImgUrl] = useState<string>(
-    "https://dimg.donga.com/wps/NEWS/IMAGE/2021/02/03/105264221.3.jpg"
-  );
+  //스토어에서 상태 호출
+  const giftState = useSelector((state: RootState) => state.sendGiftReducer);
+  const itemState = useSelector((state: RootState) => state.getItemReducer);
+
+  //각종상태
+  const [prvItem, setPrvItem] = useState<any>({ id: null, url: "" });
   const [letterNum, setLetterNum] = useState<number>(0);
 
   //프리뷰이미지 변경 및 상태변경 함수
-  const changeImg = (url: string): void => {
-    dispatch(setImg(url));
-    setImgUrl(url);
+  const changeImg = (idx: number, url: string): void => {
+    setPrvItem({ id: idx, url: url });
+    dispatch(setImg(idx));
   };
 
   //글자수 세는 함수 및 제한수 초과시 경고
@@ -27,8 +30,13 @@ export default function MsgInput() {
     setLetterNum(e.target.value.length);
     dispatch(setContent(e.target.value));
 
-    if (e.target.value.length >= 100) {
-      alert("더이상 입력할 수 없습니다");
+    if (e.target.value.length >= 150) {
+      Swal.fire({
+        title: "더이상 입력할 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+
       let str = e.target.value.slice(0, -1);
       e.target.value = str;
     }
@@ -43,24 +51,22 @@ export default function MsgInput() {
         <ImgListWrapper>
           <div>메시지와 함께 보낼 이미지를 선택해주세요</div>
           <ImgList>
-            {imgArr.map((el, idx) => {
-              return (
-                <SingleImg
-                  onClick={() => changeImg(el)}
-                  className={el === imgUrl ? "active" : ""}
-                  src={el}
-                  key={idx}
-                  alt=""
-                />
-              );
-            })}
+            <SendItemListCarousel
+              handleSetPrv={changeImg}
+              prvItem={prvItem}
+              data={itemState.img}
+            />
           </ImgList>
-          <ImagePrv src={imgUrl} alt="" />
+          {prvItem.url ? (
+            <ImagePrv src={prvItem.url} alt="" />
+          ) : (
+            <NoneImg>선택된 이미지가 없습니다</NoneImg>
+          )}
         </ImgListWrapper>
       </SubContainer>
       <SubContainer className="b">
         <BoxWrapper>
-          <div>마음을 담은 메시지를 작성해보세요 ({letterNum}/100)</div>
+          <div>마음을 담은 메시지를 작성해보세요 ({letterNum}/150)</div>
           <MsgInputBox onChange={(e) => calcLetterNum(e)} />
         </BoxWrapper>
       </SubContainer>
@@ -69,6 +75,7 @@ export default function MsgInput() {
 }
 
 const MainContainer = styled.div`
+  width: 480px;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -77,18 +84,15 @@ const MainContainer = styled.div`
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* background: #f6f6f6; */
-  background: #4c3e9f;
+  background: ${colorSet.purple};
   color: white;
   padding: 25px 35px 30px 35px;
   border-radius: 10px;
   gap: 10px;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;
-  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -40px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -50px; */
 
   &.b {
-    background: ${baseColor};
+    background: ${colorSet.base};
   }
 `;
 
@@ -96,7 +100,6 @@ const Receiver = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
-  /* gap: 10px; */
 
   div:nth-child(1) {
     display: flex;
@@ -114,39 +117,21 @@ const ImgListWrapper = styled.div`
   padding: 20px 30px;
   gap: 15px;
   font-size: 13px;
-  /* color: #3f3f3f; */
-  color: ${baseColor};
+  color: ${colorSet.base};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
-
-  div {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  div span:nth-child(2) {
-    /* padding: 5px; */
-    background: gray;
-  }
-`;
-
-const TableIcon = styled.img`
-  width: 10px;
 `;
 
 const ImgList = styled.div`
   display: flex;
-  gap: 10px;
-  /* background: white; */
+  padding: 0px 5px;
 `;
 
-const SingleImg = styled.img`
-  width: 80px;
-  cursor: pointer;
-  border-radius: 7px;
-
-  &.active {
-    outline: 3px solid ${baseColor};
-  }
+const NoneImg = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+  height: 262px;
 `;
 
 const ImagePrv = styled.img`
@@ -159,7 +144,6 @@ const ImagePrv = styled.img`
 const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  /* color: #3f3f3f; */
   color: white;
   font-size: 14px;
   gap: 5px;

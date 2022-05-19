@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { getUserInfo } from "../apis/userApi";
 import { userInfo } from "../redux/actions";
@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 
 export default function LoginForm() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -40,7 +40,6 @@ export default function LoginForm() {
         window.localStorage.setItem("token", res.data);
         window.localStorage.setItem("id", loginInfo.id);
         dispatch(loginChange());
-        navigate("/");
 
         //로그인 성공하면 유저 정보 store 저장
         if (res.status === 200) {
@@ -49,6 +48,8 @@ export default function LoginForm() {
             dispatch(userInfo(res.data));
           });
         }
+        // navigate("/");
+        window.location.replace("/");
       })
       .catch(() => {
         setIsError(true);

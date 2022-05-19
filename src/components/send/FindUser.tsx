@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { findUser } from "../../apis/userApi";
-import { baseColor } from "../../style/global";
+import { colorSet } from "../../style/global";
 import UserlistDropdown from "./UserlistDropdown";
 
 export default function FindUser() {
@@ -24,11 +25,19 @@ export default function FindUser() {
           setActiveDropdown(true);
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
-          alert("찾으시는 아이디/닉네임이 없어요");
+          Swal.fire({
+            title: "찾으시는 아이디/닉네임이 없어요",
+            icon: "warning",
+            confirmButtonText: "닫기",
+          });
         }
       });
     } else {
-      alert("아이디나 닉네임을 입력해주세요");
+      Swal.fire({
+        title: "아이디나 닉네임을 입력해주세요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
     }
   };
 
@@ -39,7 +48,6 @@ export default function FindUser() {
 
   //인풋박스 입력값 상태로 업데이트
   const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    // console.log(e.target.value);
     setFindUserId(e.target.value);
   };
 
@@ -71,7 +79,7 @@ const MainContainer = styled.div`
   width: 420px;
   padding: 20px 30px 30px 30px;
   gap: 10px;
-  background: ${baseColor};
+  background: ${colorSet.base};
   border-radius: 10px;
   color: white;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;

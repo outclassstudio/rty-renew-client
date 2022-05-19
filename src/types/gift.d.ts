@@ -1,13 +1,14 @@
 declare namespace Gift {
   interface singleGiftDTO {
-    user_from: string;
-    user_to: string;
+    idx: number;
+    userFrom: string;
+    userTo: string;
     img: string;
     svg: string;
     content: string;
     status: string;
-    attr: attributeDTO;
-    date: string;
+    svgAttr: attributeDTO | number;
+    date?: string;
   }
 
   interface attributeDTO {
@@ -22,8 +23,8 @@ declare namespace Gift {
     userFrom: string | null;
     userTo: string;
     content: string;
-    svg: string;
-    img: string;
+    svg: number | null;
+    img: number | null;
     nickname?: string;
   }
 }

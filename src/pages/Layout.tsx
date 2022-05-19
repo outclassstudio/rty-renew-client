@@ -15,7 +15,13 @@ export default function Layout({ children, title }: Props) {
   );
 }
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+  /* background-image: url("https://i.imgur.com/J8Wn1dk.png");
+  background-position: center;
+  background-size: cover; */
+  /* min-height: 100vh; */
+`;
+
 const ChildrenDiv = styled.div`
   margin-top: 50px;
   display: flex;
