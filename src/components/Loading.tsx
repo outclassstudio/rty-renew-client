@@ -16,17 +16,17 @@ export default function Loading() {
 }
 
 const LoadingWrapper = styled.div`
-  top: 0;
-  left: 0;
-  position: fixed;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff65;
+  /* background-color: #ffffff65; */
   z-index: 2;
+  background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976719965279363142/background7.png");
+  background-position: center;
+  background-size: cover;
 
   div {
     position: fixed;

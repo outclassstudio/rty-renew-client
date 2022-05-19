@@ -32,7 +32,7 @@ const StorageItem = (props: any) => {
         draggable
         onDragStart={(e: any) => dragStartHandler(e, data.idx)}
       >
-        <ItemP>{data.userFrom}</ItemP>
+        <ItemP>From. {data.userFrom}</ItemP>
         <img src={url} alt="giftItem" />
       </ItemBox>
     </div>
