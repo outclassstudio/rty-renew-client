@@ -2,13 +2,17 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  editThema,
-  isThemaModal,
-  newGiftList,
-} from "../../redux/actions/index";
+import { Gift } from "./Gift/Gift";
 import Background from "./Background";
-import { themaList } from "../../utils/themaList";
+import { getUserInfo } from "../../apis/userApi";
+import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
+import { getGift, changeGift, deleteGift } from "../../apis/giftApi";
+import { tool } from "paper/dist/paper-core";
+import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
+import { Storage } from "./Storage/Storage";
+
+import NewGiftIcon from "./NewGift/NewGiftIcon";
+import { ConfirmModal } from "../ConfirmModal";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -25,114 +29,338 @@ export const CanvasArea = styled.canvas`
   background-repeat: no-repeat;
 `;
 
-export default function Canvas() {
+export default function Canvas(props: any) {
   const dispatch = useDispatch();
-  const themaModal = useSelector(
-    (state: any) => state.spaceReducer.isThemaModal.boolean
+
+  const isEditSpace = props.editSpace;
+  const spaceGiftList = props.giftList;
+  const [spaceGift, setSpaceGift] = useState<any>([]);
+  const [dropGift, setDropGift] = useState<any>([]);
+  const [isOpenGift, setIsOpenGift] = useState(false);
+  const [isSave, setIsSave] = useState(false);
+  const [clickedId, setClickedId] = useState<number>();
+  const [match, setMatch] = useState<any>([]);
+  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
+  const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const isConfirmModal = useSelector(
+    (state: any) => state.spaceReducer.isConfirmModal
   );
-  const myThema = useSelector((state: any) => state.spaceReducer.myThema.thema);
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
+
+  const [isConfirmRes, setIsConfirmRes] = useState(false);
+
+  const themeModal = useSelector(
+    (state: any) => state.spaceReducer.isThemeModal
   );
 
-  const [newList, setNewList] = useState(newGiftLists);
-  const [selected, setSelected] = useState(null);
-  const draw = () => {
-    let myPath: any;
+  const [selected, setSelected] = useState<any>();
 
-    Paper.view.onMouseDown = () => {
-      myPath = new Paper.Path();
-      myPath.strokeColor = "yellow";
-      myPath.strokeWidth = 3;
-    };
-
-    // Paper.view.onMouseDrag = (event: any) => {
-    //   myPath.add(event.point);
-    // };
-  };
+  let tool: paper.Tool;
 
   useEffect(() => {
-    console.log("thema updated");
-    dispatch(newGiftList(newList));
-  }, [dispatch, myThema, newList]);
-
-  useEffect(() => {
+    Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
-    draw();
-    dispatch(editThema(themaList[0].url));
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    tool = new paper.Tool();
+    tool.activate();
 
-  const canvasRef = useRef(null);
+    const DropList = userGiftList.filter(
+      (item: any) => item.status !== "space"
+    );
+    console.log(DropList, "newLLL");
+    setDropGift(DropList);
 
-  //change Thema
-  const changeThemaHandler = () => {
-    dispatch(isThemaModal(true));
+    //canvas에 import 하가
+
+    like();
+
+    if (spaceGiftList.length !== 0) {
+      importSvg();
+    }
+
+    async function getUserGift() {
+      const userGiftRes = await getGift();
+      if (userGiftRes.status === 200) {
+        const spaceGifts = userGiftRes.data.filter(
+          (el) => el.status === "space"
+        );
+
+        setSpaceGift(spaceGifts);
+        dispatch(setMyGift(userGiftRes.data));
+      }
+    }
+    async function getUser() {
+      const userData = await getUserInfo();
+      dispatch(setUserInfo(userData.data));
+    }
+    getUserGift();
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (isEditSpace) {
+      edit();
+    } else {
+      saveSpace();
+    }
+  }, [isEditSpace]);
+
+  console.log(
+    "canvas",
+    "props",
+    props,
+    "selecotr",
+    "userInfo",
+    userInfo,
+    "userGiftList",
+    userGiftList
+  );
+
+  //유저정보 불러오기
+
+  //! space에 저장된 선물 불러오기
+  function importSvg() {
+    //console.log("import", spaceGiftList.length, match.length);
+
+    if (match.length <= spaceGiftList.length) {
+      spaceGiftList.forEach((gift: any) => {
+        const svgAttr = JSON.parse(gift.svgAttr);
+        Paper.project.importSVG(gift.svg, {
+          onLoad: function (item: any) {
+            //     console.log(item, "itemitem");
+            let obj = { id: item.id, gift: gift };
+            // setMatch([...match, obj]);
+            //   console.log("match", match, item);
+            match.push(obj);
+            item.position = new Paper.Point(svgAttr.x, svgAttr.y);
+            if (item.firstChild.size._width < 300) {
+              item.scale(1.5);
+            } else {
+              item.scale(0.15);
+            }
+          },
+        });
+      });
+    } else {
+      return;
+    }
+  }
+
+  const like = () => {
+    Paper.view.onDoubleClick = (e: any) => {
+      const hitItem = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
+      if (hitItem) {
+        setClickedId(hitItem.id);
+        setIsOpenGift(true);
+      }
+    };
   };
 
-  //! 변수
-  let segment: any;
-  let path: any;
-  var selectionRectangle: any;
+  const edit = () => {
+    //! test
+    let editClickedItem: any;
+    //! onClick
+    // console.log(Paper.view, "Paper.view");
 
-  //drop
+    Paper.view.onClick = (e: any) => {
+      const test = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
+
+      if (test) {
+        if (!editClickedItem) {
+          editClickedItem = test;
+          editClickedItem.bounds.selected = true;
+          setSelected(editClickedItem);
+          setClickedId(editClickedItem.id);
+        } else {
+          editClickedItem.bounds.selected = false;
+          editClickedItem = test;
+          editClickedItem.bounds.selected = true;
+          setClickedId(editClickedItem.id);
+        }
+      } else {
+        editClickedItem.bounds.selected = false;
+        editClickedItem = null;
+      }
+
+      //console.log("Test", test, match, selected);
+
+      editClickedItem.onDoubleClick = (e: any) => {
+        setIsOpenGift(true);
+      };
+
+      editClickedItem.onMouseDrag = (e: any) => {
+        editClickedItem.position.x += e.delta.x;
+        editClickedItem.position.y += e.delta.y;
+        if (e.point.x < 90 && e.point.y > 640) {
+          //! 확인 모달 띄우기
+          //dispatch(setConfirmModal(true));
+          alert("remove?");
+
+          //! 응답이 ture라면 삭제하기
+          const removeId = match.filter(
+            (el: any) => el.id === editClickedItem.id
+          );
+
+          deleteGift(removeId[0].gift.idx).then((res) =>
+            console.log(res, "removeddddddd")
+          );
+          editClickedItem.remove();
+        }
+
+        if (e.point.x > 1100 && e.point.y > 600) {
+          setIsSave(true);
+          console.log("pppppp12");
+          //! 확인 모달 띄우기
+          //   dispatch(setConfirmModal(true));
+          alert("save?");
+          //! 응답이 ture라면 저장하기
+          //storage 저장 api  호출
+
+          const editItem = match.filter(
+            (el: any) => el.id === editClickedItem.id
+          );
+          //  console.log("editClickedItem", match, clickedId, editClickedItem);
+
+          const chageData = {
+            idx: editItem[0].gift.idx,
+
+            status: "storage",
+          };
+
+          changeGift(chageData).then((res) => {
+            console.log("savesave", res);
+            if (res.status === 201) {
+              editClickedItem.remove();
+            }
+          });
+        }
+
+        if (isEditSpace && !isSave) {
+          console.log("pppppp", isSave);
+          //match arr 에서 clickedId 찾기
+          const editItem = match.filter(
+            (el: any) => el.id === editClickedItem.id
+          );
+          console.log(editClickedItem, "editClickedItem", clickedId);
+          let svgAttr = JSON.parse(editItem[0].gift.svgAttr);
+          svgAttr.x = editClickedItem.position.x;
+          svgAttr.y = editClickedItem.position.y;
+
+          svgAttr = JSON.stringify(svgAttr);
+          const chageData = {
+            idx: editItem[0].gift.idx,
+            svgAttr,
+            status: "space",
+          };
+
+          //해당 item  위치 변경 api  호출
+          changeGift(chageData).then((res) => console.log(res, "resss"));
+        }
+
+        if (isSave) {
+          console.log("도장");
+        }
+      };
+    };
+
+    /* //! delete item key
+    tool.onKeyDown = function (e: any) {
+      console.log(e, "tool");
+      if (e.key === "d") {
+        alert("Remove selected");
+        const removeId = match.filter((el: any) => el.id === a.id);
+        console.log(removeId, "removeId");
+        deleteGift(removeId[0].gift.idx).then((res) =>
+          console.log(res, "removeddddddd")
+        );
+        a.remove();
+      }
+    };*/
+  };
+  const canvasRef = useRef(null);
+
+  //! 변수
+  //let segment: any;
+  // let path: any;
+  //let selectionRectangle: any;
+  //let movePath = false;
+
+  //! dropHandler
   const dropHandler = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
-    const a = newList.filter((el: any) => {
-      return el.id !== Number(targetId);
+
+    // newGiftList에서 targetId와 같은건 삭제한다.
+    const filteredList = dropGift.filter((el: any) => {
+      return el.idx !== Number(targetId);
     });
-    setNewList(a);
-    console.log("drop", newList, "new");
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
-    // newGiftList에서 targetId와 같은건 삭제한다.
-    const targetItem = newList.filter((el: any) => {
-      return el.id === Number(targetId);
+    const targetItem = dropGift.filter((el: any) => {
+      return el.idx === Number(targetId);
     });
-    console.log("drop", targetItem, newList, targetId);
+
+    dispatch(setMyGift(filteredList));
+
+    console.log("drop", targetItem, dropGift, targetId);
     const x = e.clientX - 150;
     const y = e.clientY - 100;
-    const targetSvg = targetItem[0].url;
+    const targetSvg = targetItem[0].svg;
+
+    //! svg 속성 값 바꾸기
+    let svgAttr = JSON.parse(targetItem[0].svgAttr);
+    svgAttr.x = x;
+    svgAttr.y = y;
+    svgAttr = JSON.stringify(svgAttr);
+    const chageData = { idx: targetItem[0].idx, svgAttr, status: "space" };
+
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
       expandShapes: true,
-      //load
+
       onLoad: function (item: any) {
-        const hitOptions = {
+        /* const hitOptions = {
           segments: true,
           stroke: true,
           fill: true,
           tolerance: 5,
-        };
-        //  const tool = new Paper.Tool();
-
+        };*/
+        let obj = { id: item.id, gift: targetItem[0] };
+        // setMatch([...match, obj]);
+        console.log("svgSize", item.firstChild.size._width);
+        match.push(obj);
         item.position = new Paper.Point(x, y);
-        if (item.firstChild.size._width < 500) {
+
+        if (item.firstChild.size._width < 300) {
+          console.log("300");
           item.scale(1.5);
         } else {
+          console.log("400");
           item.scale(0.15);
         }
 
-        /*/drag event
-        item.onMouseDrag = function (e: { delta: any }) {
-          item.position.x += e.delta.x;
-          item.position.y += e.delta.y;
-        };
+        changeGift(chageData).then((res) => console.log(res, "changeGift"));
 
-        item.onMouseDown = function (e: { delta: any }) {
-          item.bounds.selected = true;
-        };*/
-
+        //! 회전 및 사이즈 조절을 위한 코드,,,연구,,,
+        /*
         //! make selectionRectangle
         function makeSelectionRectangle(path: any) {
           if (selected) {
             selectionRectangle = selected;
-
-            selectionRectangle.remove();
+            console.log(
+              "selected################################################",
+              selectionRectangle,
+              selected
+            );
+            selectionRectangle.clear();
+            console.log("지워지냐", selectionRectangle);
           }
 
           const reset =
@@ -156,19 +384,35 @@ export default function Canvas() {
             selectionRectangle.rotation = path.rotation;
             selectionRectangle.scaling = path.scaling;
           }
-          selectionRectangle.strokeWidth = 1;
+          selectionRectangle.strokeWidth = 2;
           selectionRectangle.strokeColor = "blue";
           selectionRectangle.name = "selection rectangle";
           selectionRectangle.selected = true;
 
           console.log("maked", selectionRectangle);
-          setSelected(selectionRectangle);
+          if (selectionRectangle) {
+            console.log("정보 존재");
+            setSelected(selectionRectangle);
+          } else {
+            console.log("여기 올사람");
+            selectionRectangle.remove();
+          }
         }
-
+        console.log("왜사라져ㅑ???", selectionRectangle);
         //! onMouseDown
         item.onMouseDown = function (e: any) {
+          console.log(
+            "_______________________________________________________________________________________",
+            selected,
+            selectionRectangle
+          );
+          if (selectionRectangle) {
+            console.log("remove ?????", selectionRectangle);
+            selectionRectangle.remove();
+            console.log("remove !!!!", selectionRectangle);
+          }
           const itemP = new Paper.Path(item);
-          console.log("??", selectionRectangle);
+
           console.log("item segment", itemP, item);
           segment = path = null;
           const hitResult = Paper.project.hitTest(e.point, hitOptions);
@@ -212,15 +456,27 @@ export default function Canvas() {
               }
               console.log(path.data);
             }
+            //! selectionRectangle
+            if (!selected) {
+              console.log("만들기");
+              makeSelectionRectangle(item);
+            } else {
+              console.log("지우기", selectionRectangle);
+              selectionRectangle = selected;
+              selectionRectangle.remove();
+              setSelected(null);
+              makeSelectionRectangle(item);
+            }
           }
-          //! selectionRectangle
-          if (!selectionRectangle) {
-            console.log("만들기");
-            makeSelectionRectangle(item);
-          } else {
-            console.log("있음");
+          movePath = hitResult.type === "fill";
+          if (movePath) {
+            // Paper.project.activeLayer.addChild(item);
           }
-          Paper.project.activeLayer.addChild(item);
+        };
+
+        item.onDoubleClick = function (e: any) {
+          console.log("hihihi", e);
+          setIsOpenGift(true);
         };
 
         //! onMouseDrag
@@ -245,19 +501,19 @@ export default function Canvas() {
             selectionRectangle.position.x += e.delta.x;
             selectionRectangle.position.y += e.delta.y;
             //      item.bounds.selected = true;
-            //       adjustBounds(item);
+            //  adjustBounds(item);
           }
         };
-        //error
+        //error*/
       },
     });
-    function adjustBounds(o: any) {
-      if (o.data.state === "moving") {
-        o.data.highlight.position = o.position;
-      } else {
-        o.data.highlight.children[0].bounds = o.bounds;
-      }
-    }
+    // function adjustBounds(o: any) {
+    //  if (o.data.state === "moving") {
+    //   o.data.highlight.position = o.position;
+    // } else {
+    //   o.data.highlight.children[0].bounds = o.bounds;
+    //  }
+    //}
   };
 
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
@@ -265,20 +521,36 @@ export default function Canvas() {
     e.stopPropagation();
   };
 
+  console.log("canvas2", match, isEditSpace);
+
+  function saveSpace() {
+    if (!isEditSpace) {
+      console.log("실행", match);
+    }
+  }
+
   return (
-    <CanvasBox>
-      <CanvasArea
-        ref={canvasRef}
-        id="canvas"
-        color={myThema}
-        draggable
-        onDrop={(e: any) => dropHandler(e)}
-        onDragOver={(e) => dragOverHandler(e)}
-      ></CanvasArea>
-      {themaModal ? <Background /> : null}
-      <button onClick={changeThemaHandler}>테마수정</button>
-      <button>아바타 수정</button>
-      <button>공간 수정</button>
-    </CanvasBox>
+    <>
+      <CanvasBox>
+        <CanvasArea
+          ref={canvasRef}
+          id="canvas"
+          color={userInfo.theme}
+          draggable
+          onDrop={(e: any) => dropHandler(e)}
+          onDragOver={(e) => dragOverHandler(e)}
+        ></CanvasArea>
+        <NewGiftIcon />
+        <WastebasketIcon />
+        <Storage />
+        {themeModal ? <Background /> : null}
+        {isOpenGift ? (
+          <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
+        ) : null}
+        {isConfirmModal ? (
+          <ConfirmModal setIsConfirmRes={setIsConfirmRes} />
+        ) : null}
+      </CanvasBox>
+    </>
   );
 }

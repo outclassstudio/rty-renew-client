@@ -27,9 +27,9 @@ export const getSentGift = async (): Promise<
 
 //space에 배치된 gift의 타입 및 속성값 변경
 export const changeGift = (
-  data: Gift.attributeDTO
+  data: any //Gift.attributeDTO
 ): Promise<AxiosResponse<any>> => {
-  return apiClient().patch(`/gift/${data.id}`, data);
+  return apiClient().patch(`/gift/${data.idx}`, data);
 };
 
 //gift삭제

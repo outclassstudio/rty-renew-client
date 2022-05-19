@@ -14,6 +14,36 @@ export const getUserInfo = async (): Promise<
     });
 };
 
+//테마 불러오기
+export const getThemeList = async (): Promise<AxiosResponse> => {
+  return apiClient()
+    .get(`/users/theme`)
+    .then((res) => {
+      return res;
+    });
+};
+
+//테마 및 상태메시지 변경
+export const changeTheme = async (img: string): Promise<AxiosResponse<any>> => {
+  const myId = localStorage.getItem("id");
+  return apiClient()
+    .patch(`/users/${myId}`, { id: myId, theme: img })
+    .then((res) => {
+      return res;
+    });
+};
+
+export const changeMsg = async (
+  stateMsg: string
+): Promise<AxiosResponse<any>> => {
+  const myId = localStorage.getItem("id");
+  return apiClient()
+    .patch(`/users/${myId}`, { id: myId, msg: stateMsg })
+    .then((res) => {
+      return res;
+    });
+};
+
 //다른 사람 찾기
 export const findUser = async (
   data: string

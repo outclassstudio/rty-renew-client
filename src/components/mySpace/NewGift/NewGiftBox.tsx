@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-//import { giftItemList } from "../../../utils/giftItemList";
 import NewGiftItem from "./NewGiftItem";
 import { useEffect, useState } from "react";
+import StorageItem from "../Storage/StorageItem";
+import { getGift } from "../../../apis/giftApi";
 
 export const NewGiftContainer = styled.div`
-  margin: 50px 20px 0;
+  margin: 50px 10px 0;
   width: 200px;
   height: 720px;
   background-color: #f9f9f9;
@@ -23,33 +24,60 @@ export const ItemContainer = styled.div`
   align-items: center;
 `;
 
-export function NewGiftBox() {
-  const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift.boolean
-  );
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
-  );
-  const [giftList, setGiftList] = useState(newGiftLists);
-  console.log("giftList", newGiftLists.item);
-  useEffect(() => {
-    console.log(" 실행?", newGiftLists);
-  }, [newGiftLists]);
+export function NewGiftBox(props: any) {
+  const newGiftList = props.newGiftList;
+  const storageGiftList = props.storageGiftList;
 
+  const [newList, setNewList] = useState(newGiftList);
+  const [storageList, setStorageList] = useState<any>([]);
+  // const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+
+  const isOpenGiftBox = useSelector(
+    (state: any) => state.spaceReducer.isOpenGiftBox
+  );
+  const clickGiftBox = useSelector(
+    (state: any) => state.spaceReducer.clickGiftBox
+  );
+
+  useEffect(() => {
+    setNewList(newGiftList);
+    setStorageList(storageGiftList);
+  }, [newGiftList, storageGiftList]);
+
+  console.log("newGiftBox", isOpenGiftBox, clickGiftBox, storageList);
+
+  //newGift icon click modal msg new Gift, data newList
+  //storage icon click modal msg storage Gift, data storageList
   return (
     <div>
-      {isOpenGift && newGiftLists.length !== 0 ? (
+      {isOpenGiftBox ? (
         <>
-          <NewGiftContainer>
-            <h4>GiftBox Component</h4>
-            <h3>New Gift!</h3>
-            <ItemContainer>
-              {newGiftLists &&
-                newGiftLists.map((item: any, idx: number) => {
-                  return <NewGiftItem {...item} key={idx.toString()} />;
-                })}
-            </ItemContainer>
-          </NewGiftContainer>
+          {clickGiftBox === "new" ? (
+            <>
+              <NewGiftContainer>
+                <h3>New Gift!</h3>
+                <ItemContainer>
+                  {newList &&
+                    newList.map((item: any, idx: number) => {
+                      return <NewGiftItem {...item} key={idx.toString()} />;
+                    })}
+                </ItemContainer>
+              </NewGiftContainer>
+            </>
+          ) : null}
+          {clickGiftBox === "storage" ? (
+            <>
+              <NewGiftContainer>
+                <h3>Storage Gift!</h3>
+                <ItemContainer>
+                  {storageList &&
+                    storageList.map((item: any, idx: number) => {
+                      return <NewGiftItem {...item} key={idx.toString()} />;
+                    })}
+                </ItemContainer>
+              </NewGiftContainer>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>

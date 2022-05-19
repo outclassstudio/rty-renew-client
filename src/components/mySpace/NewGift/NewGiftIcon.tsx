@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { isOpenNewGift } from "../../../redux/actions/index";
+//import { isOpenNewGift } from "../../../redux/actions/index";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
 import { useEffect } from "react";
+import {
+  setClickGiftBox,
+  setOpenGiftBox,
+} from "../../../redux/reducers/spaceReducer";
 
 export const GiftIconBox = styled.div`
   position: absolute;
@@ -17,33 +21,41 @@ export const GiftBox = styled.div`
   background-color: red;
 `;
 
+export const GiftCount = styled.p`
+  margin: 0px;
+  font-weight: 900;
+  font-size: larger;
+  color: red;
+}
+`;
+
 export default function NewGift() {
   // new giftbox의 길이가 0이 아닐 때
   //새로 받은 선물함 아이콘이 있다.
   //선물함을 클릭하면 선물함 리스트 컴포넌트가 보인다.
   const dispatch = useDispatch();
   const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift.boolean
+    (state: any) => state.spaceReducer.isOpenNewGift
   );
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
+  const isOpenGiftBox = useSelector(
+    (state: any) => state.spaceReducer.isOpenGiftBox
   );
-  console.log(isOpenGift);
-  useEffect(() => {}, [isOpenGift, newGiftLists]);
+  const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const newGiftLists = giftLists.filter((el: any) => el.status === "new");
+  useEffect(() => {}, [isOpenGift, giftLists]);
 
   const openGiftHandler = () => {
-    console.log("click new gift");
-    dispatch(isOpenNewGift(!isOpenGift));
+    dispatch(setOpenGiftBox(!isOpenGiftBox));
+    dispatch(setClickGiftBox("new"));
   };
-  console.log("-------newGiftLists", newGiftLists);
+
   return (
     <div>
       <GiftIconBox>
+        <GiftCount>{newGiftLists.length}</GiftCount>
         {newGiftLists && !newGiftLists.length ? null : (
           <NewGifIcon1 onClick={openGiftHandler} />
         )}
-        {isOpenGift ? "open" : "close"}
-        {/*img src={NewGifts} alt="giftBox" /> */}
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>

@@ -1,40 +1,89 @@
-import {
-  IS_THEMA_MODAL,
-  IS_OPEN_NEW_GIFT_BOX,
-  NEW_GIFT_LIST,
-  EDIT_THEMA,
-} from "../actions/index";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { initialState } from "./initialState";
+interface spaceState {
+  isThemeModal: boolean;
+  isOpenNewGift: boolean;
+  newGiftList: any;
+  userInfo: Myinfo;
+  myGift: any;
+  isOpenStorage: boolean;
+  isConfirmModal: boolean;
+  isConfirmRes: boolean;
+  isOpenGiftBox: boolean;
+  clickGiftBox: string;
+}
 
-const spaceReducer: any = (
-  state = initialState,
-  action: {
-    type: any;
-    payload: any;
-  }
-) => {
-  const newState = { ...state };
-  switch (action.type) {
-    case IS_THEMA_MODAL:
-      return { ...newState, isThemaModal: action.payload };
-      break;
+interface Myinfo {
+  id: undefined | string;
+  nickname: undefined | string;
+  point: number;
+  birth?: undefined | string;
+  theme?: string;
+}
 
-    case IS_OPEN_NEW_GIFT_BOX:
-      return { ...newState, isOpenNewGift: action.payload };
-      break;
+const initialState = {
+  isThemeModal: false,
+  isOpenNewGift: false,
+  newGiftList: "",
+  userInfo: {
+    id: "",
+    nickname: "",
+    point: 0,
+    theme: "https://i.imgur.com/mpT71SX.jpg",
+    msg: "",
+  },
+  isOpenStorage: false,
+  myGift: undefined,
+  isConfirmModal: false,
+  isConfirmRes: false,
+  isOpenGiftBox: false,
+  clickGiftBox: "",
+} as spaceState;
 
-    case EDIT_THEMA:
-      return { ...newState, myThema: action.payload };
-      break;
+//로그인 액션 및 리듀서 생성
+const spaceSlice = createSlice({
+  name: "space",
+  initialState,
+  reducers: {
+    setUserInfo(state, action: PayloadAction<any>) {
+      state.userInfo = action.payload;
+    },
+    setModalOpen(state, action: PayloadAction<any>) {
+      state.isThemeModal = action.payload;
+    },
+    setOpenNewGift(state, action: PayloadAction<any>) {
+      state.isOpenNewGift = action.payload;
+    },
+    setMyGift(state, action: PayloadAction<any>) {
+      state.myGift = action.payload;
+    },
+    setOpenStorage(state, action: PayloadAction<any>) {
+      state.isOpenStorage = action.payload;
+    },
+    setConfirmModal(state, action: PayloadAction<any>) {
+      state.isConfirmModal = action.payload;
+    },
+    setConfirmRes(state, action: PayloadAction<any>) {
+      state.isConfirmRes = action.payload;
+    },
+    setOpenGiftBox(state, action: PayloadAction<any>) {
+      state.isOpenGiftBox = action.payload;
+    },
+    setClickGiftBox(state, action: PayloadAction<any>) {
+      state.clickGiftBox = action.payload;
+    },
+  },
+});
 
-    case NEW_GIFT_LIST:
-      return { ...newState, newGiftList: action.payload };
-      break;
-
-    default:
-      return state;
-  }
-};
-
-export default spaceReducer;
+export const {
+  setUserInfo,
+  setModalOpen,
+  setOpenNewGift,
+  setMyGift,
+  setOpenStorage,
+  setConfirmModal,
+  setConfirmRes,
+  setOpenGiftBox,
+  setClickGiftBox,
+} = spaceSlice.actions;
+export default spaceSlice.reducer;
