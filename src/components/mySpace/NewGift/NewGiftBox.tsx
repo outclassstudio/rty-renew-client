@@ -38,9 +38,6 @@ export function NewGiftBox(props: any) {
   const clickGiftBox = useSelector(
     (state: any) => state.spaceReducer.clickGiftBox
   );
-  const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift
-  );
 
   useEffect(() => {
     setNewList(newGiftList);

@@ -1,14 +1,12 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getUserInfo } from "../apis/userApi";
-import NewGift from "../components/mySpace/NewGift/NewGiftIcon";
 import Canvas from "../components/mySpace/Canvas";
 import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
 import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
-import { setModalOpen, setMyGift } from "../redux/reducers/spaceReducer";
-import { getGift } from "../apis/giftApi";
+import { setModalOpen } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
 
@@ -25,13 +23,14 @@ export const ThemeBtnBox = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 300px;
+  width: 400px;
   height: 70px;
   margin: 15px;
   cursor: pointer;
   background: darkorange;
   border-radius: 10px;
   border: transparent;
+  font-size: medium;
 `;
 
 export const InfoBox = styled.div`

@@ -59,7 +59,6 @@ export function Avatar(props: any) {
     getUserInfo().then((res) => {
       let user = res.data;
       setMyInfo(user);
-      //dispatch(userInfo(user));
     });
   }, [dispatch]);
 

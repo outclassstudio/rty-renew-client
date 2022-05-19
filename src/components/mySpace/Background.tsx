@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { userInfo } from "../../redux/actions/index";
-import { themeList } from "../../utils/themaList";
-import { changeTheme } from "../../apis/userApi";
+import { changeTheme, getThemeList } from "../../apis/userApi";
 import { setModalOpen } from "../../redux/reducers/spaceReducer";
 
 export const ModalBackground = styled.div`
@@ -83,6 +82,13 @@ export const CloseBtn = styled.button`
 export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
+  const [themeList, setThemeList] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    getThemeList().then((res) => setThemeList(res.data));
+  }, []);
+
+  console.log("themeList", themeList);
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
@@ -113,18 +119,21 @@ export default function Background() {
     <ModalBackground>
       <ModalView>
         <ImgContainer>
-          {themeList.map((img) => {
+          {themeList.map((theme, idx) => {
             return (
-              <SelectImg key={img.id}>
-                <ImgBox>{/**  <Img src={img.url} alt="theme" />*/}</ImgBox>
-                <ImgName>{img.name}</ImgName>
+              <SelectImg key={idx}>
+                <ImgBox>
+                  {" "}
+                  <Img src={theme.url} alt="theme" />
+                </ImgBox>
+                <ImgName>{theme.name}</ImgName>
                 <SelectInput
                   type="checkbox"
-                  value={img.name}
+                  value={theme.name}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(img.name) ? true : false}
+                  checked={checkedItem.includes(theme.name) ? true : false}
                 ></SelectInput>
               </SelectImg>
             );

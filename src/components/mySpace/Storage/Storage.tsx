@@ -37,9 +37,6 @@ export function Storage() {
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
-  const isOpenStorage = useSelector(
-    (state: any) => state.spaceReducer.isOpenStorage
-  );
 
   const isOpenHandler = () => {
     dispatch(setOpenGiftBox(!isOpenGiftBox));

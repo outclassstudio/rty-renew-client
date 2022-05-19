@@ -6,9 +6,7 @@ import { useEffect } from "react";
 import {
   setClickGiftBox,
   setOpenGiftBox,
-  setOpenNewGift,
 } from "../../../redux/reducers/spaceReducer";
-import { NewGiftBox } from "./NewGiftBox";
 
 export const GiftIconBox = styled.div`
   position: absolute;
@@ -50,7 +48,6 @@ export default function NewGift() {
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));
   };
-  console.log("isOpenGift", isOpenGift);
 
   return (
     <div>
