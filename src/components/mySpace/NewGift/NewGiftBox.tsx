@@ -4,24 +4,38 @@ import NewGiftItem from "./NewGiftItem";
 import { useEffect, useState } from "react";
 import StorageItem from "../Storage/StorageItem";
 import { getGift } from "../../../apis/giftApi";
+import { colorSet, fadeSlide } from "../../../style/global";
 
 export const NewGiftContainer = styled.div`
   margin: 50px 10px 0;
-  width: 200px;
-  height: 720px;
-  background-color: #f9f9f9;
+  width: 170px;
+  height: 700px;
+  background-color: ${colorSet.purple};
   border-radius: 10px;
   overflow: auto;
   scrollbar-width: none;
+  padding: 10px 20px;
+  animation: ${fadeSlide} 0.3s ease-out;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 0px;
+
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
     display: none;
+  }
 `;
 
 export const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: white;
+  height: 650px;
+`;
+
+export const GiftBoxTitle = styled.div`
+  color: #ffffff;
+  font-size: 20px;
+  margin-bottom: 5px;
 `;
 
 export function NewGiftBox(props: any) {
@@ -55,7 +69,7 @@ export function NewGiftBox(props: any) {
           {clickGiftBox === "new" && newGiftList.length !== 0 ? (
             <>
               <NewGiftContainer>
-                <h3>New Gift!</h3>
+                <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
                 <ItemContainer>
                   {newList &&
                     newList.map((item: any, idx: number) => {
@@ -68,7 +82,7 @@ export function NewGiftBox(props: any) {
           {clickGiftBox === "storage" && storageGiftList.length !== 0 ? (
             <>
               <NewGiftContainer>
-                <h3>Storage Gift!</h3>
+                <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>
                 <ItemContainer>
                   {storageList &&
                     storageList.map((item: any, idx: number) => {

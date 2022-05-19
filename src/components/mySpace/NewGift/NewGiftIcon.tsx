@@ -7,13 +7,17 @@ import {
   setClickGiftBox,
   setOpenGiftBox,
 } from "../../../redux/reducers/spaceReducer";
+import { colorSet } from "../../../style/global";
 
 export const GiftIconBox = styled.div`
   position: absolute;
-  top: 170px;
-  right: 450px;
-  width: 80px;
+  margin-top: 20px;
+  margin-left: 1160px;
+  width: 90px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 `;
 
 export const GiftBox = styled.div`
@@ -21,12 +25,21 @@ export const GiftBox = styled.div`
   background-color: red;
 `;
 
-export const GiftCount = styled.p`
-  margin: 0px;
+export const GiftCount = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  margin-top: 60px;
+  /* margin-left: 20px; */
   font-weight: 900;
-  font-size: larger;
-  color: red;
-}
+  font-size: 20px;
+  color: white;
+  background: ${colorSet.darkPink};
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  /* padding-bottom: 2px; */
 `;
 
 export default function NewGift() {

@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { userInfo } from "../../redux/actions/index";
 import { changeTheme, getThemeList } from "../../apis/userApi";
 import { setModalOpen } from "../../redux/reducers/spaceReducer";
+import { NormalBtn } from "../../style/btnStyle.style";
+import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -12,6 +14,10 @@ export const ModalBackground = styled.div`
   height: 100vh;
   left: 0;
   top: 0;
+  animation: ${fadeAction} 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ModalView = styled.div`
@@ -19,29 +25,39 @@ export const ModalView = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: 600px;
-  padding: 2rem 1rem 2rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 6px;
-  background-color: #efefef;
+  /* width: 600px; */
+  padding: 25px 40px 25px 40px;
+  border-radius: 10px;
+  background-color: ${colorSet.purple};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  animation: ${fadeExpand} 0.3s ease-in-out;
+
   @media screen and (max-width: 480px) {
     width: 70%;
   }
 `;
 
+const ModalTitle = styled.div`
+  color: white;
+  font-size: 20px;
+  margin-bottom: 25px;
+`;
+
 export const ImgContainer = styled.div`
-  width: 400px;
+  /* width: 400px; */
   display: flex;
   justify-content: center;
   flex-direction: row;
+  padding: 35px 20px;
+  gap: 15px;
+  background: white;
+  /* border-radius: 10px; */
 `;
+
 export const ImgBox = styled.div`
-  width: 180px;
-  height: 200px;
-  margin: 0 12px 12px 12px;
+  width: 160px;
+  height: 120px;
+  margin: 0 5px 5px 5px;
   border-radius: 5px;
 `;
 
@@ -49,14 +65,19 @@ export const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 12px 0px;
 `;
 
-export const ImgName = styled.p``;
+export const ImgName = styled.div`
+  color: ${colorSet.base};
+  font-weight: bold;
+`;
 
 export const SelectImg = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* padding: 20px 10px; */
 `;
 
 export const SelectInput = styled.input``;
@@ -64,7 +85,8 @@ export const SelectInput = styled.input``;
 export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 25px;
+  gap: 5px;
 `;
 
 export const SaveBtn = styled.button`
@@ -124,6 +146,7 @@ export default function Background() {
   return (
     <ModalBackground>
       <ModalView>
+        <ModalTitle>🎨테마를 선택해주세요</ModalTitle>
         <ImgContainer>
           {themeList.map((theme, idx) => {
             return (
@@ -144,10 +167,23 @@ export default function Background() {
             );
           })}
         </ImgContainer>
-
         <BtnBox>
-          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
-          <CloseBtn onClick={closeThemeHandler}> 닫기</CloseBtn>
+          <NormalBtn
+            className="c"
+            width={"80px"}
+            height={"30px"}
+            onClick={changeThemeHandler}
+          >
+            저장
+          </NormalBtn>
+          <NormalBtn
+            className="b"
+            width={"80px"}
+            height={"30px"}
+            onClick={closeThemeHandler}
+          >
+            닫기
+          </NormalBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>

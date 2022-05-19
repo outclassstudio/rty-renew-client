@@ -5,6 +5,7 @@ import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg
 import { changeMsg, getUserInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { colorSet } from "../../style/global";
 
 export const AvatarBox = styled.div`
   display: flex;
@@ -18,13 +19,24 @@ export const AvatarBox = styled.div`
 
 export const MsgBox = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 220px;
-  height: 50px;
-  background-color: green;
+  justify-content: left;
+  align-items: center;
+  min-width: 100px;
+  height: 45px;
+  background-color: ${colorSet.purple};
   border-radius: 10px;
   margin: 10px;
-  padding: 6px;
+  padding: 0px 10px;
+  color: white;
+
+  input {
+    background: none;
+    border: none;
+    color: white;
+  }
+  input:focus {
+    outline: none;
+  }
 `;
 
 export const MsgEditBtn = styled.button`
@@ -32,12 +44,15 @@ export const MsgEditBtn = styled.button`
   background-color: transparent;
   width: 36px;
   cursor: pointer;
-  margin: 5px;
+  /* margin: 5px; */
   border-radius: 10px;
 `;
 
-export const H3 = styled.h3`
-  margin: 0px;
+export const H3 = styled.div`
+  margin-top: 10px;
+  color: white;
+  font-family: "Hanna", sans-serif;
+  text-shadow: 1px 1px 0px black;
 `;
 
 export const Input = styled.input`
@@ -88,13 +103,12 @@ export function Avatar(props: any) {
     <>
       {myInfo ? (
         <AvatarBox onClick={clickAvatarHandler}>
-          <H3>내이름은 {myInfo.nickname}!!</H3>
           <MsgBox>
             {editType ? (
               <>
                 <input
                   type="text"
-                  maxLength="10"
+                  // maxLength="10"
                   onChange={inputChangeHandler}
                 />
                 <MsgEditBtn onClick={editBtnHandler}>
@@ -114,6 +128,7 @@ export function Avatar(props: any) {
             )}
           </MsgBox>
           <MyAvatar />
+          <H3>내 이름은 {myInfo.nickname}!!</H3>
         </AvatarBox>
       ) : null}
     </>
