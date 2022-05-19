@@ -134,7 +134,7 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
             <Text>
               <SubText className="a">{el.name}</SubText>
               <SubText
-                className={el.point === 0 ? "b" : "c"}
+                className={mine ? (el.point === 0 ? "b" : "d") : "c"}
                 onClick={() => handleDirectBuy(el)}
               >
                 {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
@@ -155,7 +155,6 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
 
   return (
     <CarouselWrapper>
-      {/* <h2> Single Item</h2> */}
       <Slider {...settings}>{sliders()}</Slider>
       {modalOpen ? (
         <ImageModal
@@ -241,8 +240,25 @@ const SubText = styled.div`
     background: linear-gradient(to right, #ec047a 40%, #b22490 100%);
     font-size: 0;
   }
+
   &.c:hover:before {
     content: "구매하기";
+    font-size: 14px;
+  }
+
+  &.d {
+    background: ${colorSet.darkPink};
+    border-radius: 0px 0px 10px 0px;
+    cursor: pointer;
+  }
+
+  &.d:hover {
+    background: linear-gradient(to right, #ec047a 40%, #b22490 100%);
+    font-size: 0;
+  }
+
+  &.d:hover:before {
+    content: "구입함";
     font-size: 14px;
   }
 `;

@@ -69,7 +69,7 @@ const Title = styled.div`
   font-size: 25px;
   font-weight: bold;
   color: ${colorSet.base};
-  background: white;
+  /* background: white; */
   padding: 25px 0px;
 
   &.scroll {
