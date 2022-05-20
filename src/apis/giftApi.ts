@@ -37,6 +37,18 @@ export const changeGift = (
     });
 };
 
+//space에 배치된 gift 전체 위치 변경
+export const changeGiftPosition = (
+  data: any //Gift.attributeDTO
+): Promise<AxiosResponse<any>> => {
+  return apiClient()
+    .patch("/gift/update", data)
+    .then((res) => {
+      console.log(res, "changeGiftPosition");
+      return res;
+    });
+};
+
 //gift삭제
 export const deleteGift = (data: number): Promise<AxiosResponse<any>> => {
   return apiClient().delete(`/gift/${data}`);

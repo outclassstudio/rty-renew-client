@@ -58,7 +58,7 @@ export default function Space() {
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
   const [editMove, setEditMove] = useState(false);
-  const [saveSpace, setSaveSpace] = useState(false);
+  const [saveSpace, setSaveSpace] = useState(true);
 
   useEffect(() => {
     getUserInfo().then((res) => {
@@ -100,6 +100,7 @@ export default function Space() {
     //editSpace 가  true일 때만
     //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
+    setSaveSpace(false);
     dispatch(setClickBtn("editSpace"));
   };
 
@@ -112,6 +113,7 @@ export default function Space() {
   const saveSpaceHandler = () => {
     console.log("clickssss");
     setSaveSpace(true);
+    setEditSpace(false);
   };
   console.log("moveeditttt", editMove);
   return (
@@ -155,14 +157,26 @@ export default function Space() {
           >
             {editAvatar ? "수정 중" : "아바타 수정"}
           </NormalBtn>
-          <NormalBtn
-            className={editSpace ? "b" : "a"}
-            width={"300px"}
-            height={"50px"}
-            onClick={editSpaceHandler}
-          >
-            {editSpace ? "완료" : "선물 수정"}
-          </NormalBtn>
+
+          {editSpace ? (
+            <NormalBtn
+              className={editSpace ? "b" : "a"}
+              width={"300px"}
+              height={"50px"}
+              onClick={saveSpaceHandler}
+            >
+              완료
+            </NormalBtn>
+          ) : (
+            <NormalBtn
+              className={editSpace ? "b" : "a"}
+              width={"300px"}
+              height={"50px"}
+              onClick={editSpaceHandler}
+            >
+              수정
+            </NormalBtn>
+          )}
 
           <NormalBtn
             className="a"

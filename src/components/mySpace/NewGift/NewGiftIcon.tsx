@@ -65,9 +65,11 @@ export default function NewGift() {
   return (
     <div>
       <GiftIconBox>
-        <GiftCount>{newGiftLists.length}</GiftCount>
         {newGiftLists && !newGiftLists.length ? null : (
-          <NewGifIcon1 onClick={openGiftHandler} />
+          <>
+            <GiftCount>{newGiftLists.length}</GiftCount>
+            <NewGifIcon1 onClick={openGiftHandler} />
+          </>
         )}
       </GiftIconBox>
       <GiftBox></GiftBox>
