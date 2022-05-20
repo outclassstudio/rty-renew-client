@@ -106,7 +106,7 @@ export function Avatar(props: any) {
               <>
                 <input
                   type="text"
-                  maxLength="10"
+                  maxLength={10}
                   onChange={inputChangeHandler}
                 />
                 <MsgEditBtn onClick={editBtnHandler}>

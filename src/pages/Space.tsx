@@ -63,6 +63,7 @@ export default function Space() {
   useEffect(() => {
     getUserInfo().then((res) => {
       let user = res.data;
+      console.log("유저정보확인", user);
       setMyInfo(user);
       dispatch(userInfo(user));
     });
