@@ -103,8 +103,7 @@ const Content = styled.div`
   div:nth-child(2) {
     margin-top: 20px;
     font-size: 17px;
-    font-weight: 200;
-    color: #555555;
+    color: #2e2e2e;
   }
 `;
 

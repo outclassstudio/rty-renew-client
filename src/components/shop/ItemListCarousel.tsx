@@ -15,7 +15,7 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
 
   //carousel 세팅
   const settings = {
-    focusOnSelect: true,
+    focusOnSelect: false,
     dots: false,
     infinite: false,
     speed: 300,

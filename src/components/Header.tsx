@@ -1,8 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import styled, { keyframes } from "styled-components";
-import { colorSet } from "../style/global";
+import Swal from "sweetalert2";
+import { findUser } from "../apis/userApi";
+import { checkBlank } from "../hooks/validation";
+import { NormalBtn } from "../style/btnStyle.style";
+import { colorSet, fadeAction } from "../style/global";
 import Dropdown from "./Dropdown";
+import HeaderUserlist from "./HeaderUserlist";
 
 interface Props {
   title?: string;
@@ -10,13 +15,20 @@ interface Props {
 
 export default function Header({ title }: Props) {
   const navigate = useNavigate();
+  //서치바 활성화 부분
   const [activeSearch, setActiveSearch] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
   const [activeClass, setActiveClass] = useState<boolean>(false);
 
+  //사람검색 부분
+  const [findUserId, setFindUserId] = useState<string>("");
+  const [userList, setUserList] = useState<any[]>([]);
+  const [activeFindDropdown, setActiveFindDropdown] = useState<boolean>(false);
+
   //서치바 on/off
   const handleActiveSearch = (): void => {
     if (activeSearch) {
+      setFindUserId("");
       setActiveSearch(false);
     } else {
       setActiveClass(true);
@@ -35,6 +47,52 @@ export default function Header({ title }: Props) {
     }
   };
 
+  //사람찾기 실행
+  const handleFindUser = (): void => {
+    // e.preventDefault();
+
+    //*아이디값이 truthy하고 공백이 아닌 경우
+    if (findUserId && !findUserId.match(checkBlank)) {
+      findUser(findUserId).then((res) => {
+        if (res.data.length !== 0) {
+          setUserList(res.data);
+          setActiveFindDropdown(true);
+        } else {
+          //?DB상에 검색되는 아이디/닉네임이 없는 경우
+          Swal.fire({
+            title: "찾으시는 아이디/닉네임이 없어요",
+            icon: "warning",
+            confirmButtonText: "닫기",
+          });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "아이디나 닉네임을 입력해주세요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    }
+  };
+
+  const findToEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleFindUser();
+    } else if (e.key === "Escape") {
+      closeListDropdown();
+    }
+  };
+
+  //드롭다운 닫는 함수
+  const closeListDropdown = (): void => {
+    setActiveFindDropdown(false);
+  };
+
+  //인풋박스 입력값 상태로 업데이트
+  const handleUserIdInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setFindUserId(e.target.value);
+  };
+
   return (
     <HeaderDiv onClick={closeDropDown}>
       <HeaderLeft>
@@ -46,6 +104,15 @@ export default function Header({ title }: Props) {
       </HeaderLeft>
       <HeaderCenter>{title}</HeaderCenter>
       <HeaderRight>
+        {activeSearch ? (
+          ""
+        ) : (
+          <SubText
+            className={activeClass ? (activeSearch ? "" : "fadeOut") : ""}
+          >
+            다른사람의 공간을 방문해보세요 ▶
+          </SubText>
+        )}
         <SearchBar
           className={activeClass ? (activeSearch ? "slideIn" : "slideOut") : ""}
         >
@@ -55,8 +122,30 @@ export default function Header({ title }: Props) {
             alt=""
           />
           <SearchBarWrapper className={activeSearch ? "slideIn" : "invisible"}>
-            <input type="text" placeholder="친구를 찾아봐요" />
-            <div onClick={handleActiveSearch}>X</div>
+            <input
+              type="text"
+              placeholder="친구를 찾아봐요"
+              onChange={(e) => handleUserIdInput(e)}
+              onKeyDown={(e) => findToEnter(e)}
+              value={findUserId}
+            />
+            <NormalBtn
+              className="b"
+              width={"50px"}
+              height={"30px"}
+              onClick={handleFindUser}
+            >
+              찾기
+            </NormalBtn>
+            <CloseText onClick={handleActiveSearch}>X</CloseText>
+            {activeFindDropdown ? (
+              <HeaderUserlist
+                userList={userList}
+                closeDropdown={closeListDropdown}
+              />
+            ) : (
+              ""
+            )}
           </SearchBarWrapper>
         </SearchBar>
         <img
@@ -155,6 +244,18 @@ const HeaderRight = styled.div`
   }
 `;
 
+const SubText = styled.div`
+  position: fixed;
+  right: 88px;
+  font-size: 12px;
+  color: #ffffffc5;
+  margin-bottom: 2px;
+
+  &.fadeOut {
+    animation: ${fadeAction} 0.2s linear;
+  }
+`;
+
 const SearchBar = styled.div`
   width: 160px;
   display: flex;
@@ -201,21 +302,21 @@ const SearchBarWrapper = styled.div`
     display: none;
   }
 
-  div {
-    display: flex;
-    align-items: center;
-    opacity: 0.3;
-  }
-
-  div:hover {
-    opacity: 1;
-  }
-
   input {
     padding-left: 7px;
   }
 
   input::placeholder {
     font-size: 11px;
+  }
+`;
+
+const CloseText = styled.div`
+  display: flex;
+  align-items: center;
+  opacity: 0.3;
+
+  :hover {
+    opacity: 1;
   }
 `;
