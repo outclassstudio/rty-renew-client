@@ -76,8 +76,6 @@ const PrvBoxWrapper = styled.div`
   padding: 0px;
   border-radius: 11px;
   background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976382563788673124/pexels-george-dolgikh-giftpunditscom-1303092.jpg");
-  /* background-size: cover; */
-  /* background-position: center; */
 
   img {
     margin-bottom: 5px;
@@ -106,9 +104,8 @@ const Content = styled.div`
 
   div:nth-child(2) {
     margin-top: 20px;
-    font-size: 12px;
-    font-weight: 200;
-    color: #000000;
+    font-size: 17px;
+    color: #2e2e2e;
   }
 `;
 

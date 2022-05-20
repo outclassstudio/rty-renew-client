@@ -14,6 +14,17 @@ export const getUserInfo = async (): Promise<
     });
 };
 
+//나의 정보 조회
+export const getOthersInfo = async (
+  id: string | undefined
+): Promise<AxiosResponse<Users.myinfoDTO>> => {
+  return apiClient()
+    .get(`/users/${id}`)
+    .then((res) => {
+      return res;
+    });
+};
+
 //테마 불러오기
 export const getThemeList = async (): Promise<AxiosResponse> => {
   return apiClient()

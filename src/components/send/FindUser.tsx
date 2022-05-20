@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { findUser } from "../../apis/userApi";
+import { checkBlank } from "../../hooks/validation";
 import { colorSet } from "../../style/global";
 import UserlistDropdown from "./UserlistDropdown";
 
@@ -10,15 +11,12 @@ export default function FindUser() {
   const [userList, setUserList] = useState<any[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
 
-  //공백체크 정규표현식
-  const pattern = /\s/g;
-
   //사람찾기 실행
   const handleFindUser = (e: React.SyntheticEvent): void => {
     e.preventDefault();
 
     //*아이디값이 truthy하고 공백이 아닌 경우
-    if (findUserId && !findUserId.match(pattern)) {
+    if (findUserId && !findUserId.match(checkBlank)) {
       findUser(findUserId).then((res) => {
         if (res.data.length !== 0) {
           setUserList(res.data);

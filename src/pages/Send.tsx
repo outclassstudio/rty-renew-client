@@ -14,15 +14,20 @@ import { getMyItems } from "../apis/buyApi";
 import { useDispatch } from "react-redux";
 import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
 import Swal from "sweetalert2";
+import Loading from "../components/Loading";
 
 export default function Send() {
   const dispatch = useDispatch();
-  const giftState = useSelector((state: RootState) => state.sendGiftReducer);
+  const giftState = useSelector(
+    (state: RootState) => state.sendGiftReducer.gift
+  );
   const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //내 아이템 리스트 불러와서 store에 저장
   useEffect(() => {
     getMyItems().then((res) => {
+      setIsLoading(false);
       const imgData = res.data.filter((el) => {
         return el.type === "img";
       });
@@ -39,7 +44,6 @@ export default function Send() {
   const viewErrMsg = (text: string): void => {
     Swal.fire({
       title: text,
-      // text: text,
       icon: "error",
       confirmButtonText: "닫기",
     });
@@ -47,13 +51,13 @@ export default function Send() {
 
   //에러유형체크
   const checkSendGift = (): boolean => {
-    if (!giftState.gift.userTo) {
+    if (!giftState.userTo) {
       viewErrMsg("유저를 선택해주세요");
       return false;
-    } else if (!giftState.gift.svg) {
+    } else if (!giftState.svg) {
       viewErrMsg("포장을 선택해주세요");
       return false;
-    } else if (!giftState.gift.content) {
+    } else if (!giftState.content) {
       viewErrMsg("내용을 입력해주세요");
       return false;
     } else {
@@ -76,7 +80,7 @@ export default function Send() {
   //선물전송함수
   const handleSendGift = (): void => {
     if (checkSendGift()) {
-      sendGift(giftState.gift)
+      sendGift(giftState)
         .then(() => {
           Swal.fire({
             title: "선물이 보내졌습니다",
@@ -97,43 +101,47 @@ export default function Send() {
 
   return (
     <Layout title={"선물보내기"}>
-      <MainContainer className="main">
-        <SubContainer>
-          <LeftWrapper>
-            <FindUser />
-            <SetGiftBox />
-          </LeftWrapper>
-          <RightWrapper>
-            <MsgInput />
-          </RightWrapper>
-        </SubContainer>
-        <BtnWrapper>
-          <NormalBtn
-            onClick={handleOpenPreview}
-            className="c"
-            width="200px"
-            height="45px"
-          >
-            미리보기
-          </NormalBtn>
-          <NormalBtn
-            onClick={handleSendGift}
-            className="b"
-            width="200px"
-            height="45px"
-          >
-            선물보내기
-          </NormalBtn>
-        </BtnWrapper>
-        {openPreview ? (
-          <PreviewModal
-            data={giftState.gift}
-            handleCloseModal={handleCloseModal}
-          />
-        ) : (
-          ""
-        )}
-      </MainContainer>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <MainContainer className="main">
+          <SubContainer>
+            <LeftWrapper>
+              <FindUser />
+              <SetGiftBox />
+            </LeftWrapper>
+            <RightWrapper>
+              <MsgInput />
+            </RightWrapper>
+          </SubContainer>
+          <BtnWrapper>
+            <NormalBtn
+              onClick={handleOpenPreview}
+              className="c"
+              width="200px"
+              height="45px"
+            >
+              미리보기
+            </NormalBtn>
+            <NormalBtn
+              onClick={handleSendGift}
+              className="b"
+              width="200px"
+              height="45px"
+            >
+              선물보내기
+            </NormalBtn>
+          </BtnWrapper>
+          {openPreview ? (
+            <PreviewModal
+              data={giftState}
+              handleCloseModal={handleCloseModal}
+            />
+          ) : (
+            ""
+          )}
+        </MainContainer>
+      )}
     </Layout>
   );
 }

@@ -14,6 +14,17 @@ export const getGift = async (): Promise<
     });
 };
 
+//다른사람 gift받아오기
+export const getOthersGift = async (
+  id: string | undefined
+): Promise<AxiosResponse<Gift.singleGiftDTO[]>> => {
+  return apiClient()
+    .get(`/gift/${id}`)
+    .then((res) => {
+      return res;
+    });
+};
+
 //보낸선물조회
 export const getSentGift = async (): Promise<
   AxiosResponse<Gift.singleGiftDTO[]>
