@@ -31,7 +31,8 @@ export default function GiftModal({ data }: any) {
             <ContentImg>
               <div>{data.content}</div>
             </ContentImg>
-            <div>{date}에 보낸 선물입니다.</div>
+            <div>from . {data.userFrom}</div>
+            {/* <div>{date}에 보낸 선물입니다.</div> */}
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>
