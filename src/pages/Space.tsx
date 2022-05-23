@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import {
   setClickBtn,
   setModalOpen,
+  setNewGift,
   setStorageGift,
 } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
@@ -77,6 +78,7 @@ export default function Space() {
       const newGift = userGiftList.filter(
         (item: { status: string }) => item.status === "new"
       );
+      dispatch(setNewGift(newGift));
       setNewGiftList(newGift);
       const space = userGiftList.filter(
         (item: { status: string }) => item.status === "space"
