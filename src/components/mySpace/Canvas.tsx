@@ -116,11 +116,11 @@ export default function Canvas(props: any) {
   useEffect(() => {
     if (saveSpace) {
       console.log("saveSpace11", saveSpace);
-      Paper.view.onClick = function abc() {};
 
       if (editClickedItem) {
-        editClickedItem.onMouseDrag = function abc() {};
         setEditClickedItem(null);
+        editClickedItem.bounds.selected = false;
+        editClickedItem.onMouseDrag = function abc() {};
       }
     } else {
       Paper.view.onClick = (e: any) => {

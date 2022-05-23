@@ -11,9 +11,9 @@ export const NewGiftContainer = styled.div`
   width: 170px;
   height: 700px;
   background-color: ${colorSet.purple};
-  overflow: hidden;
-  border-radius: 10px;
   overflow: auto;
+  border-radius: 10px;
+
   scrollbar-width: none;
   padding: 10px 20px;
   animation: ${fadeSlide} 0.3s ease-out;
@@ -32,6 +32,11 @@ export const ItemContainer = styled.div`
   background: white;
   height: 90%;
   overflow: auto;
+
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const GiftBoxTitle = styled.div`
@@ -72,16 +77,16 @@ export function NewGiftBox(props: any) {
   useEffect(() => {
     setStorageList(storageGiftLists);
     setNewList(newGiftLists);
-    console.log(
-      "newGiftBox",
-      isOpenGiftBox,
-      clickGiftBox,
-      newList,
-      "   newGiftList,",
-      newGiftLists,
-      storageList,
-      storageGiftLists
-    );
+    // console.log(
+    //   "newGiftBox",
+    //   isOpenGiftBox,
+    //   clickGiftBox,
+    //   newList,
+    //   "   newGiftList,",
+    //   newGiftLists,
+    //   storageList,
+    //   storageGiftLists
+    // );
   }, [newGiftLists, storageGiftLists]);
 
   //newGift icon click modal msg new Gift, data newList
