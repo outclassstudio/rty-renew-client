@@ -6,11 +6,13 @@ import { setSvg } from "../../redux/reducers/sendGiftReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/reducers";
 import SendItemListCarousel from "./SendItemListCarousel";
+import ViewAllItemsModal from "./ViewAllItemsModal";
 
 export default function SetGiftBox() {
   const dispatch = useDispatch();
   const svgState = useSelector((state: RootState) => state.getItemReducer);
   const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
+  const [viewAll, setViewAll] = useState<boolean>(false);
 
   //선물포장 선택하는 함수
   const handleSetPrv = (id: number, url: string): void => {
@@ -18,9 +20,21 @@ export default function SetGiftBox() {
     dispatch(setSvg(id));
   };
 
+  //모든 아이템 보기 모달창 on/off
+  const handleActiveViewAll = () => {
+    setViewAll((prev) => !prev);
+  };
+
   return (
     <MainContainer>
-      선물포장을 선택해주세요
+      <TitleWrapper>
+        선물포장을 선택해주세요
+        <img
+          src="https://cdn.discordapp.com/attachments/974114424036155505/978082257766080582/menuswhite.png"
+          alt=""
+          onClick={handleActiveViewAll}
+        />
+      </TitleWrapper>
       <SvgListWrapper>
         <SvgList>
           <SendItemListCarousel
@@ -37,6 +51,16 @@ export default function SetGiftBox() {
           <NoneImg>선택된 포장이 없습니다</NoneImg>
         )}
       </SvgPrv>
+      {viewAll ? (
+        <ViewAllItemsModal
+          data={svgState.svg}
+          handleSetPrv={handleSetPrv}
+          prvItem={prvSvg}
+          handleActiveViewAll={handleActiveViewAll}
+        />
+      ) : (
+        ""
+      )}
     </MainContainer>
   );
 }
@@ -63,6 +87,24 @@ const SvgListWrapper = styled.div`
   font-size: 13px;
   color: ${colorSet.base};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  img {
+    margin-top: 2px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+
+  /* img:hover {
+    filter: grayscale(200%);
+  } */
 `;
 
 const NoneImg = styled.div`

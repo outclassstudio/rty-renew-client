@@ -59,7 +59,6 @@ const MainWrapper = styled.div`
   align-items: center;
   z-index: 1;
   padding: 0px;
-  border-radius: 11px;
   cursor: default;
   animation: 0.2s ease-out ${fadeExpand};
 `;

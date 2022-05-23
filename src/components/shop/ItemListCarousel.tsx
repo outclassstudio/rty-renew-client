@@ -8,7 +8,12 @@ import ImageModal from "./ImageModal";
 import { buyItem } from "../../apis/buyApi";
 import Swal from "sweetalert2";
 
-export default function ItemListCarousel({ img, myIdList, myData }: any) {
+export default function ItemListCarousel({
+  img,
+  myIdList,
+  myData,
+  handleGetItem,
+}: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<any>({});
   const [myItem, setMyItem] = useState<boolean>(false);
@@ -69,7 +74,7 @@ export default function ItemListCarousel({ img, myIdList, myData }: any) {
       }).then((result) => {
         if (result.isConfirmed) {
           buyItem(data).then(() => {
-            window.location.replace("/shop");
+            handleGetItem();
           });
         }
       });

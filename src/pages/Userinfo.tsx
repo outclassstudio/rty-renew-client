@@ -142,17 +142,35 @@ export default function Userinfo() {
         confirmButtonText: "닫기",
       });
     } else {
-      patchUserInfo(data).then(() => {
-        Swal.fire({
-          title: "수정완료",
-          icon: "success",
-          confirmButtonText: "닫기",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.replace("/userinfo");
-          }
+      if (newNickname !== "" && !nickNameCheck(String(newNickname))) {
+        patchUserInfo(data).then(() => {
+          Swal.fire({
+            title: "수정완료",
+            icon: "success",
+            confirmButtonText: "닫기",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("/userinfo");
+            }
+          });
         });
-      });
+      } else {
+        Swal.fire({
+          title: "입력을 확인해주세요",
+          icon: "warning",
+          confirmButtonText: "닫기",
+        });
+      }
+    }
+  };
+
+  //닉네임유효성 검사 결과 렌더링하는 함수
+  const renderNicknameValidCheckMessage = () => {
+    if (
+      (newNickname !== "" && nickNameCheck(String(newNickname))) ||
+      String(newNickname).length > 8
+    ) {
+      return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
     }
   };
 
@@ -378,11 +396,14 @@ export default function Userinfo() {
                 <UserinfoItems>
                   <UserinfoText>닉네임</UserinfoText>
                   {editMode ? (
-                    <UserinfoInput
-                      value={newNickname}
-                      type="text"
-                      onChange={(e) => handleChangeNickname(e)}
-                    />
+                    <>
+                      <UserinfoInput
+                        value={newNickname}
+                        type="text"
+                        onChange={(e) => handleChangeNickname(e)}
+                      />
+                      {renderNicknameValidCheckMessage()}
+                    </>
                   ) : (
                     <UserinfoBox>{userInfo.nickname}</UserinfoBox>
                   )}
