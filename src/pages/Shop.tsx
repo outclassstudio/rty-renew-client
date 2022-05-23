@@ -7,6 +7,7 @@ import { getItems, getMyItems } from "../apis/buyApi";
 import { colorSet, fadeMoveAction, fadeMoveActionDelay } from "../style/global";
 import { getUserInfo } from "../apis/userApi";
 import Loading from "../components/Loading";
+import ViewAllInShopModal from "../components/shop/ViewAllInShopModal";
 
 export default function Shop() {
   const [img, setImg] = useState<any>([]);
@@ -14,6 +15,8 @@ export default function Shop() {
   const [myIdList, setmyIdList] = useState<any>([]);
   const [myData, setMyData] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [svgModal, setSvgModal] = useState<boolean>(false);
+  const [imgModal, setImgModal] = useState<boolean>(false);
 
   //유저정보 불러오기
   useEffect(() => {
@@ -52,6 +55,15 @@ export default function Shop() {
     handleGetItem();
   }, []);
 
+  //아이템 전체보기 on/off
+  const handleActiveViewAll = (type: string) => {
+    if (type === "svg") {
+      setSvgModal((prev) => !prev);
+    } else if (type === "img") {
+      setImgModal((prev) => !prev);
+    }
+  };
+
   return (
     <Layout title={"상점"}>
       {isLoading ? (
@@ -60,7 +72,14 @@ export default function Shop() {
         <MainContainer>
           <MyPoint myData={myData} />
           <SubContainer className="a">
-            <Text>🎁선물 포장 구입하기</Text>
+            <Text>
+              🎁선물 포장 구입하기
+              <img
+                src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
+                alt=""
+                onClick={() => handleActiveViewAll("svg")}
+              />
+            </Text>
             <CarouselWrapper>
               <ItemListCarousel
                 myData={myData}
@@ -71,7 +90,14 @@ export default function Shop() {
             </CarouselWrapper>
           </SubContainer>
           <SubContainer className="b">
-            <Text>📸이미지 구입하기</Text>
+            <Text>
+              📸이미지 구입하기
+              <img
+                src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
+                alt=""
+                onClick={() => handleActiveViewAll("img")}
+              />
+            </Text>
             <CarouselWrapper>
               <ItemListCarousel
                 myData={myData}
@@ -81,6 +107,28 @@ export default function Shop() {
               />
             </CarouselWrapper>
           </SubContainer>
+          {svgModal ? (
+            <ViewAllInShopModal
+              myData={myData}
+              myIdList={myIdList}
+              data={svg}
+              handleActiveViewAll={handleActiveViewAll}
+              handleGetItem={handleGetItem}
+            />
+          ) : (
+            ""
+          )}
+          {imgModal ? (
+            <ViewAllInShopModal
+              myData={myData}
+              myIdList={myIdList}
+              data={img}
+              handleActiveViewAll={handleActiveViewAll}
+              handleGetItem={handleGetItem}
+            />
+          ) : (
+            ""
+          )}
         </MainContainer>
       )}
     </Layout>
@@ -121,4 +169,18 @@ const Text = styled.div`
   font-weight: bold;
   color: ${colorSet.base};
   margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  img:hover {
+    background: ${colorSet.skyBlue};
+  }
 `;

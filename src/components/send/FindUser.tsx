@@ -49,6 +49,13 @@ export default function FindUser() {
     setFindUserId(e.target.value);
   };
 
+  //esc로 드롭다운 닫기
+  const handleCancelFind = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      closeDropdown();
+    }
+  };
+
   return (
     <MainContainer>
       <div>보낼사람찾기</div>
@@ -57,6 +64,7 @@ export default function FindUser() {
           <img src="https://i.imgur.com/vX7F9l4.png" alt="" />
         </button>
         <input
+          onKeyDown={handleCancelFind}
           onChange={handleUserIdInput}
           type="text"
           placeholder="아이디 또는 닉네임을 입력해주세요"

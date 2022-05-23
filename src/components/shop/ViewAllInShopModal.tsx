@@ -1,86 +1,16 @@
-import Slider from "react-slick";
-import "./slick.css";
-import "./slick-theme.css";
 import styled from "styled-components";
-import { colorSet } from "../../style/global";
-import { useState } from "react";
-import ImageModal from "./ImageModal";
-import { buyItem } from "../../apis/buyApi";
 import Swal from "sweetalert2";
+import { buyItem } from "../../apis/buyApi";
+import { NormalBtn } from "../../style/btnStyle.style";
+import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
-export default function ItemListCarousel({
-  img,
-  myIdList,
+export default function ViewAllInShopModal({
+  data,
+  handleActiveViewAll,
   myData,
+  myIdList,
   handleGetItem,
 }: any) {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [current, setCurrent] = useState<any>({});
-  const [myItem, setMyItem] = useState<boolean>(false);
-
-  //carousel 세팅
-  const settings = {
-    focusOnSelect: false,
-    dots: false,
-    infinite: false,
-    speed: 300,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    arrow: true,
-  };
-
-  //모달 열기 및 선택된 아이템 상태 업데이트
-  const openModal = (item: any) => {
-    setCurrent(item);
-
-    if (myIdList.includes(item.idx)) {
-      setMyItem(true);
-    } else {
-      setMyItem(false);
-    }
-
-    setModalOpen(true);
-  };
-
-  //모달 닫기
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  //모달 띄우고 아이템 구입 요청
-  const handleBuyItem = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    let data = {
-      userId: window.localStorage.getItem("id"),
-      itemIdx: current.idx,
-      point: current.point,
-      name: current.name,
-    };
-
-    if (myData.point < data.point) {
-      Swal.fire({
-        title: "포인트가 부족해요!",
-        icon: "error",
-        confirmButtonText: "네ㅠㅠ",
-      });
-    } else {
-      //*확인 클릭시 구매요청 진행
-      Swal.fire({
-        title: `${current.point}포인트가 차감됩니다. 그래도 하시겠습니까?`,
-        icon: "info",
-        confirmButtonText: "네!",
-        showCancelButton: true,
-        cancelButtonText: "안할래요",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          buyItem(data).then(() => {
-            handleGetItem();
-          });
-        }
-      });
-    }
-  };
-
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
     if (myIdList.includes(item.idx)) {
@@ -118,9 +48,19 @@ export default function ItemListCarousel({
     }
   };
 
-  //슬라이더 요소 컴포넌트
-  const sliders = () => {
-    return img.map((el: any, idx: number) => {
+  //아이템 선택과 동시에 preview업데이트, 모달창 종료
+  const handleOpenModal = () => {
+    console.log("타입확인", data[0].type);
+    if (data[0].type === "svg") {
+      handleActiveViewAll("svg");
+    } else {
+      handleActiveViewAll("img");
+    }
+  };
+
+  //아이템 컴포넌트
+  const renderItems = () => {
+    return data.map((el: any, idx: number) => {
       const mine = myIdList.includes(el.idx);
 
       let url;
@@ -135,7 +75,7 @@ export default function ItemListCarousel({
       return (
         <Wrapper key={idx}>
           <ImageWrapper>
-            <SingleImage src={url} alt="" onClick={() => openModal(el)} />
+            <SingleImage src={url} alt="" />
             <Text>
               <SubText className="a">{el.name}</SubText>
               <SubText
@@ -145,13 +85,7 @@ export default function ItemListCarousel({
                 {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
               </SubText>
             </Text>
-            {mine ? (
-              ""
-            ) : (
-              <OverwrapText onClick={() => openModal(el)}>
-                미구입상품입니다
-              </OverwrapText>
-            )}
+            {mine ? "" : <OverwrapText>미구입상품입니다</OverwrapText>}
           </ImageWrapper>
         </Wrapper>
       );
@@ -159,25 +93,72 @@ export default function ItemListCarousel({
   };
 
   return (
-    <CarouselWrapper>
-      <Slider {...settings}>{sliders()}</Slider>
-      {modalOpen ? (
-        <ImageModal
-          image={current}
-          closeModal={closeModal}
-          myItem={myItem}
-          handleBuyItem={handleBuyItem}
-        />
-      ) : (
-        ""
-      )}
-    </CarouselWrapper>
+    <MainWrapper>
+      <PrvBoxWrapper>
+        🌈모든 아이템 보기
+        <GridBox>{renderItems()}</GridBox>
+        <NormalBtn
+          onClick={handleOpenModal}
+          className="b"
+          width={"150px"}
+          height={"35px"}
+        >
+          닫기
+        </NormalBtn>
+      </PrvBoxWrapper>
+      <ModalBg onClick={handleOpenModal}></ModalBg>
+    </MainWrapper>
   );
 }
 
-const CarouselWrapper = styled.div`
-  width: 1000px;
-  color: black;
+export const ModalBg = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #30303075;
+  animation: 0.2s linear ${fadeAction};
+  /* z-index:1; */
+`;
+
+const MainWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  cursor: default;
+  z-index: 1;
+`;
+
+const PrvBoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: ${colorSet.purple};
+  color: white;
+  box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
+  padding: 25px 15px;
+  border-radius: 11px;
+  gap: 20px;
+  font-weight: bold;
+  font-size: 20px;
+  z-index: 2;
+  animation: 0.2s ease-out ${fadeExpand};
+`;
+
+const GridBox = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 `;
 
 const Wrapper = styled.div`
@@ -185,14 +166,12 @@ const Wrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 217px;
   display: flex;
   flex-direction: column;
   background: white;
   color: ${colorSet.base};
   border-radius: 11px 11px 11px 11px;
   box-shadow: rgba(50, 50, 93, 0.5) 0px 0px 10px 0px;
-  cursor: pointer;
 
   :hover {
     outline: 3px solid ${colorSet.darkPink};
@@ -200,8 +179,8 @@ const ImageWrapper = styled.div`
 `;
 
 const SingleImage = styled.img`
-  width: 217px;
-  height: 167px;
+  width: 130px;
+  height: 100px;
   border-radius: 10px 10px 0px 0px;
 `;
 
@@ -210,7 +189,7 @@ const Text = styled.div`
   justify-content: center;
   align-items: center;
   color: white;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: bold;
   border-radius: 0px 0px 10px 10px;
 `;
@@ -221,8 +200,8 @@ const SubText = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 14px 0px 14px 0px;
-  font-size: 14px;
+  padding: 7px 0px 7px 0px;
+  font-size: 10px;
   cursor: default;
 
   &.a {
@@ -248,7 +227,7 @@ const SubText = styled.div`
 
   &.c:hover:before {
     content: "구매하기";
-    font-size: 14px;
+    font-size: 10px;
   }
 
   &.d {
@@ -264,7 +243,7 @@ const SubText = styled.div`
 
   &.d:hover:before {
     content: "구입함";
-    font-size: 14px;
+    font-size: 10px;
   }
 `;
 
@@ -275,9 +254,10 @@ const OverwrapText = styled.div`
   position: fixed;
   color: #ffffff;
   background: #8383839e;
-  width: 217px;
-  height: 167px;
+  width: 130px;
+  height: 100px;
   border-radius: 10px 10px 0px 0px;
+  font-size: 12px;
 
   :hover {
     background: none;
