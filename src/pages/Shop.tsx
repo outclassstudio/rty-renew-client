@@ -22,8 +22,8 @@ export default function Shop() {
     });
   }, []);
 
-  //아이템 불러와서 타입별로 분류
-  useEffect(() => {
+  //아이템 불러와서 세팅
+  const handleGetItem = () => {
     getItems().then((res) => {
       setIsLoading(false);
 
@@ -45,6 +45,11 @@ export default function Shop() {
         setmyIdList(ids);
       });
     });
+  };
+
+  //아이템 세팅 함수 실행
+  useEffect(() => {
+    handleGetItem();
   }, []);
 
   return (
@@ -57,13 +62,23 @@ export default function Shop() {
           <SubContainer className="a">
             <Text>🎁선물 포장 구입하기</Text>
             <CarouselWrapper>
-              <ItemListCarousel myData={myData} myIdList={myIdList} img={svg} />
+              <ItemListCarousel
+                myData={myData}
+                myIdList={myIdList}
+                img={svg}
+                handleGetItem={handleGetItem}
+              />
             </CarouselWrapper>
           </SubContainer>
           <SubContainer className="b">
             <Text>📸이미지 구입하기</Text>
             <CarouselWrapper>
-              <ItemListCarousel myData={myData} myIdList={myIdList} img={img} />
+              <ItemListCarousel
+                myData={myData}
+                myIdList={myIdList}
+                img={img}
+                handleGetItem={handleGetItem}
+              />
             </CarouselWrapper>
           </SubContainer>
         </MainContainer>
@@ -80,7 +95,6 @@ const MainContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  /* margin-top: 30px; */
 `;
 
 const SubContainer = styled.div`
