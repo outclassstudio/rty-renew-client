@@ -168,7 +168,7 @@ export default function Userinfo() {
   const renderNicknameValidCheckMessage = () => {
     if (
       (newNickname !== "" && nickNameCheck(String(newNickname))) ||
-      String(newNickname).length > 8
+      String(newNickname).length > 10
     ) {
       return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
     }

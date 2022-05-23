@@ -99,7 +99,7 @@ export default function Signup() {
   const renderNicknameValidCheckMessage = () => {
     if (
       (signUpInfo.nickname !== "" && nickNameCheck(signUpInfo.nickname)) ||
-      signUpInfo.nickname.length > 8
+      signUpInfo.nickname.length > 10
     ) {
       return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
     }
@@ -189,7 +189,7 @@ export default function Signup() {
               아이디 <span>*</span>
             </SignUpText>
             <SignUpText className="sub">
-              * 4자 이상 12자 이하의 영어 또는 숫자를 포함한 아이디
+              * 4자 이상 10자 이하의 영어 또는 숫자를 포함한 아이디
             </SignUpText>
             <SignUpSubItem>
               <SignUpBox
@@ -230,7 +230,7 @@ export default function Signup() {
             <SignUpText>
               닉네임 <span>*</span>
             </SignUpText>
-            <SignUpText className="sub">* 12자 이하의 닉네임</SignUpText>
+            <SignUpText className="sub">* 10자 이하의 닉네임</SignUpText>
             <SignUpBox
               type="text"
               onChange={handleSignUpValue("nickname")}

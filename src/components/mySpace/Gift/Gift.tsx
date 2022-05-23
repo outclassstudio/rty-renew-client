@@ -89,7 +89,7 @@ const ModalBg = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: #30303030;
+  background: #30303057;
   animation: 0.2s linear ${fadeAction};
 `;
 

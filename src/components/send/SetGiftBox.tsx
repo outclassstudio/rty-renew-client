@@ -93,18 +93,19 @@ const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 101%;
 
   img {
     margin-top: 2px;
     width: 15px;
     height: 15px;
     cursor: pointer;
+    padding: 3px;
   }
 
-  /* img:hover {
-    filter: grayscale(200%);
-  } */
+  img:hover {
+    background: #ffffff37;
+  }
 `;
 
 const NoneImg = styled.div`

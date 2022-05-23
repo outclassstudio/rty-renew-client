@@ -155,6 +155,11 @@ const TitleWrapper = styled.div`
     width: 15px;
     height: 15px;
     cursor: pointer;
+    padding: 3px;
+  }
+
+  img:hover {
+    background: ${colorSet.skyBlue};
   }
 `;
 
