@@ -17,7 +17,7 @@ export const NormalBtn = styled.button<Size>`
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-
+  margin: 0 20px; 0px 20px;
   &.a {
     background: linear-gradient(90deg, #ffca60 0%, #fb834c 58.85%);
   }

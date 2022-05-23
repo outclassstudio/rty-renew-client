@@ -55,9 +55,12 @@ export default function NewGift() {
   );
   const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const newGiftLists = giftLists.filter((el: any) => el.status === "new");
-  useEffect(() => {}, [isOpenGift, giftLists]);
+  useEffect(() => {
+    // console.log("newGift", newGiftLists, giftLists);
+  }, [isOpenGift, isOpenGiftBox]);
 
   const openGiftHandler = () => {
+    console.log("clickopenGiftHandler");
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));
   };
@@ -65,10 +68,12 @@ export default function NewGift() {
   return (
     <div>
       <GiftIconBox>
-        <GiftCount>{newGiftLists.length}</GiftCount>
-        {newGiftLists && !newGiftLists.length ? null : (
-          <NewGifIcon1 onClick={openGiftHandler} />
-        )}
+        {newGiftLists && newGiftLists.length !== 0 ? (
+          <>
+            <GiftCount>{newGiftLists.length}</GiftCount>
+            <NewGifIcon1 onClick={openGiftHandler} />
+          </>
+        ) : null}
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>

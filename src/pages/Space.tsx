@@ -6,11 +6,16 @@ import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
 import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
-import { setClickBtn, setModalOpen } from "../redux/reducers/spaceReducer";
+import {
+  setClickBtn,
+  setModalOpen,
+  setStorageGift,
+} from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
 import { NormalBtn } from "../style/btnStyle.style";
 import { fadeAction } from "../style/global";
+import React from "react";
 
 export const SpaceContainer = styled.div`
   display: flex;
@@ -58,29 +63,33 @@ export default function Space() {
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
   const [editMove, setEditMove] = useState(false);
-  const [saveSpace, setSaveSpace] = useState(false);
+  const [saveSpace, setSaveSpace] = useState(true);
 
   useEffect(() => {
-    getUserInfo().then((res) => {
-      let user = res.data;
-      console.log("유저정보확인", user);
-      setMyInfo(user);
-      dispatch(userInfo(user));
-    });
+    // getUserInfo().then((res) => {
+    //   let user = res.data;
+    //   setMyInfo(user);
+    //   dispatch(userInfo(user));
+    // });
     console.log("spapce", userGiftList);
-    const newGift = userGiftList.filter(
-      (item: { status: string }) => item.status === "new"
-    );
-    setNewGiftList(newGift);
-    const space = userGiftList.filter(
-      (item: { status: string }) => item.status === "space"
-    );
-    setSpaceGiftList(space);
-    const storage = userGiftList.filter(
-      (item: { status: string }) => item.status === "storage"
-    );
 
-    setStorageGiftList(storage);
+    if (userGiftList) {
+      const newGift = userGiftList.filter(
+        (item: { status: string }) => item.status === "new"
+      );
+      setNewGiftList(newGift);
+      const space = userGiftList.filter(
+        (item: { status: string }) => item.status === "space"
+      );
+      setSpaceGiftList(space);
+
+      const storage = userGiftList.filter(
+        (item: { status: string }) => item.status === "storage"
+      );
+      dispatch(setStorageGift(storage));
+      setStorageGiftList(storage);
+    }
+
     if (userGiftList) {
       setIsEachGift(true);
     }
@@ -101,18 +110,14 @@ export default function Space() {
     //editSpace 가  true일 때만
     //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
+    setSaveSpace(false);
     dispatch(setClickBtn("editSpace"));
-  };
-
-  const editMoveHandler = () => {
-    setEditMove(!editMove);
-    console.log("moveeditttt");
-    dispatch(setClickBtn("editMove"));
   };
 
   const saveSpaceHandler = () => {
     console.log("clickssss");
     setSaveSpace(true);
+    setEditSpace(false);
   };
   console.log("moveeditttt", editMove);
   return (
@@ -146,7 +151,7 @@ export default function Space() {
             height={"50px"}
             onClick={changeThemeHandler}
           >
-            테마수정
+            테마 변경
           </NormalBtn>
           <NormalBtn
             className="a"
@@ -154,25 +159,28 @@ export default function Space() {
             height={"50px"}
             onClick={editAvatarHandler}
           >
-            {editAvatar ? "수정 중" : "아바타 수정"}
-          </NormalBtn>
-          <NormalBtn
-            className={editSpace ? "b" : "a"}
-            width={"300px"}
-            height={"50px"}
-            onClick={editSpaceHandler}
-          >
-            {editSpace ? "완료" : "선물 수정"}
+            {editAvatar ? "수정 중" : "나의 메시지 수정"}
           </NormalBtn>
 
-          <NormalBtn
-            className="a"
-            width={"300px"}
-            height={"50px"}
-            onClick={editMoveHandler}
-          >
-            공간 수정
-          </NormalBtn>
+          {editSpace ? (
+            <NormalBtn
+              className={editSpace ? "b" : "a"}
+              width={"300px"}
+              height={"50px"}
+              onClick={saveSpaceHandler}
+            >
+              완료
+            </NormalBtn>
+          ) : (
+            <NormalBtn
+              className={editSpace ? "b" : "a"}
+              width={"300px"}
+              height={"50px"}
+              onClick={editSpaceHandler}
+            >
+              나의 공간 수정
+            </NormalBtn>
+          )}
         </ThemeBtnBox>
       </MainContainer>
     </Layout>

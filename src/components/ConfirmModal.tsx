@@ -1,6 +1,12 @@
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setConfirmModal, setConfirmRes } from "../redux/reducers/spaceReducer";
+import {
+  setConfirmModal,
+  setConfirmRes,
+  setIsOpenSave,
+  setIsOpenTrash,
+} from "../redux/reducers/spaceReducer";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -43,17 +49,25 @@ export const Button = styled.button`
 
 export function ConfirmModal(props: any) {
   const dispatch = useDispatch();
-
-  const setIsConfirmRes = props.setIsConfirmRes;
+  const isOpenTrash = useSelector(
+    (state: any) => state.spaceReducer.isOpenTrash
+  );
+  const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
+  const msg = props.msg;
+  // const setIsConfirmRes = props.setIsConfirmRes;
   const okModalHandler = () => {
-    console.log("okokok", setIsConfirmRes);
+    console.log("okokok");
     //dispatch(setConfirmRes(true));
-    setIsConfirmRes(true);
+    //기능 수행 후 모달 해제
+
+    dispatch(setConfirmRes(true));
   };
 
   const cancleModalHandler = () => {
     console.log("nono");
     dispatch(setConfirmModal(false));
+    //  dispatch(setIsOpenTrash(false));
+    // dispatch(setIsOpenSave(false));
   };
 
   return (
@@ -61,7 +75,7 @@ export function ConfirmModal(props: any) {
       <ModalView>
         <ContentBox>
           <div>
-            <p>저장 또는 삭제 하시겠습니까?</p>
+            <p>{msg} 하시겠습니까?</p>
             <Button onClick={okModalHandler}>OK</Button>
             <Button onClick={cancleModalHandler}>NO</Button>
           </div>

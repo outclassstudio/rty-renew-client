@@ -4,6 +4,7 @@ interface spaceState {
   isThemeModal: boolean;
   isOpenNewGift: boolean;
   newGiftList: any;
+  storageGiftList: any;
   userInfo: Myinfo;
   myGift: any;
   isOpenStorage: boolean;
@@ -12,6 +13,8 @@ interface spaceState {
   isOpenGiftBox: boolean;
   clickGiftBox: string;
   clickBtn: string;
+  isOpenTrash: boolean;
+  isOpenSave: boolean;
 }
 
 interface Myinfo {
@@ -40,6 +43,9 @@ const initialState = {
   isOpenGiftBox: false,
   clickGiftBox: "",
   clickBtn: "",
+  isOpenTrash: false,
+  isOpenSave: false,
+  storageGiftList: "",
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -59,6 +65,12 @@ const spaceSlice = createSlice({
     setMyGift(state, action: PayloadAction<any>) {
       state.myGift = action.payload;
     },
+    setStorageGift(state, action: PayloadAction<any>) {
+      state.storageGiftList = action.payload;
+    },
+    setNewGift(state, action: PayloadAction<any>) {
+      state.newGiftList = action.payload;
+    },
     setOpenStorage(state, action: PayloadAction<any>) {
       state.isOpenStorage = action.payload;
     },
@@ -77,6 +89,12 @@ const spaceSlice = createSlice({
     setClickBtn(state, action: PayloadAction<any>) {
       state.clickBtn = action.payload;
     },
+    setIsOpenTrash(state, action: PayloadAction<any>) {
+      state.isOpenTrash = action.payload;
+    },
+    setIsOpenSave(state, action: PayloadAction<any>) {
+      state.isOpenSave = action.payload;
+    },
   },
 });
 
@@ -91,5 +109,9 @@ export const {
   setOpenGiftBox,
   setClickGiftBox,
   setClickBtn,
+  setIsOpenSave,
+  setIsOpenTrash,
+  setStorageGift,
+  setNewGift,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;
