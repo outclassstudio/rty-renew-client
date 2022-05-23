@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 //import { isOpenNewGift } from "../../../redux/actions/index";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   setClickGiftBox,
   setOpenGiftBox,
@@ -47,21 +47,31 @@ export default function NewGift() {
   //새로 받은 선물함 아이콘이 있다.
   //선물함을 클릭하면 선물함 리스트 컴포넌트가 보인다.
   const dispatch = useDispatch();
+
   const isOpenGift = useSelector(
     (state: any) => state.spaceReducer.isOpenNewGift
   );
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
+
+  const newGiftList = useSelector(
+    (state: any) => state.spaceReducer.newGiftList
+  );
+
   const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const newGiftLists = giftLists.filter((el: any) => el.status === "new");
-  const newgift = useSelector((state: any) => state.spaceReducer.newGiftList);
+
+  const [newList, setNewList] = useState<any>([]);
 
   useEffect(() => {
-    // console.log("newGift", newGiftLists, giftLists);
-  }, [isOpenGift, isOpenGiftBox]);
+    setNewList(newGiftLists);
+    console.log("newGifticon", newGiftLists, giftLists, newList);
+  }, []);
 
-  console.log("갯수확인", newgift);
+  useEffect(() => {
+    setNewList(newGiftList);
+  }, [newGiftList, isOpenGiftBox]);
 
   const openGiftHandler = () => {
     console.log("clickopenGiftHandler");
@@ -72,9 +82,10 @@ export default function NewGift() {
   return (
     <div>
       <GiftIconBox>
-        {newGiftLists && newGiftLists.length !== 0 ? (
+        {newList && newList.length !== 0 ? (
           <>
-            <GiftCount>{newGiftLists.length}</GiftCount>
+            {console.log("newGifticon", newList.lengtht)}
+            <GiftCount>{newList.length}</GiftCount>
             <NewGifIcon1 onClick={openGiftHandler} />
           </>
         ) : null}
