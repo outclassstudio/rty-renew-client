@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setIsOpenTrash } from "../../../redux/reducers/spaceReducer";
 
 export const WastebasketIconBox = styled.div`
-  width: 100px;
+  width: 150px;
   height: 150px;
   position: fixed;
-  margin-top: 600px;
-  margin-left: 20px;
+  margin-top: 205px;
+  margin-left: 1170px;
+  z-index: 1;
   cursor: pointer;
 `;
 
@@ -31,7 +32,7 @@ export function WastebasketIcon() {
     <>
       {isOpenSave ? null : (
         <WastebasketIconBox onClick={clickTrashHandler}>
-          {isOpenTrash ? <TrashOpen /> : <GarbageTrash />}
+          {isOpenTrash ? <TrashOpen width="75" /> : <GarbageTrash width="80" />}
         </WastebasketIconBox>
       )}
     </>

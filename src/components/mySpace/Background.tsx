@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { userInfo } from "../../redux/actions/index";
 import { changeTheme, getThemeList } from "../../apis/userApi";
-import { setModalOpen } from "../../redux/reducers/spaceReducer";
+import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
@@ -86,7 +86,7 @@ export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 25px;
-  gap: 5px;
+  gap: 15px;
 `;
 
 export const SaveBtn = styled.button`
@@ -132,10 +132,10 @@ export default function Background() {
       changeTheme(checkedItem[0]).then((res) => {
         let info = res.data;
         console.log(info, "Avatar");
-        dispatch(userInfo(info));
+        dispatch(setUserInfo(info));
       });
-      // dispatch(setModalOpen(false));
-      window.location.replace("/");
+      dispatch(setModalOpen(false));
+      // window.location.replace("/");
     }
   };
 

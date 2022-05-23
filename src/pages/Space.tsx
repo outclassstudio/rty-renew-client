@@ -11,6 +11,7 @@ import {
   setModalOpen,
   setNewGift,
   setStorageGift,
+  setUserInfo,
 } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
@@ -67,11 +68,11 @@ export default function Space() {
   const [saveSpace, setSaveSpace] = useState(true);
 
   useEffect(() => {
-    // getUserInfo().then((res) => {
-    //   let user = res.data;
-    //   setMyInfo(user);
-    //   dispatch(userInfo(user));
-    // });
+    getUserInfo().then((res) => {
+      let user = res.data;
+      setMyInfo(user);
+      dispatch(setUserInfo(user));
+    });
     console.log("spapce", userGiftList);
 
     if (userGiftList) {

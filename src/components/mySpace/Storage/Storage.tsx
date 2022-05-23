@@ -6,8 +6,6 @@ import { getGift } from "../../../apis/giftApi";
 import { ReactComponent as StorageICon } from "../../../assets/images/svg/storage.svg";
 import { ReactComponent as OpenBox } from "../../../assets/images/svg/openBox.svg";
 import { ReactComponent as CloseBox } from "../../../assets/images/svg/closeBox.svg";
-import { ReactComponent as Minus } from "../../../assets/images/svg/minus.svg";
-import { ReactComponent as Plus } from "../../../assets/images/svg/plus.svg";
 import {
   setClickGiftBox,
   setOpenGiftBox,
@@ -15,11 +13,9 @@ import {
 } from "../../../redux/reducers/spaceReducer";
 
 export const StorageContainer = styled.div`
-  width: 100px;
-  height: 150px;
   position: fixed;
-  margin-top: 610px;
-  margin-left: 1145px;
+  margin-top: 115px;
+  margin-left: 1165px;
   cursor: pointer;
 `;
 
@@ -74,11 +70,11 @@ export function Storage(props: any) {
             <>
               {isOpenSave ? (
                 <StorageContainer>
-                  <OpenBox onClick={clickBoxHandler} />
+                  <OpenBox width="85" fill="white" onClick={clickBoxHandler} />
                 </StorageContainer>
               ) : (
                 <StorageContainer>
-                  <CloseBox onClick={clickBoxHandler} />
+                  <CloseBox fill="white" onClick={clickBoxHandler} />
                 </StorageContainer>
               )}
             </>
@@ -88,11 +84,21 @@ export function Storage(props: any) {
         <StorageContainer>
           {isShowStorage ? (
             <ShowBox>
-              <Minus onClick={isShowHandler} />
+              <Minus
+                src={
+                  "https://cdn.discordapp.com/attachments/974114424036155505/978184305668923402/minus.png"
+                }
+                onClick={isShowHandler}
+              />
             </ShowBox>
           ) : (
             <ShowBox>
-              <Plus onClick={isShowHandler} />
+              <Plus
+                src={
+                  "https://cdn.discordapp.com/attachments/974114424036155505/978184305916403762/plus.png"
+                }
+                onClick={isShowHandler}
+              />
             </ShowBox>
           )}
           {isShowStorage ? <StorageICon onClick={isOpenHandler} /> : null}
@@ -101,3 +107,11 @@ export function Storage(props: any) {
     </>
   );
 }
+
+const Minus = styled.img`
+  width: 20px;
+`;
+
+const Plus = styled.img`
+  width: 20px;
+`;

@@ -33,7 +33,7 @@ const initialState = {
     id: "",
     nickname: "",
     point: 0,
-    theme: "https://i.imgur.com/mpT71SX.jpg",
+    theme: "",
     msg: "",
   },
   isOpenStorage: false,
