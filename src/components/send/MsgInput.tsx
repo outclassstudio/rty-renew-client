@@ -7,6 +7,7 @@ import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
 import SendItemListCarousel from "./SendItemListCarousel";
+import ViewAllItemsModal from "./ViewAllItemsModal";
 
 export default function MsgInput() {
   const dispatch = useDispatch();
@@ -18,11 +19,17 @@ export default function MsgInput() {
   //각종상태
   const [prvItem, setPrvItem] = useState<any>({ id: null, url: "" });
   const [letterNum, setLetterNum] = useState<number>(0);
+  const [viewAll, setViewAll] = useState<boolean>(false);
 
   //프리뷰이미지 변경 및 상태변경 함수
   const changeImg = (idx: number, url: string): void => {
     setPrvItem({ id: idx, url: url });
     dispatch(setImg(idx));
+  };
+
+  //모든 아이템 보기 모달창 on/off
+  const handleActiveViewAll = () => {
+    setViewAll((prev) => !prev);
   };
 
   //글자수 세는 함수 및 제한수 초과시 경고
@@ -49,7 +56,14 @@ export default function MsgInput() {
           <div>🎁{giftState.gift.nickname}님에게</div>
         </Receiver>
         <ImgListWrapper>
-          <div>메시지와 함께 보낼 이미지를 선택해주세요</div>
+          <TitleWrapper>
+            메시지와 함께 보낼 이미지를 선택해주세요{" "}
+            <img
+              src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
+              alt=""
+              onClick={handleActiveViewAll}
+            />
+          </TitleWrapper>
           <ImgList>
             <SendItemListCarousel
               handleSetPrv={changeImg}
@@ -63,6 +77,16 @@ export default function MsgInput() {
             <NoneImg>선택된 이미지가 없습니다</NoneImg>
           )}
         </ImgListWrapper>
+        {viewAll ? (
+          <ViewAllItemsModal
+            data={itemState.img}
+            handleSetPrv={changeImg}
+            prvItem={prvItem}
+            handleActiveViewAll={handleActiveViewAll}
+          />
+        ) : (
+          ""
+        )}
       </SubContainer>
       <SubContainer className="b">
         <BoxWrapper>
@@ -119,6 +143,24 @@ const ImgListWrapper = styled.div`
   font-size: 13px;
   color: ${colorSet.base};
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  img {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    padding: 3px;
+  }
+
+  img:hover {
+    background: ${colorSet.skyBlue};
+  }
 `;
 
 const ImgList = styled.div`

@@ -22,8 +22,6 @@ const LoadingWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: #ffffff65; */
-  z-index: 2;
   background-image: url("https://cdn.discordapp.com/attachments/974114424036155505/976719965279363142/background7.png");
   background-position: center;
   background-size: cover;

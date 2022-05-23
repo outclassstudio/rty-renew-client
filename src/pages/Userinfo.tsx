@@ -16,8 +16,9 @@ import { NormalBtn } from "../style/btnStyle.style";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import Swal from "sweetalert2";
 import MyPicker from "../components/MyPicker";
-import { strongPassword } from "../hooks/validation";
+import { nickNameCheck, strongPassword } from "../hooks/validation";
 import { ErrMsg } from "./Signup";
+import Loading from "../components/Loading";
 
 interface UserInfo {
   id: string | undefined;
@@ -35,6 +36,8 @@ interface PwInfo {
 export default function Userinfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //수정모드 on/off상태
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -72,6 +75,7 @@ export default function Userinfo() {
   //유저정보 불러오기
   useEffect(() => {
     getUserInfo().then((res) => {
+      setIsLoading(false);
       setUserInfo({
         id: res.data.id,
         nickname: res.data.nickname,
@@ -138,17 +142,35 @@ export default function Userinfo() {
         confirmButtonText: "닫기",
       });
     } else {
-      patchUserInfo(data).then(() => {
-        Swal.fire({
-          title: "수정완료",
-          icon: "success",
-          confirmButtonText: "닫기",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.replace("/userinfo");
-          }
+      if (newNickname !== "" && !nickNameCheck(String(newNickname))) {
+        patchUserInfo(data).then(() => {
+          Swal.fire({
+            title: "수정완료",
+            icon: "success",
+            confirmButtonText: "닫기",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("/userinfo");
+            }
+          });
         });
-      });
+      } else {
+        Swal.fire({
+          title: "입력을 확인해주세요",
+          icon: "warning",
+          confirmButtonText: "닫기",
+        });
+      }
+    }
+  };
+
+  //닉네임유효성 검사 결과 렌더링하는 함수
+  const renderNicknameValidCheckMessage = () => {
+    if (
+      (newNickname !== "" && nickNameCheck(String(newNickname))) ||
+      String(newNickname).length > 10
+    ) {
+      return <ErrMsg className="err">유효하지 않은 닉네임입니다</ErrMsg>;
     }
   };
 
@@ -273,221 +295,228 @@ export default function Userinfo() {
 
   return (
     <Layout title={"나의 정보"}>
-      <MainContainer>
-        <Logo
-          src="https://i.imgur.com/JKy28zb.png"
-          title="logo_sample(png).png"
-          onClick={() => navigate("/")}
-        />
-        <UserInfoWrapper>
-          {activePicker ? (
-            <PickerWrapper>
-              <MyPicker
-                handleAcitvePicker={handleAcitvePicker}
-                handleDateValue={handleDateValue}
-              />
-              <DropdonwBg onClick={handleAcitvePicker} />
-            </PickerWrapper>
-          ) : (
-            ""
-          )}
-          {pwChangeMode ? (
-            <SubWrapper className="change-mode">
-              <UserinfoItems>
-                <UserinfoText>현재비밀번호</UserinfoText>
-                <UserinfoInput
-                  type="password"
-                  onChange={handlePwValue("current")}
-                ></UserinfoInput>
-                {errors.emptyBoxCheck
-                  ? changePwdInfo.current === ""
-                    ? renderEmptyBoxCheck()
-                    : ""
-                  : ""}
-                {checkPw ? (
-                  ""
-                ) : (
-                  <BtnWrapper className="row">
-                    <NormalBtn
-                      className="a"
-                      width={"312px"}
-                      height={"45px"}
-                      onClick={(e) => handleCheckPw(e)}
-                    >
-                      비밀번호 확인
-                    </NormalBtn>
-                    {errors.pwCheck ? (
-                      <ErrMsg className="err">비밀번호가 잘못됐습니다</ErrMsg>
-                    ) : (
-                      ""
-                    )}
-                  </BtnWrapper>
-                )}
-              </UserinfoItems>
-              {checkPw ? (
-                <>
-                  <UserinfoItems className="change-pw">
-                    <UserinfoText>변경할 비밀번호</UserinfoText>
-                    <UserinfoText className="sub">
-                      * 6자 이상, 영어, 숫자를 포함한 비밀번호
-                    </UserinfoText>
-                    <UserinfoInput
-                      type="password"
-                      onChange={handlePwValue("password")}
-                    ></UserinfoInput>
-                    {renderValidationCheckMessage()}
-                    {errors.emptyBoxCheck
-                      ? changePwdInfo.password === ""
-                        ? renderEmptyBoxCheck()
-                        : ""
-                      : ""}
-                  </UserinfoItems>
-                  <UserinfoItems>
-                    <UserinfoText>변경할 비밀번호 확인</UserinfoText>
-                    <UserinfoInput
-                      type="password"
-                      onChange={handlePwValue("passwordCheck")}
-                    ></UserinfoInput>
-                    {renderFeedbackMessage()}
-                    {errors.emptyBoxCheck
-                      ? changePwdInfo.passwordCheck === ""
-                        ? renderEmptyBoxCheck()
-                        : ""
-                      : ""}
-                  </UserinfoItems>
-                </>
-              ) : (
-                ""
-              )}
-            </SubWrapper>
-          ) : (
-            <SubWrapper>
-              <UserinfoItems>
-                <UserinfoText>아이디</UserinfoText>
-                <UserinfoBox className={editMode ? "edit" : ""}>
-                  {userInfo.id}
-                </UserinfoBox>
-              </UserinfoItems>
-              <UserinfoItems>
-                <UserinfoText>닉네임</UserinfoText>
-                {editMode ? (
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <MainContainer>
+          <Logo
+            src="https://i.imgur.com/JKy28zb.png"
+            title="logo_sample(png).png"
+            onClick={() => navigate("/")}
+          />
+          <UserInfoWrapper>
+            {activePicker ? (
+              <PickerWrapper>
+                <MyPicker
+                  handleAcitvePicker={handleAcitvePicker}
+                  handleDateValue={handleDateValue}
+                />
+                <DropdonwBg onClick={handleAcitvePicker} />
+              </PickerWrapper>
+            ) : (
+              ""
+            )}
+            {pwChangeMode ? (
+              <SubWrapper className="change-mode">
+                <UserinfoItems>
+                  <UserinfoText>현재비밀번호</UserinfoText>
                   <UserinfoInput
-                    value={newNickname}
-                    type="text"
-                    onChange={(e) => handleChangeNickname(e)}
-                  />
+                    type="password"
+                    onChange={handlePwValue("current")}
+                  ></UserinfoInput>
+                  {errors.emptyBoxCheck
+                    ? changePwdInfo.current === ""
+                      ? renderEmptyBoxCheck()
+                      : ""
+                    : ""}
+                  {checkPw ? (
+                    ""
+                  ) : (
+                    <BtnWrapper className="row">
+                      <NormalBtn
+                        className="a"
+                        width={"312px"}
+                        height={"45px"}
+                        onClick={(e) => handleCheckPw(e)}
+                      >
+                        비밀번호 확인
+                      </NormalBtn>
+                      {errors.pwCheck ? (
+                        <ErrMsg className="err">비밀번호가 잘못됐습니다</ErrMsg>
+                      ) : (
+                        ""
+                      )}
+                    </BtnWrapper>
+                  )}
+                </UserinfoItems>
+                {checkPw ? (
+                  <>
+                    <UserinfoItems className="change-pw">
+                      <UserinfoText>변경할 비밀번호</UserinfoText>
+                      <UserinfoText className="sub">
+                        * 6자 이상, 영어, 숫자를 포함한 비밀번호
+                      </UserinfoText>
+                      <UserinfoInput
+                        type="password"
+                        onChange={handlePwValue("password")}
+                      ></UserinfoInput>
+                      {renderValidationCheckMessage()}
+                      {errors.emptyBoxCheck
+                        ? changePwdInfo.password === ""
+                          ? renderEmptyBoxCheck()
+                          : ""
+                        : ""}
+                    </UserinfoItems>
+                    <UserinfoItems>
+                      <UserinfoText>변경할 비밀번호 확인</UserinfoText>
+                      <UserinfoInput
+                        type="password"
+                        onChange={handlePwValue("passwordCheck")}
+                      ></UserinfoInput>
+                      {renderFeedbackMessage()}
+                      {errors.emptyBoxCheck
+                        ? changePwdInfo.passwordCheck === ""
+                          ? renderEmptyBoxCheck()
+                          : ""
+                        : ""}
+                    </UserinfoItems>
+                  </>
                 ) : (
-                  <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+                  ""
                 )}
-              </UserinfoItems>
-              <UserinfoItems>
-                <UserinfoText>생년월일</UserinfoText>
-                {editMode ? (
-                  <BtnWrapper>
-                    <UserinfoBox className="sub">{newBirth}</UserinfoBox>
-                    <BtnDiv
-                      height={"42px"}
-                      width={"95px"}
-                      onClick={handleAcitvePicker}
-                      className="a"
-                    >
-                      날짜선택
-                    </BtnDiv>
-                  </BtnWrapper>
-                ) : (
-                  <UserinfoBox>{userInfo.birth}</UserinfoBox>
-                )}
-              </UserinfoItems>
-              <UserinfoItems>
-                <UserinfoText>나의포인트</UserinfoText>
-                <UserinfoBox className={editMode ? "edit" : ""}>
-                  {userInfo.point}
-                </UserinfoBox>
-              </UserinfoItems>
-            </SubWrapper>
-          )}
-          {pwChangeMode ? (
-            ""
-          ) : editMode ? (
-            <BtnWrapper>
+              </SubWrapper>
+            ) : (
+              <SubWrapper>
+                <UserinfoItems>
+                  <UserinfoText>아이디</UserinfoText>
+                  <UserinfoBox className={editMode ? "edit" : ""}>
+                    {userInfo.id}
+                  </UserinfoBox>
+                </UserinfoItems>
+                <UserinfoItems>
+                  <UserinfoText>닉네임</UserinfoText>
+                  {editMode ? (
+                    <>
+                      <UserinfoInput
+                        value={newNickname}
+                        type="text"
+                        onChange={(e) => handleChangeNickname(e)}
+                      />
+                      {renderNicknameValidCheckMessage()}
+                    </>
+                  ) : (
+                    <UserinfoBox>{userInfo.nickname}</UserinfoBox>
+                  )}
+                </UserinfoItems>
+                <UserinfoItems>
+                  <UserinfoText>생년월일</UserinfoText>
+                  {editMode ? (
+                    <BtnWrapper>
+                      <UserinfoBox className="sub">{newBirth}</UserinfoBox>
+                      <BtnDiv
+                        height={"42px"}
+                        width={"95px"}
+                        onClick={handleAcitvePicker}
+                        className="a"
+                      >
+                        날짜선택
+                      </BtnDiv>
+                    </BtnWrapper>
+                  ) : (
+                    <UserinfoBox>{userInfo.birth}</UserinfoBox>
+                  )}
+                </UserinfoItems>
+                <UserinfoItems>
+                  <UserinfoText>나의포인트</UserinfoText>
+                  <UserinfoBox className={editMode ? "edit" : ""}>
+                    {userInfo.point}
+                  </UserinfoBox>
+                </UserinfoItems>
+              </SubWrapper>
+            )}
+            {pwChangeMode ? (
+              ""
+            ) : editMode ? (
+              <BtnWrapper>
+                <NormalBtn
+                  className="a"
+                  width={"155px"}
+                  height={"45px"}
+                  onClick={(e) => handleUserinfoEdit(e)}
+                >
+                  변경취소
+                </NormalBtn>
+                <NormalBtn
+                  className="c"
+                  width={"155px"}
+                  height={"45px"}
+                  onClick={(e) => handleEditedInfoSend(e)}
+                >
+                  수정완료
+                </NormalBtn>
+              </BtnWrapper>
+            ) : (
               <NormalBtn
-                className="a"
-                width={"155px"}
+                className="c"
+                width={"315px"}
                 height={"45px"}
                 onClick={(e) => handleUserinfoEdit(e)}
               >
-                변경취소
+                정보수정
               </NormalBtn>
+            )}
+
+            {editMode ? (
+              ""
+            ) : pwChangeMode ? (
+              <BtnWrapper>
+                <NormalBtn
+                  className="a"
+                  width={"155px"}
+                  height={"45px"}
+                  onClick={(e) => handlePwChange(e)}
+                >
+                  변경취소
+                </NormalBtn>
+                <NormalBtn
+                  className="c"
+                  width={"155px"}
+                  height={"45px"}
+                  onClick={(e) => handleChangedPwSend(e)}
+                >
+                  변경완료
+                </NormalBtn>
+              </BtnWrapper>
+            ) : (
               <NormalBtn
                 className="c"
-                width={"155px"}
-                height={"45px"}
-                onClick={(e) => handleEditedInfoSend(e)}
-              >
-                수정완료
-              </NormalBtn>
-            </BtnWrapper>
-          ) : (
-            <NormalBtn
-              className="c"
-              width={"315px"}
-              height={"45px"}
-              onClick={(e) => handleUserinfoEdit(e)}
-            >
-              정보수정
-            </NormalBtn>
-          )}
-
-          {editMode ? (
-            ""
-          ) : pwChangeMode ? (
-            <BtnWrapper>
-              <NormalBtn
-                className="a"
-                width={"155px"}
+                width={"315px"}
                 height={"45px"}
                 onClick={(e) => handlePwChange(e)}
               >
-                변경취소
+                비밀번호변경
               </NormalBtn>
-              <NormalBtn
-                className="c"
-                width={"155px"}
-                height={"45px"}
-                onClick={(e) => handleChangedPwSend(e)}
-              >
-                변경완료
-              </NormalBtn>
-            </BtnWrapper>
-          ) : (
+            )}
+
             <NormalBtn
-              className="c"
+              className="a"
               width={"315px"}
               height={"45px"}
-              onClick={(e) => handlePwChange(e)}
+              onClick={handleLogout}
             >
-              비밀번호변경
+              로그아웃
             </NormalBtn>
-          )}
-
-          <NormalBtn
-            className="a"
-            width={"315px"}
-            height={"45px"}
-            onClick={handleLogout}
-          >
-            로그아웃
-          </NormalBtn>
-          <NormalBtn
-            className="b"
-            width={"315px"}
-            height={"45px"}
-            onClick={(e) => handleDeleteAcount(e)}
-          >
-            계정삭제
-          </NormalBtn>
-        </UserInfoWrapper>
-      </MainContainer>
+            <NormalBtn
+              className="b"
+              width={"315px"}
+              height={"45px"}
+              onClick={(e) => handleDeleteAcount(e)}
+            >
+              계정삭제
+            </NormalBtn>
+          </UserInfoWrapper>
+        </MainContainer>
+      )}
     </Layout>
   );
 }

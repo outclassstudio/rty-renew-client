@@ -44,7 +44,7 @@ const ModalBg = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: #30303030;
+  background: #30303057;
   animation: 0.2s linear ${fadeAction};
 `;
 
@@ -59,7 +59,6 @@ const MainWrapper = styled.div`
   align-items: center;
   z-index: 1;
   padding: 0px;
-  border-radius: 11px;
   cursor: default;
   animation: 0.2s ease-out ${fadeExpand};
 `;
@@ -103,8 +102,7 @@ const Content = styled.div`
   div:nth-child(2) {
     margin-top: 20px;
     font-size: 17px;
-    font-weight: 200;
-    color: #555555;
+    color: #2e2e2e;
   }
 `;
 

@@ -81,6 +81,8 @@ export default function Canvas(props: any) {
   let tool: paper.Tool;
 
   useEffect(() => {
+    console.log("경로", userInfo);
+
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);

@@ -89,7 +89,7 @@ const ModalBg = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: #30303030;
+  background: #30303057;
   animation: 0.2s linear ${fadeAction};
 `;
 
@@ -148,8 +148,7 @@ const Content = styled.div`
   div:nth-child(2) {
     margin-top: 20px;
     font-size: 17px;
-    /* font-weight: 200; */
-    color: #383838;
+    color: #2e2e2e;
   }
 `;
 
