@@ -178,7 +178,7 @@ export default function Signup() {
   return (
     <MainContainer>
       <Logo
-        src="https://i.imgur.com/ITptV6p.png"
+        src="https://cdn.discordapp.com/attachments/974114424036155505/978189535957614592/main_logo.png"
         title="logo_sample(png).png"
         onClick={() => navigate("/")}
       />

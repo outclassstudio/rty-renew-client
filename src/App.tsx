@@ -7,7 +7,6 @@ import Send from "./pages/Send";
 import GiftList from "./pages/GiftList";
 import Visit from "./pages/Visit";
 import ShopRoutes from "./routes/ShopRoutes";
-import Loading from "./components/Loading";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -59,22 +58,21 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        {loginState.login && isGift ? (
+      {loginState.login && isGift ? (
+        <Routes>
           <Route path="/" element={<Space />} />
-        ) : (
-          <Route path="/" element={<Login />} />
-        )}
-        {/*<Route path="/space" element={<Space />} />*/}
-
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/userinfo" element={<Userinfo />} />
-        <Route path="/shop/*" element={<ShopRoutes />} />
-        <Route path="/send" element={<Send />} />
-        <Route path="/giftlist" element={<GiftList />} />
-        <Route path="/loading" element={<Loading />} />
-        <Route path="/visit/:id" element={<Visit />} />
-      </Routes>
+          <Route path="/userinfo" element={<Userinfo />} />
+          <Route path="/shop/*" element={<ShopRoutes />} />
+          <Route path="/send" element={<Send />} />
+          <Route path="/giftlist" element={<GiftList />} />
+          <Route path="/visit/:id" element={<Visit />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/*" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      )}
     </Router>
   );
 }
