@@ -63,9 +63,8 @@ export const ModalBg = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: #30303030;
+  background: #3030306a;
   animation: 0.2s linear ${fadeAction};
-  /* z-index:1; */
 `;
 
 const MainWrapper = styled.div`
@@ -88,8 +87,8 @@ const PrvBoxWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 150px;
-  background: white;
-  color: ${colorSet.base};
+  background: ${colorSet.purple};
+  color: white;
   width: 500px;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
   padding: 25px 15px;

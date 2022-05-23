@@ -50,7 +50,6 @@ export default function ViewAllInShopModal({
 
   //아이템 선택과 동시에 preview업데이트, 모달창 종료
   const handleOpenModal = () => {
-    console.log("타입확인", data[0].type);
     if (data[0].type === "svg") {
       handleActiveViewAll("svg");
     } else {
@@ -111,7 +110,7 @@ export default function ViewAllInShopModal({
   );
 }
 
-export const ModalBg = styled.div`
+const ModalBg = styled.div`
   position: fixed;
   left: 0;
   top: 0;
@@ -119,7 +118,6 @@ export const ModalBg = styled.div`
   height: 100vh;
   background: #30303075;
   animation: 0.2s linear ${fadeAction};
-  /* z-index:1; */
 `;
 
 const MainWrapper = styled.div`
