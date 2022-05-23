@@ -4,18 +4,19 @@ import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Gift } from "./Gift/Gift";
 import Background from "./Background";
-import { getUserInfo } from "../../apis/userApi";
-import { setMyGift, setUserInfo } from "../../redux/reducers/spaceReducer";
 import {
-  getGift,
-  changeGift,
-  deleteGift,
-  changeGiftPosition,
-} from "../../apis/giftApi";
-import { projects, tool } from "paper/dist/paper-core";
+  setConfirmModal,
+  setConfirmRes,
+  setIsOpenSave,
+  setIsOpenTrash,
+  setMyGift,
+  setNewGift,
+  setStorageGift,
+} from "../../redux/reducers/spaceReducer";
+import { changeGift, deleteGift, changeGiftPosition } from "../../apis/giftApi";
+import { PointText, projects, tool } from "paper/dist/paper-core";
 import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
 import { Storage } from "./Storage/Storage";
-
 import NewGiftIcon from "./NewGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
 import { debug } from "console";
@@ -44,6 +45,7 @@ export default function Canvas(props: any) {
   const isEditMove = props.editMove;
   const saveSpace = props.saveSpace;
   const [count, setCount] = useState<number>(1);
+  const [msg, setMsg] = useState<string>("");
   const [spaceGift, setSpaceGift] = useState<any>([]);
   const [dropGift, setDropGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
@@ -53,12 +55,22 @@ export default function Canvas(props: any) {
   const [editClickedItem, setEditClickedItem] = useState<any>();
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const isOpenTrash = useSelector(
+    (state: any) => state.spaceReducer.isOpenTrash
+  );
+  const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
+  const storageGiftLists = useSelector(
+    (state: any) => state.spaceReducer.storageGiftList
+  );
   const clickBtn = useSelector((state: any) => state.spaceReducer.clickBtn);
   const isConfirmModal = useSelector(
     (state: any) => state.spaceReducer.isConfirmModal
   );
+  const isConfirmRes = useSelector(
+    (state: any) => state.spaceReducer.isConfirmRes
+  );
 
-  const [isConfirmRes, setIsConfirmRes] = useState(false);
+  //const [isConfirmRes, setIsConfirmRes] = useState(false);
 
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
@@ -76,48 +88,21 @@ export default function Canvas(props: any) {
     tool = new paper.Tool();
     tool.activate();
 
-    const DropList = userGiftList.filter(
-      (item: any) => item.status !== "space"
-    );
-    console.log(DropList, "newLLL");
+    const DropList =
+      userGiftList &&
+      userGiftList.filter((item: any) => item.status !== "space");
     setDropGift(DropList);
 
     //canvas에 import 하가
 
     like();
-
-    if (spaceGiftList.length !== 0) {
+    // tiger();
+    if (spaceGiftList && spaceGiftList.length !== 0) {
       importSvg();
     }
-
-    async function getUserGift() {
-      const userGiftRes = await getGift();
-      if (userGiftRes.status === 200) {
-        const spaceGifts = userGiftRes.data.filter(
-          (el) => el.status === "space"
-        );
-
-        setSpaceGift(spaceGifts);
-        dispatch(setMyGift(userGiftRes.data));
-      }
-    }
-    async function getUser() {
-      const userData = await getUserInfo();
-      dispatch(setUserInfo(userData.data));
-    }
-    getUserGift();
-    getUser();
   }, []);
 
   useEffect(() => {
-    if (isEditSpace) {
-      edit(saveSpace);
-      console.log("editmove");
-    }
-    // if (isEditMove) {
-    //   move(isEditMove);
-    //   console.log("moveedit", isEditMove);
-    // }
     if (saveSpace && count !== 1) {
       saveSpace1();
       // edit(saveSpace);
@@ -130,8 +115,10 @@ export default function Canvas(props: any) {
     if (saveSpace) {
       console.log("saveSpace11", saveSpace);
       Paper.view.onClick = function abc() {};
+
       if (editClickedItem) {
         editClickedItem.onMouseDrag = function abc() {};
+        setEditClickedItem(null);
       }
     } else {
       Paper.view.onClick = (e: any) => {
@@ -174,56 +161,39 @@ export default function Canvas(props: any) {
         };
 
         test.onMouseDrag = (e: any) => {
+          console.log("drag", e);
           test.position.x += e.delta.x;
           test.position.y += e.delta.y;
-          if (e.point.x < 90 && e.point.y > 640) {
-            //! 확인 모달 띄우기
-            //dispatch(setConfirmModal(true));
-            alert("remove?");
-
-            //! 응답이 ture라면 삭제하기
-            const removeId = match.filter(
-              (el: any) => el.id === editClickedItem.id
-            );
-
-            deleteGift(removeId[0].gift.idx).then((res) =>
-              console.log(res, "removeddddddd")
-            );
-            editClickedItem.remove();
-          }
-
-          if (e.point.x > 1100 && e.point.y > 600) {
-            //! 확인 모달 띄우기
-            //   dispatch(setConfirmModal(true));
-            alert("save?");
-            //! 응답이 ture라면 저장하기
-            //storage 저장 api  호출
-
-            const editItem = match.filter(
-              (el: any) => el.id === editClickedItem.id
-            );
-            //  console.log("editClickedItem", match, clickedId, editClickedItem);
-
-            const chageData = {
-              idx: editItem[0].gift.idx,
-              status: "storage",
-              userTo: window.localStorage.getItem("id"),
-            };
-            console.log("pppppp12", isSave, chageData, editItem);
-            changeGift(chageData).then((res) => {
-              console.log("savesave", res);
-              if (res.status === 200) {
-                editClickedItem.remove();
-              }
-            });
-          }
 
           //! 움직인걸 찾아라!
         };
       };
     }
     setCount(count + 1);
-  }, [saveSpace, editClickedItem]);
+
+    //! 쓰레기통 클릭 후  아이템 삭제하기
+    if (isOpenTrash && editClickedItem) {
+      setMsg("정말 삭제");
+      dispatch(setConfirmModal(true));
+      deleteHandler();
+    }
+
+    //! 박스 클릭 후  아이템 저장하기
+    if (isOpenSave && editClickedItem) {
+      setMsg("저장");
+
+      saveHandler();
+    }
+
+    console.log("isConfirmRes", isConfirmRes);
+  }, [
+    saveSpace,
+    editClickedItem,
+    isConfirmRes,
+    isOpenTrash,
+    isOpenSave,
+    isConfirmRes,
+  ]);
 
   console.log(
     "canvas",
@@ -235,6 +205,96 @@ export default function Canvas(props: any) {
     "userGiftList",
     userGiftList
   );
+
+  //! test isOpenTrash
+  const deleteHandler = () => {
+    //타겟이 있고 쓰레기통이 열려 있다면 삭제하겠냐는 모달 띄우기
+    if (isOpenTrash && editClickedItem) {
+      dispatch(setConfirmModal(true));
+      //! 응답이 ture라면 삭제하기
+      if (isConfirmRes) {
+        //응답이 ture라면
+        const removeId = match.filter(
+          (el: any) => el.id === editClickedItem.id
+        );
+        deleteGift(removeId[0].gift.idx).then((res) =>
+          console.log(res, "removeddddddd")
+        );
+
+        dispatch(setConfirmModal(false));
+        editClickedItem.remove();
+        dispatch(setIsOpenTrash(!isOpenTrash));
+        dispatch(setConfirmRes(false));
+      } else {
+        editClickedItem.bounds.selected = false;
+        // dispatch(setIsOpenTrash(false));
+      }
+    }
+  };
+
+  //! test save
+  const saveHandler = () => {
+    if (isOpenSave && editClickedItem) {
+      dispatch(setConfirmModal(true));
+      if (isConfirmRes) {
+        // 저장할 아이템 찾기
+        const editItem = match.filter(
+          (el: any) => el.id === editClickedItem.id
+        );
+
+        //status 변경
+        const chageData = {
+          idx: editItem[0].gift.idx,
+          status: "storage",
+          userTo: window.localStorage.getItem("id"),
+        };
+
+        changeGift(chageData).then((res) => {
+          //성공적으로 저장 되면
+          if (res.status === 200) {
+            dispatch(setConfirmModal(false));
+            editClickedItem.remove();
+            dispatch(setIsOpenSave(!isOpenSave));
+            const filteredList = res.data.filter(
+              (el: any) => el.status === "storage"
+            );
+            console.log("123123", filteredList);
+            dispatch(setStorageGift(filteredList));
+            setEditClickedItem(null);
+            dispatch(setConfirmRes(false));
+          }
+        });
+      } else {
+        editClickedItem.bounds.selected = false;
+      }
+    }
+  };
+
+  //! test tiger
+  // const tiger = () => {
+  //   const url = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/106114/tiger.svg`;
+  //   let a;
+  //   Paper.project.importSVG(url, function (item: any) {
+  //     a = item;
+  //     a.scale(0.2);
+  //     a.position = new paper.Point(
+  //       a.bounds.width + 500 / 2,
+  //       a.bounds.height + 800 / 2
+  //     );
+  //     console.log("aa", a.bounds.top);
+  //     var pos = new paper.Point(a.bounds.top);
+  //     // pos could really be anything here
+  //     var text = new paper.PointText(pos);
+  //     text.justification = "center";
+  //     text.fontWeight = "bold";
+  //     text.fontSize = 24;
+
+  //     text.content = "save";
+  //     // now use the adjusted drop point to set the center position
+  //     // of text.
+  //     text.position = pos;
+  //   });
+  // };
 
   //유저정보 불러오기
 
@@ -254,7 +314,7 @@ export default function Canvas(props: any) {
             match.push(obj);
             item.data.idx = gift.idx;
             item.position = new Paper.Point(svgAttr.x, svgAttr.y);
-            if (item.firstChild.size._width < 300) {
+            if (item.firstChild.size._width < 200) {
               item.scale(1.5);
             } else {
               item.scale(0.15);
@@ -335,7 +395,6 @@ export default function Canvas(props: any) {
             };
 
             //해당 item  위치 변경 api  호출
-            changeGift(chageData).then((res) => console.log(res, "movesss"));
           }
         };
       };
@@ -399,8 +458,8 @@ export default function Canvas(props: any) {
     const targetItem = dropGift.filter((el: any) => {
       return el.idx === Number(targetId);
     });
-
-    dispatch(setMyGift(filteredList));
+    console.log("canvasfilteredList", filteredList);
+    dispatch(setStorageGift(filteredList));
 
     console.log("drop", targetItem, dropGift, targetId);
     const x = e.clientX - 320;
@@ -436,15 +495,28 @@ export default function Canvas(props: any) {
         match.push(obj);
         item.position = new Paper.Point(x, y);
 
-        if (item.firstChild.size._width < 300) {
-          console.log("300");
+        if (item.firstChild.size._width < 200) {
+          // console.log("300");
           item.scale(1.5);
         } else {
-          console.log("400");
+          // console.log("400");
           item.scale(0.15);
         }
 
-        changeGift(chageData).then((res) => console.log(res, "changeGift"));
+        changeGift(chageData).then((res) => {
+          console.log(res, "123123");
+          if (res.status === 200) {
+            const filteredList = res.data.filter(
+              (el: any) => el.status === "storage"
+            );
+            const filteredNew = res.data.filter(
+              (el: any) => el.status === "new"
+            );
+            console.log("123123", res.data, filteredList);
+            dispatch(setStorageGift(filteredList));
+            dispatch(setNewGift(filteredNew));
+          }
+        });
 
         //! 회전 및 사이즈 조절을 위한 코드,,,연구,,,
         /*
@@ -642,28 +714,42 @@ export default function Canvas(props: any) {
             svgAttr.y !== layer.position.y
           ) {
             const newPosition = { x: layer.position.x, y: layer.position.y };
-            MoveArr.push({
+            let data = {
               idx: layer.data.idx,
-              svgAttr: newPosition,
+              svgAttr: JSON.stringify(newPosition),
               userTo: localStorage.getItem("id"),
-            });
+            };
+            //   JSON.stringify(data);
+            MoveArr.push(data);
+            console.log("spaveSpace211111", data);
           }
         }
       });
     });
-    console.log("spaveSpace2", match, MoveArr);
-    changeGiftPosition(MoveArr).then((res) =>
-      console.log(res, "changeGiftPosition")
-    );
-    if (editClickedItem) editClickedItem.bounds.selected = false;
+    if (!MoveArr.length) {
+      return;
+    } else {
+      changeGiftPosition(MoveArr).then((res) =>
+        console.log(res, "changeGiftPosition")
+      );
+    }
+    if (editClickedItem) {
+      editClickedItem.bounds.selected = false;
+      setEditClickedItem(null);
+    }
   }
 
   return (
     <>
       <CanvasBox>
         <NewGiftIcon />
-        <WastebasketIcon />
-        <Storage />
+        {isEditSpace && !editClickedItem ? <WastebasketIcon /> : null}
+        {isEditSpace && !editClickedItem ? (
+          <Storage isEditSpace={isEditSpace} />
+        ) : (
+          <Storage />
+        )}
+
         <CanvasArea
           ref={canvasRef}
           id="canvas"
@@ -672,13 +758,13 @@ export default function Canvas(props: any) {
           onDrop={(e: any) => dropHandler(e)}
           onDragOver={(e) => dragOverHandler(e)}
         ></CanvasArea>
+
         {themeModal ? <Background /> : null}
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
         ) : null}
-        {isConfirmModal ? (
-          <ConfirmModal setIsConfirmRes={setIsConfirmRes} />
-        ) : null}
+        {isConfirmModal && isOpenTrash ? <ConfirmModal msg={msg} /> : null}
+        {isConfirmModal && isOpenSave ? <ConfirmModal msg={msg} /> : null}
       </CanvasBox>
     </>
   );

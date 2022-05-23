@@ -11,6 +11,7 @@ export const NewGiftContainer = styled.div`
   width: 170px;
   height: 700px;
   background-color: ${colorSet.purple};
+  overflow: hidden;
   border-radius: 10px;
   overflow: auto;
   scrollbar-width: none;
@@ -29,7 +30,7 @@ export const ItemContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background: white;
-  height: 650px;
+  height: 100%;
 `;
 
 export const GiftBoxTitle = styled.div`
@@ -42,9 +43,16 @@ export function NewGiftBox(props: any) {
   const newGiftList = props.newGiftList;
   const storageGiftList = props.storageGiftList;
 
-  const [newList, setNewList] = useState(newGiftList);
-  const [storageList, setStorageList] = useState<any>([]);
-  // const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
+  const [newList, setNewList] = useState<any>();
+  const [storageList, setStorageList] = useState<any>();
+
+  const storageGiftLists = useSelector(
+    (state: any) => state.spaceReducer.storageGiftList
+  );
+
+  const newGiftLists = useSelector(
+    (state: any) => state.spaceReducer.newGiftList
+  );
 
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
@@ -53,12 +61,27 @@ export function NewGiftBox(props: any) {
     (state: any) => state.spaceReducer.clickGiftBox
   );
 
+  // const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
+
   useEffect(() => {
     setNewList(newGiftList);
     setStorageList(storageGiftList);
-  }, [newGiftList, storageGiftList]);
+  }, [isOpenGiftBox]);
 
-  console.log("newGiftBox", isOpenGiftBox, clickGiftBox, storageList);
+  useEffect(() => {
+    setStorageList(storageGiftLists);
+    setNewList(newGiftLists);
+    console.log(
+      "newGiftBox",
+      isOpenGiftBox,
+      clickGiftBox,
+      newList,
+      "   newGiftList,",
+      newGiftLists,
+      storageList,
+      storageGiftLists
+    );
+  }, [newGiftLists, storageGiftLists]);
 
   //newGift icon click modal msg new Gift, data newList
   //storage icon click modal msg storage Gift, data storageList
@@ -66,7 +89,7 @@ export function NewGiftBox(props: any) {
     <MainContainer>
       {isOpenGiftBox ? (
         <>
-          {clickGiftBox === "new" && newGiftList.length !== 0 ? (
+          {clickGiftBox === "new" && newList.length !== 0 ? (
             <>
               <NewGiftContainer>
                 <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
@@ -79,7 +102,7 @@ export function NewGiftBox(props: any) {
               </NewGiftContainer>
             </>
           ) : null}
-          {clickGiftBox === "storage" && storageGiftList.length !== 0 ? (
+          {clickGiftBox === "storage" && storageList.length !== 0 ? (
             <>
               <NewGiftContainer>
                 <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>

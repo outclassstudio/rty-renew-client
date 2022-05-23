@@ -25,6 +25,7 @@ export const ItemContainer = styled.div`
 export function StorageBox(props) {
   const storageHandler = props.setIsOpenStorage;
   const storageList = props.storageList;
+  console.log("storageList", storageList);
   const closeModalHandler = () => {
     storageHandler(false);
   };

@@ -7,7 +7,7 @@ export const ItemBox = styled.div`
   align-items: center;
   cursor: grab;
   width: 100%;
-
+  margin: 20px;
   img {
     width: 100px;
   }
