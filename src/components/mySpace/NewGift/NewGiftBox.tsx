@@ -30,7 +30,8 @@ export const ItemContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background: white;
-  height: 100%;
+  height: 90%;
+  overflow: auto;
 `;
 
 export const GiftBoxTitle = styled.div`

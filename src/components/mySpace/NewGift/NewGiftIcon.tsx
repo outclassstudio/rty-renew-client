@@ -55,9 +55,13 @@ export default function NewGift() {
   );
   const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
   const newGiftLists = giftLists.filter((el: any) => el.status === "new");
+  const newgift = useSelector((state: any) => state.spaceReducer.newGiftList);
+
   useEffect(() => {
     // console.log("newGift", newGiftLists, giftLists);
   }, [isOpenGift, isOpenGiftBox]);
+
+  console.log("갯수확인", newgift);
 
   const openGiftHandler = () => {
     console.log("clickopenGiftHandler");
