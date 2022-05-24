@@ -69,14 +69,18 @@ export function NewGiftBox(props: any) {
 
   // const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
 
-  useEffect(() => {
-    setNewList(newGiftList);
-    setStorageList(storageGiftList);
-  }, [isOpenGiftBox]);
+  // useEffect(() => {
+  //   setNewList(newGiftList);
+  //   setStorageList(storageGiftList);
+  // }, [isOpenGiftBox]);
 
   useEffect(() => {
-    setStorageList(storageGiftLists);
-    setNewList(newGiftLists);
+    if (storageGiftLists && newGiftLists) {
+      setStorageList(storageGiftLists);
+      setNewList(newGiftLists);
+    }
+
+    console.log("storageGiftLists", storageGiftLists);
     // console.log(
     //   "newGiftBox",
     //   isOpenGiftBox,
@@ -108,7 +112,9 @@ export function NewGiftBox(props: any) {
               </NewGiftContainer>
             </>
           ) : null}
-          {clickGiftBox === "storage" && storageList.length !== 0 ? (
+          {storageGiftLists &&
+          clickGiftBox === "storage" &&
+          storageList.length !== 0 ? (
             <>
               <NewGiftContainer>
                 <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>

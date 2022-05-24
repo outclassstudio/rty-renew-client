@@ -5,9 +5,11 @@ import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGif
 import { useEffect, useState } from "react";
 import {
   setClickGiftBox,
+  setNewGift,
   setOpenGiftBox,
 } from "../../../redux/reducers/spaceReducer";
 import { colorSet } from "../../../style/global";
+import { getGift } from "../../../apis/giftApi";
 
 export const GiftIconBox = styled.div`
   position: absolute;
@@ -75,6 +77,10 @@ export default function NewGift() {
 
   const openGiftHandler = () => {
     console.log("clickopenGiftHandler");
+    getGift().then((res) => {
+      const storge = res.data.filter((el) => el.status === "new");
+      dispatch(setNewGift(storge));
+    });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));
   };

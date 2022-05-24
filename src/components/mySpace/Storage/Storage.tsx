@@ -10,6 +10,7 @@ import {
   setClickGiftBox,
   setOpenGiftBox,
   setIsOpenSave,
+  setStorageGift,
 } from "../../../redux/reducers/spaceReducer";
 
 export const StorageContainer = styled.div`
@@ -50,6 +51,10 @@ export function Storage(props: any) {
   const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
 
   const isOpenHandler = () => {
+    getGift().then((res) => {
+      const storge = res.data.filter((el) => el.status === "storage");
+      dispatch(setStorageGift(storge));
+    });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("storage"));
   };
