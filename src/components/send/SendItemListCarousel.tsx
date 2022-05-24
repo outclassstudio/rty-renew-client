@@ -11,6 +11,7 @@ export default function SendItemListCarousel({
 }: any) {
   //carousel 세팅
   const settings = {
+    focusOnSelect: false,
     dots: false,
     infinite: false,
     speed: 300,
