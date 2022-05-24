@@ -36,10 +36,10 @@ const sendGiftSlice = createSlice({
     setContent(state, action: PayloadAction<string>) {
       state.gift.content = action.payload;
     },
-    setSvg(state, action: PayloadAction<number>) {
+    setSvg(state, action: PayloadAction<number | null>) {
       state.gift.svg = action.payload;
     },
-    setImg(state, action: PayloadAction<number>) {
+    setImg(state, action: PayloadAction<number | null>) {
       state.gift.img = action.payload;
     },
     setNickname(state, action: PayloadAction<string>) {

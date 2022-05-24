@@ -32,7 +32,6 @@ export default function ImageModal({
           ""
         ) : (
           <OverwrapWrapper>
-            {/* <OverwrapText>미구입상품입니다</OverwrapText> */}
             <NormalBtn
               onClick={(e) => handleBuyItem(e)}
               className="b"

@@ -49,7 +49,7 @@ export default function Visit() {
     getOthersInfo(params.id).then((res) => {
       setUserInfo(res.data);
     });
-  }, []);
+  }, [params.id]);
 
   //캔버스에 svg세팅
   useEffect(() => {
