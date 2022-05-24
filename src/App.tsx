@@ -6,7 +6,6 @@ import Userinfo from "./pages/Userinfo";
 import Send from "./pages/Send";
 import GiftList from "./pages/GiftList";
 import Visit from "./pages/Visit";
-import ShopRoutes from "./routes/ShopRoutes";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -15,6 +14,7 @@ import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
 import { setMyGift } from "./redux/reducers/spaceReducer";
 import { getGift } from "./apis/giftApi";
+import Shop from "./pages/Shop";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -62,7 +62,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Space />} />
           <Route path="/userinfo" element={<Userinfo />} />
-          <Route path="/shop/*" element={<ShopRoutes />} />
+          <Route path="/shop" element={<Shop />} />
           <Route path="/send" element={<Send />} />
           <Route path="/giftlist" element={<GiftList />} />
           <Route path="/visit/:id" element={<Visit />} />

@@ -58,6 +58,7 @@ export default function Visit() {
     }
   }, [spaceGiftList]);
 
+  //캔버스에 svg임포트
   function importSvg() {
     spaceGiftList.forEach((gift: any) => {
       const svgAttr = JSON.parse(gift.svgAttr);

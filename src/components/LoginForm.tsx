@@ -7,6 +7,7 @@ import { getUserInfo } from "../apis/userApi";
 import { userInfo } from "../redux/actions";
 import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
+import { colorSet } from "../style/global";
 
 axios.defaults.withCredentials = true;
 
@@ -111,6 +112,10 @@ export const LoginBox = styled.input`
   border: 1px solid #a5a5a5;
   box-shadow: 1px 1px 1px #6969692d;
   margin-bottom: 0.25rem;
+
+  :focus {
+    outline: 2px solid ${colorSet.purple};
+  }
 `;
 
 export const LoginText = styled.div`
