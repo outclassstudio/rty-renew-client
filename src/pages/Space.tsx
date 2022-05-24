@@ -81,6 +81,7 @@ export default function Space() {
       );
       dispatch(setNewGift(newGift));
       setNewGiftList(newGift);
+
       const space = userGiftList.filter(
         (item: { status: string }) => item.status === "space"
       );
