@@ -23,8 +23,7 @@ const AvatarBox = styled.div`
   flex-direction: column;
   align-items: center;
   position: fixed;
-  margin-right: 1020px;
-  margin-top: 350px;
+  margin-bottom: 50px;
   width: 150px;
 `;
 
