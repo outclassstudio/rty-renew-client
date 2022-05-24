@@ -45,9 +45,28 @@ const sendGiftSlice = createSlice({
     setNickname(state, action: PayloadAction<string>) {
       state.gift.nickname = action.payload;
     },
+    clearSendGift(state) {
+      let data = {
+        userFrom: "",
+        userTo: "",
+        content: "",
+        svg: null,
+        img: null,
+        nickname: "",
+      };
+
+      state.gift = data;
+    },
   },
 });
 
-export const { setFrom, setTo, setContent, setImg, setSvg, setNickname } =
-  sendGiftSlice.actions;
+export const {
+  setFrom,
+  setTo,
+  setContent,
+  setImg,
+  setSvg,
+  setNickname,
+  clearSendGift,
+} = sendGiftSlice.actions;
 export default sendGiftSlice.reducer;

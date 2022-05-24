@@ -190,14 +190,15 @@ const Text = styled.div`
   font-size: 13px;
   font-weight: bold;
   border-radius: 0px 0px 10px 10px;
+  /* height: 30px; */
 `;
 
 const SubText = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 65px;
+  height: 15px;
   padding: 7px 0px 7px 0px;
   font-size: 10px;
   cursor: default;
