@@ -77,6 +77,7 @@ const BoxWrapper = styled.div`
   color: ${colorSet.base};
   border-radius: 10px 10px 11px 11px;
   width: 160px;
+  height: 183px;
   box-shadow: rgba(50, 50, 93, 0.5) 0px 0px 10px 0px;
   cursor: pointer;
 
@@ -89,10 +90,12 @@ const BoxWrapper = styled.div`
 
 const BoxSvg = styled.img`
   margin-bottom: 5px;
-  padding: 20px 35px 20px 35px;
+  padding: 13px 35px 13px 35px;
 `;
 
 const Text = styled.div`
+  width: 136px;
+  height: 43px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,6 +114,8 @@ const Text = styled.div`
 `;
 
 const OverWrapText = styled.div`
+  /* height: 185px; */
+  width: 160px;
   position: fixed;
   font-size: 13px;
   margin-top: 5px;

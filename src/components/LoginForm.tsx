@@ -32,7 +32,7 @@ export default function LoginForm() {
   //일반 로그인 요청 함수
   const handleLogin = () => {
     axios
-      .post("http://192.168.10.153:8080/users/login", {
+      .post("/users/login", {
         id: loginInfo.id,
         pwd: loginInfo.pwd,
       })

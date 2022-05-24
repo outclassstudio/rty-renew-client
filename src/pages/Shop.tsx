@@ -18,15 +18,9 @@ export default function Shop() {
   const [svgModal, setSvgModal] = useState<boolean>(false);
   const [imgModal, setImgModal] = useState<boolean>(false);
 
-  //유저정보 불러오기
-  useEffect(() => {
-    getUserInfo().then((res) => {
-      setMyData(res.data);
-    });
-  }, []);
-
-  //아이템 불러와서 세팅
+  //아이템 및 유저정보 불러와서 세팅 함수
   const handleGetItem = () => {
+    //*아이템세팅
     getItems().then((res) => {
       setIsLoading(false);
 
@@ -48,9 +42,14 @@ export default function Shop() {
         setmyIdList(ids);
       });
     });
+
+    //*유저정보세팅
+    getUserInfo().then((res) => {
+      setMyData(res.data);
+    });
   };
 
-  //아이템 세팅 함수 실행
+  //유저정보 및 아이템 세팅 함수 실행
   useEffect(() => {
     handleGetItem();
   }, []);

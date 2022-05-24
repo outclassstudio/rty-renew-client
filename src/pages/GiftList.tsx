@@ -9,6 +9,9 @@ import Loading from "../components/Loading";
 export default function GistList() {
   const [giftListData, setGiftListData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(12);
 
   //내가 보낸 선물 리스트 요청
   useEffect(() => {
@@ -17,6 +20,41 @@ export default function GistList() {
       setGiftListData(res.data);
     });
   }, []);
+
+  //번호선택 및 범위지정
+  const handleSetPage = (page: number) => {
+    setStart((page - 1) * 12);
+    setEnd(page * 12);
+    setPage(page);
+  };
+
+  //페이지번호렌더링
+  const numbers = () => {
+    let numberArr: number[] = [];
+
+    if (giftListData.length === 0) {
+      numberArr.push(1);
+    } else {
+      let length: number = Math.ceil(giftListData.length / 12);
+      for (let i = 1; i <= length; i++) {
+        numberArr.push(i);
+      }
+    }
+
+    return numberArr.map((el: number, idx: number) => {
+      return (
+        <SingleNumber
+          onClick={() => {
+            handleSetPage(el);
+          }}
+          key={idx}
+          className={el === page ? "selected" : ""}
+        >
+          {el}
+        </SingleNumber>
+      );
+    });
+  };
 
   return (
     <Layout title={"보낸 선물 리스트"}>
@@ -31,10 +69,11 @@ export default function GistList() {
               <div>※ 이미 보낸 선물은 삭제하거나 수정할 수 없습니다.</div>
             </SubTitle>
             <BoxWrapper>
-              {giftListData.map((el: any, idx: number) => {
+              {giftListData.slice(start, end).map((el: any, idx: number) => {
                 return <GiftListBox key={idx} data={el} />;
               })}
             </BoxWrapper>
+            <PageNumber>{numbers()}</PageNumber>
           </SubContainer>
         </MainContainer>
       )}
@@ -49,7 +88,7 @@ const MainContainer = styled.div`
 
 const SubContainer = styled.div`
   min-width: 715px;
-  padding: 45px 65px;
+  padding: 45px 65px 20px 65px;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -58,8 +97,7 @@ const SubContainer = styled.div`
   animation: 0.6s ease-in-out ${fadeAction};
   margin-top: 85px;
   margin-bottom: 50px;
-  overflow: auto;
-  height: 700px;
+  height: 730px;
 `;
 
 const Title = styled.div`
@@ -93,7 +131,25 @@ const SubTitle = styled.div`
 `;
 
 const BoxWrapper = styled.div`
+  height: 600px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px 25px;
+`;
+
+const PageNumber = styled.div`
+  display: flex;
+  gap: 5px;
+  color: white;
+  justify-content: center;
+  margin-top: 20px;
+  font-weight: 200;
+`;
+
+const SingleNumber = styled.div`
+  cursor: pointer;
+
+  &.selected {
+    font-weight: bold;
+  }
 `;

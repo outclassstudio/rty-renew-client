@@ -56,7 +56,7 @@ export default function Signup() {
   const handleIdCheck = (): void => {
     if (idCheck(signUpInfo.userId)) {
       axios
-        .get(`http://192.168.10.153:8080/users/checkid/${signUpInfo.userId}`)
+        .get(`/users/checkid/${signUpInfo.userId}`)
         .then((res) => {
           setMessageRender(true);
           setErrors({ ...errors, idOverlap: res.data });
@@ -136,7 +136,7 @@ export default function Signup() {
       !errors.nickNameLength
     ) {
       axios
-        .post("http://192.168.10.153:8080/users/signup", {
+        .post("/users/signup", {
           id: signUpInfo.userId,
           nickname: signUpInfo.nickname,
           pwd: signUpInfo.password,
