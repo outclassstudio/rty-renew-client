@@ -123,12 +123,17 @@ export default function Canvas(props: any) {
         editClickedItem.onMouseDrag = function abc() {};
       }
     } else {
+      Paper.project.activeLayer.children.forEach((el) => {
+        if (el.data.type === "name") {
+          el.visible = false;
+        }
+      });
       Paper.view.onClick = (e: any) => {
         // console.log("eidtfunction");
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
-        console.log("eidtfunction", test);
+        console.log("eidtfunction", test, Paper.project.activeLayer.children);
         // setEditClickedItem(test);
         if (test) {
           if (!editClickedItem) {
@@ -302,8 +307,6 @@ export default function Canvas(props: any) {
 
   //! space에 저장된 선물 불러오기
   function importSvg() {
-    //console.log("import", spaceGiftList.length, match.length);
-    // debugger;
     if (match.length <= spaceGiftList.length) {
       spaceGiftList.forEach((gift: any) => {
         const svgAttr = JSON.parse(gift.svgAttr);
@@ -322,19 +325,20 @@ export default function Canvas(props: any) {
               item.scale(0.15);
             }
             // //! text
-            // var pos = new paper.Point(
-            //   item.position.x + 5,
-            //   item.position.y - 45
-            // );
-            // // pos could really be anything here
-            // var text = new paper.PointText(pos);
-            // text.justification = "center";
-            // text.fontWeight = "bold";
-            // text.fontSize = 20;
+            const pos = new paper.Point(
+              item.position.x + 5,
+              item.position.y - 45
+            );
+            //  pos could really be anything here
+            const text = new paper.PointText(pos);
+            text.justification = "center";
+            text.fontWeight = "bold";
+            text.fontSize = 18;
 
-            // text.content = gift.userFrom;
-            // // now use the adjusted drop point to set the center position of text.
-            // text.position = pos;
+            text.content = gift.userFrom;
+            //  now use the adjusted drop point to set the center position of text.
+            text.position = pos;
+            text.data.type = "name";
           },
         });
       });

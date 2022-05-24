@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { userInfo } from "../../redux/actions/index";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
+import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
 import { changeMsg, getUserInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -59,14 +60,36 @@ export const Input = styled.input`
   margin: 2px;
 `;
 
+export const Circle = styled.div`
+  justify-content: center;
+  display: flex;
+  width: 56px;
+  margin: 5px;
+  border-radius: 50px;
+  background: #00d3d3;
+  align-items: center;
+`;
+
+export const P = styled.p`
+  font-weight: bold;
+  font-size: 20pxd;
+`;
+
+export const CircleBox = styled.div`
+  display: flex;
+`;
+
 export function Avatar(props: any) {
   const dispatch = useDispatch();
+
+  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   //user info 가져오기
   // const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
   const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
   const [stateMsg, setStateMsg] = useState("");
-  const [isEditBtn, setIsEditBtn] = useState(false);
+  const [isEditBtn, setIsEditBtn] = useState<Boolean>(false);
+  const [isClickedAvatar, setIsClikedAvatar] = useState<Boolean>(false);
 
   const editType = props.editAvatar;
   const setEdit = props.setEditAvatar;
@@ -96,36 +119,51 @@ export function Avatar(props: any) {
 
   const clickAvatarHandler = () => {
     console.log("clicked avatar");
+    setIsClikedAvatar(!isClickedAvatar);
   };
+
+  console.log("myinfo", userGiftList);
   return (
     <>
       {myInfo ? (
-        <AvatarBox onClick={clickAvatarHandler}>
-          <MsgBox>
-            {editType ? (
-              <>
-                <input
-                  type="text"
-                  maxLength={10}
-                  onChange={inputChangeHandler}
-                />
-                <MsgEditBtn onClick={editBtnHandler}>
-                  <svg
-                    width="24"
-                    height="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                  >
-                    <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
-                  </svg>
-                </MsgEditBtn>
-              </>
-            ) : (
-              <p>{myInfo.msg}</p>
-            )}
-          </MsgBox>
-          <MyAvatar />
+        <AvatarBox>
+          {isClickedAvatar ? (
+            <CircleBox>
+              <Circle>
+                <P>{userGiftList.length}</P>
+              </Circle>
+              <Circle>
+                <Letter />
+              </Circle>
+            </CircleBox>
+          ) : (
+            <MsgBox>
+              {editType ? (
+                <>
+                  <input
+                    type="text"
+                    maxLength={10}
+                    onChange={inputChangeHandler}
+                  />
+                  <MsgEditBtn onClick={editBtnHandler}>
+                    <svg
+                      width="24"
+                      height="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                    >
+                      <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
+                    </svg>
+                  </MsgEditBtn>
+                </>
+              ) : (
+                <p>{myInfo.msg}</p>
+              )}
+            </MsgBox>
+          )}
+
+          <MyAvatar onClick={clickAvatarHandler} />
           <H3>내 이름은 {myInfo.nickname}!!</H3>
         </AvatarBox>
       ) : null}
