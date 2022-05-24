@@ -113,6 +113,7 @@ export function NewGiftBox(props: any) {
             </>
           ) : null}
           {storageGiftLists &&
+          storageList &&
           clickGiftBox === "storage" &&
           storageList.length !== 0 ? (
             <>

@@ -62,7 +62,7 @@ export const changeGiftPosition = (
 
 //gift삭제
 export const deleteGift = (data: number): Promise<AxiosResponse<any>> => {
-  return apiClient().delete(`/gift/${data}`);
+  return apiClient().delete(`/gift/${data}/${myId}`);
 };
 
 //gift보내기

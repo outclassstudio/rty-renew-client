@@ -46,7 +46,7 @@ export default function Canvas(props: any) {
   const saveSpace = props.saveSpace;
   const [count, setCount] = useState<number>(1);
   const [msg, setMsg] = useState<string>("");
-  const [spaceGift, setSpaceGift] = useState<any>([]);
+  const [changeData, setChageData] = useState<any>();
   const [dropNewGift, setNewDropGift] = useState<any>([]);
   const [dropStorage, setDropStorage] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
@@ -116,7 +116,14 @@ export default function Canvas(props: any) {
   }, [isEditSpace, isEditMove, saveSpace, count, saveSpace12]);
 
   useEffect(() => {
-    if (saveSpace) {
+    if (saveSpace && count >= 1) {
+      console.log("impoirt");
+      //  importSvg();
+      // Paper.project.activeLayer.children.forEach((el) => {
+      //   if (el.data.type === "name") {
+      //     el.visible = true;
+      //   }
+      // });
       if (editClickedItem) {
         setEditClickedItem(null);
         editClickedItem.bounds.selected = false;
@@ -126,6 +133,7 @@ export default function Canvas(props: any) {
       Paper.project.activeLayer.children.forEach((el) => {
         if (el.data.type === "name") {
           el.visible = false;
+          el.bounds.selected = false;
         }
       });
       Paper.view.onClick = (e: any) => {
@@ -178,17 +186,33 @@ export default function Canvas(props: any) {
     setCount(count + 1);
 
     //! 쓰레기통 클릭 후  아이템 삭제하기
-    if (isOpenTrash && editClickedItem) {
+    if (isOpenTrash && editClickedItem && !isConfirmModal) {
       setMsg("정말 삭제");
       dispatch(setConfirmModal(true));
-      deleteHandler();
+
+      const removeId = match.filter((el: any) => el.id === editClickedItem.id);
+
+      setChageData(removeId[0].gift.idx);
     }
 
     //! 박스 클릭 후  아이템 저장하기
-    if (isOpenSave && editClickedItem) {
+    if (isOpenSave && editClickedItem && !isConfirmModal) {
       setMsg("저장");
+      dispatch(setConfirmModal(true));
+      const editItem = match.filter((el: any) => el.id === editClickedItem.id);
 
-      saveHandler();
+      //status 변경
+      const changeData = {
+        idx: editItem[0].gift.idx,
+        status: "storage",
+        userTo: window.localStorage.getItem("id"),
+      };
+      setChageData(changeData);
+    }
+    if (isConfirmRes) {
+      editClickedItem.remove();
+      setEditClickedItem(null);
+      dispatch(setConfirmRes(false));
     }
 
     console.log("isConfirmRes", isConfirmRes);
@@ -213,69 +237,8 @@ export default function Canvas(props: any) {
   );
 
   //! test isOpenTrash
-  const deleteHandler = () => {
-    //타겟이 있고 쓰레기통이 열려 있다면 삭제하겠냐는 모달 띄우기
-    if (isOpenTrash && editClickedItem) {
-      dispatch(setConfirmModal(true));
-      //! 응답이 ture라면 삭제하기
-      if (isConfirmRes) {
-        //응답이 ture라면
-        const removeId = match.filter(
-          (el: any) => el.id === editClickedItem.id
-        );
-        deleteGift(removeId[0].gift.idx).then((res) =>
-          console.log(res, "removeddddddd")
-        );
-
-        dispatch(setConfirmModal(false));
-        editClickedItem.remove();
-        dispatch(setIsOpenTrash(!isOpenTrash));
-        dispatch(setConfirmRes(false));
-      } else {
-        editClickedItem.bounds.selected = false;
-        // dispatch(setIsOpenTrash(false));
-      }
-    }
-  };
 
   //! test save
-  const saveHandler = () => {
-    if (isOpenSave && editClickedItem) {
-      dispatch(setConfirmModal(true));
-      if (isConfirmRes) {
-        // 저장할 아이템 찾기
-
-        const editItem = match.filter(
-          (el: any) => el.id === editClickedItem.id
-        );
-        console.log("canvasave", editItem, editClickedItem);
-        //status 변경
-        const chageData = {
-          idx: editItem[0].gift.idx,
-          status: "storage",
-          userTo: window.localStorage.getItem("id"),
-        };
-
-        changeGift(chageData).then((res) => {
-          //성공적으로 저장 되면
-          if (res.status === 200) {
-            dispatch(setConfirmModal(false));
-            editClickedItem.remove();
-            dispatch(setIsOpenSave(!isOpenSave));
-            const filteredList = res.data.filter(
-              (el: any) => el.status === "storage"
-            );
-            console.log("123123", filteredList);
-            dispatch(setStorageGift(filteredList));
-            setEditClickedItem(null);
-            dispatch(setConfirmRes(false));
-          }
-        });
-      } else {
-        editClickedItem.bounds.selected = false;
-      }
-    }
-  };
 
   //! test tiger
   // const tiger = () => {
@@ -392,7 +355,7 @@ export default function Canvas(props: any) {
     const targetItem = userGiftList.filter((el: any) => {
       return el.idx === Number(targetId);
     });
-    console.log("canvasfilteredList", filteredNew, filteredStorage);
+    console.log("canvasfilteredList", targetItem, filteredStorage);
 
     console.log("drop", targetItem, dropNewGift, targetId);
     const x = e.clientX - 320;
@@ -435,6 +398,19 @@ export default function Canvas(props: any) {
           // console.log("400");
           item.scale(0.15);
         }
+
+        // //! text
+        const pos = new paper.Point(item.position.x + 5, item.position.y - 45);
+        //  pos could really be anything here
+        const text = new paper.PointText(pos);
+        text.justification = "center";
+        text.fontWeight = "bold";
+        text.fontSize = 18;
+
+        text.content = targetItem[0].userFrom;
+        //  now use the adjusted drop point to set the center position of text.
+        text.position = pos;
+        text.data.type = "name";
 
         //  dispatch(setStorageGift(filteredStorage));
         // dispatch(setNewGift(filteredNew));
@@ -631,6 +607,8 @@ export default function Canvas(props: any) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function saveSpace12() {
+    dispatch(setIsOpenTrash(false));
+    dispatch(setIsOpenSave(false));
     //! 1. match 와 activeLayer의 children에서 동일한 id를 찾고 포지션을 비교한다.
     console.log("spaveSpace1", match);
     let activeLayer: paper.Item[] = [];
@@ -666,9 +644,11 @@ export default function Canvas(props: any) {
     if (!MoveArr.length) {
       return;
     } else {
-      changeGiftPosition(MoveArr).then((res) =>
-        console.log(res, "changeGiftPosition")
-      );
+      changeGiftPosition(MoveArr).then((res) => {
+        if (res.status === 200) {
+          console.log(res, "changeGiftPosition");
+        }
+      });
     }
     if (editClickedItem) {
       editClickedItem.bounds.selected = false;
@@ -700,8 +680,12 @@ export default function Canvas(props: any) {
         {isOpenGift ? (
           <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
         ) : null}
-        {isConfirmModal && isOpenTrash ? <ConfirmModal msg={msg} /> : null}
-        {isConfirmModal && isOpenSave ? <ConfirmModal msg={msg} /> : null}
+        {isConfirmModal && isOpenTrash && editClickedItem ? (
+          <ConfirmModal msg={msg} changeData={changeData} />
+        ) : null}
+        {isConfirmModal && isOpenSave && editClickedItem ? (
+          <ConfirmModal msg={msg} changeData={changeData} />
+        ) : null}
       </CanvasBox>
     </>
   );
