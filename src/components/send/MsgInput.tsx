@@ -49,6 +49,12 @@ export default function MsgInput() {
     }
   };
 
+  //프리뷰 제거 함수
+  const removePreview = () => {
+    setPrvItem({ id: null, url: "" });
+    dispatch(setImg(null));
+  };
+
   return (
     <MainContainer>
       <SubContainer>
@@ -57,7 +63,7 @@ export default function MsgInput() {
         </Receiver>
         <ImgListWrapper>
           <TitleWrapper>
-            메시지와 함께 보낼 이미지를 선택해주세요{" "}
+            메시지와 함께 보낼 이미지를 선택해주세요
             <img
               src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
               alt=""
@@ -72,7 +78,16 @@ export default function MsgInput() {
             />
           </ImgList>
           {prvItem.url ? (
-            <ImagePrv src={prvItem.url} alt="" />
+            <>
+              <CancelBtn
+                onClick={removePreview}
+                src={
+                  "https://cdn.discordapp.com/attachments/974114424036155505/978530134460096582/cancel_pink.png"
+                }
+                alt=""
+              />
+              <ImagePrv src={prvItem.url} alt="" />
+            </>
           ) : (
             <NoneImg>선택된 이미지가 없습니다</NoneImg>
           )}
@@ -181,6 +196,14 @@ const ImagePrv = styled.img`
   height: 262px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 1) 0px 30px 30px -35px;
+`;
+
+const CancelBtn = styled.img`
+  margin-top: 110px;
+  margin-left: 343px;
+  position: fixed;
+  width: 14px;
+  cursor: pointer;
 `;
 
 const BoxWrapper = styled.div`

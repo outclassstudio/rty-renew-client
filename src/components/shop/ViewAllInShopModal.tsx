@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { buyItem } from "../../apis/buyApi";
@@ -11,6 +12,17 @@ export default function ViewAllInShopModal({
   myIdList,
   handleGetItem,
 }: any) {
+  const [title, setTitle] = useState<string>("");
+
+  //제목설정
+  useEffect(() => {
+    if (data[0].type === "svg") {
+      setTitle("선물상자");
+    } else {
+      setTitle("이미지");
+    }
+  }, []);
+
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
     if (myIdList.includes(item.idx)) {
@@ -94,7 +106,7 @@ export default function ViewAllInShopModal({
   return (
     <MainWrapper>
       <PrvBoxWrapper>
-        🌈모든 아이템 보기
+        🌈모든 {title} 보기
         <GridBox>{renderItems()}</GridBox>
         <NormalBtn
           onClick={handleOpenModal}
@@ -190,7 +202,6 @@ const Text = styled.div`
   font-size: 13px;
   font-weight: bold;
   border-radius: 0px 0px 10px 10px;
-  /* height: 30px; */
 `;
 
 const SubText = styled.div`

@@ -125,6 +125,6 @@ const SingleItem = styled.img`
   border-radius: 7px;
 
   &.active {
-    outline: 3px solid ${colorSet.base};
+    outline: 3px solid ${colorSet.pink};
   }
 `;

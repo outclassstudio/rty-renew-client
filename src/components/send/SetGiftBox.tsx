@@ -25,6 +25,12 @@ export default function SetGiftBox() {
     setViewAll((prev) => !prev);
   };
 
+  //프리뷰 제거 함수
+  const removePreview = () => {
+    setPrvSvg({ id: null, svg: "" });
+    dispatch(setSvg(null));
+  };
+
   return (
     <MainContainer>
       <TitleWrapper>
@@ -46,7 +52,16 @@ export default function SetGiftBox() {
       </SvgListWrapper>
       <SvgPrv>
         {prvSvg.id ? (
-          <img src={prvSvg.svg} alt="" />
+          <>
+            <CancelBtn
+              onClick={removePreview}
+              src={
+                "https://cdn.discordapp.com/attachments/974114424036155505/978530134460096582/cancel_pink.png"
+              }
+              alt=""
+            />
+            <img src={prvSvg.svg} alt="" />
+          </>
         ) : (
           <NoneImg>선택된 포장이 없습니다</NoneImg>
         )}
@@ -129,4 +144,12 @@ const SvgPrv = styled.div`
   height: 298px;
   padding: 20px;
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
+`;
+
+const CancelBtn = styled.img`
+  margin-top: 0px;
+  margin-left: 340px;
+  position: fixed;
+  width: 14px;
+  cursor: pointer;
 `;
