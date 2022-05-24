@@ -69,9 +69,11 @@ export default function GistList() {
               <div>※ 이미 보낸 선물은 삭제하거나 수정할 수 없습니다.</div>
             </SubTitle>
             <BoxWrapper>
-              {giftListData.slice(start, end).map((el: any, idx: number) => {
-                return <GiftListBox key={idx} data={el} />;
-              })}
+              <GridWrapper>
+                {giftListData.slice(start, end).map((el: any, idx: number) => {
+                  return <GiftListBox key={idx} data={el} />;
+                })}
+              </GridWrapper>
             </BoxWrapper>
             <PageNumber>{numbers()}</PageNumber>
           </SubContainer>
@@ -83,7 +85,6 @@ export default function GistList() {
 
 const MainContainer = styled.div`
   height: calc(100vh - 50px);
-  /* background: white; */
 `;
 
 const SubContainer = styled.div`
@@ -132,6 +133,9 @@ const SubTitle = styled.div`
 
 const BoxWrapper = styled.div`
   height: 600px;
+`;
+
+const GridWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px 25px;
