@@ -44,6 +44,7 @@ export default function GistList() {
 
 const MainContainer = styled.div`
   height: calc(100vh - 50px);
+  /* background: white; */
 `;
 
 const SubContainer = styled.div`
@@ -57,6 +58,8 @@ const SubContainer = styled.div`
   animation: 0.6s ease-in-out ${fadeAction};
   margin-top: 85px;
   margin-bottom: 50px;
+  overflow: auto;
+  height: 700px;
 `;
 
 const Title = styled.div`
@@ -69,7 +72,6 @@ const Title = styled.div`
   font-size: 25px;
   font-weight: bold;
   color: ${colorSet.base};
-  /* background: white; */
   padding: 25px 0px;
 
   &.scroll {

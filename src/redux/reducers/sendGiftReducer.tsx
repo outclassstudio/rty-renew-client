@@ -13,7 +13,7 @@ interface giftState {
 
 const initialState = {
   gift: {
-    userFrom: "",
+    userFrom: window.localStorage.getItem("id"),
     userTo: "",
     content: "",
     svg: null,
@@ -47,7 +47,7 @@ const sendGiftSlice = createSlice({
     },
     clearSendGift(state) {
       let data = {
-        userFrom: "",
+        userFrom: window.localStorage.getItem("id"),
         userTo: "",
         content: "",
         svg: null,
