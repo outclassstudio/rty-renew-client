@@ -219,8 +219,8 @@ const SubText = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 109px;
+  height: 20px;
   padding: 14px 0px 14px 0px;
   font-size: 14px;
   cursor: default;
