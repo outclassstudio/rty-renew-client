@@ -16,6 +16,7 @@ import { setGetImg, setGetSvg } from "../redux/reducers/getItemReducer";
 import Swal from "sweetalert2";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router";
+import { clearSendGift } from "../redux/reducers/sendGiftReducer";
 
 export default function Send() {
   const dispatch = useDispatch();
@@ -91,8 +92,8 @@ export default function Send() {
             confirmButtonText: "닫기",
           }).then((result) => {
             if (result.isConfirmed) {
-              // window.location.replace("/giftlist");
               navigate("/giftlist");
+              dispatch(clearSendGift());
             }
           });
         })
