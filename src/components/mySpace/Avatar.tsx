@@ -13,8 +13,8 @@ export const AvatarBox = styled.div`
   flex-direction: column;
   align-items: center;
   position: fixed;
-  top: 170px;
-  right: 950px;
+  margin-top: 170px;
+  margin-right: -23px;
   width: 150px;
 `;
 
@@ -77,6 +77,7 @@ export const P = styled.p`
 
 export const CircleBox = styled.div`
   display: flex;
+  margin: 1px;
 `;
 
 export function Avatar(props: any) {
@@ -98,22 +99,33 @@ export function Avatar(props: any) {
       let user = res.data;
       setMyInfo(user);
     });
-  }, [dispatch]);
+  }, [dispatch, userGiftList]);
 
   const editBtnHandler = () => {
-    changeMsg(stateMsg).then((res) => {
-      let info = res.data;
-      setMyInfo(info);
-      dispatch(userInfo(info));
-      setIsEditBtn(false);
-    });
+    const blank_pattern = /^\s+|\s+$/g;
+    if (blank_pattern.test(stateMsg) === true) {
+      alert("공백 불가");
+    } else {
+      changeMsg(stateMsg).then((res) => {
+        let info = res.data;
+        setMyInfo(info);
+        dispatch(userInfo(info));
+        setIsEditBtn(false);
+      });
 
-    setEdit(!setEdit);
+      setEdit(!setEdit);
+    }
   };
 
   const inputChangeHandler = (e: any) => {
     //msg변경
-    setStateMsg(e.target.value);
+    console.log("입력중", e.target);
+    if (e.target.value === " " || e.target.value === null) {
+      alert("공백 불가");
+    } else {
+      setStateMsg(e.target.value);
+    }
+
     //서버에게 user 상태 메세지 변경 post 요청 보내기
   };
 
@@ -144,6 +156,7 @@ export function Avatar(props: any) {
                     type="text"
                     maxLength={10}
                     onChange={inputChangeHandler}
+                    value={stateMsg}
                   />
                   <MsgEditBtn onClick={editBtnHandler}>
                     <svg
