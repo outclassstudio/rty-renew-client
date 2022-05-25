@@ -7,6 +7,8 @@ import { changeMsg, getUserInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { colorSet } from "../../style/global";
+import { useNavigate } from "react-router";
+import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 
 export const AvatarBox = styled.div`
   display: flex;
@@ -82,6 +84,7 @@ export const CircleBox = styled.div`
 
 export function Avatar(props: any) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   //user info 가져오기
@@ -92,8 +95,11 @@ export function Avatar(props: any) {
   const [isEditBtn, setIsEditBtn] = useState<Boolean>(false);
   const [isClickedAvatar, setIsClikedAvatar] = useState<Boolean>(false);
 
+  const otherUser = props.userInfo;
+  const otherGift = props.AllGiftListCount;
   const editType = props.editAvatar;
   const setEdit = props.setEditAvatar;
+
   useEffect(() => {
     getUserInfo().then((res) => {
       let user = res.data;
@@ -130,14 +136,21 @@ export function Avatar(props: any) {
   };
 
   const clickAvatarHandler = () => {
-    console.log("clicked avatar");
     setIsClikedAvatar(!isClickedAvatar);
   };
 
-  console.log("myinfo", userGiftList);
+  const sendGiftHandler = () => {
+    console.log("other user send click", otherUser);
+    // 클릭한 유저에게 선물 보내기 페이지 라우팅
+
+    navigate("/send", { state: otherUser.id });
+    dispatch(setTo(otherUser.id));
+    dispatch(setNickname(otherUser.nickname));
+  };
+
   return (
     <>
-      {myInfo ? (
+      {myInfo && !otherUser ? (
         <AvatarBox>
           {isClickedAvatar ? (
             <CircleBox>
@@ -175,9 +188,28 @@ export function Avatar(props: any) {
               )}
             </MsgBox>
           )}
-
           <MyAvatar onClick={clickAvatarHandler} />
           <H3>내 이름은 {myInfo.nickname}!!</H3>
+        </AvatarBox>
+      ) : null}
+      {otherUser ? (
+        <AvatarBox>
+          {isClickedAvatar ? (
+            <CircleBox>
+              <Circle>
+                <P>{otherGift}</P>
+              </Circle>
+              <Circle onClick={sendGiftHandler}>
+                <Letter />
+              </Circle>
+            </CircleBox>
+          ) : (
+            <MsgBox>
+              <p>{otherUser.msg}</p>
+            </MsgBox>
+          )}
+          <MyAvatar onClick={clickAvatarHandler} />
+          <H3>내 이름은 {otherUser.nickname}!!</H3>
         </AvatarBox>
       ) : null}
     </>

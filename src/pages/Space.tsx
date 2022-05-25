@@ -125,7 +125,7 @@ export default function Space() {
   };
   console.log("moveeditttt", editMove);
   return (
-    <Layout title={"내공간"}>
+    <Layout title={"내 공간"}>
       <MainContainer>
         <SpaceContainer>
           <Avatar

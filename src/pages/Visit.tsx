@@ -9,6 +9,7 @@ import { NormalBtn } from "../style/btnStyle.style";
 import Swal from "sweetalert2";
 import { getOthersInfo } from "../apis/userApi";
 import VisitAvatar from "../components/visit/VisitAvatar";
+import { Avatar } from "../components/mySpace/Avatar";
 
 export default function Visit() {
   const params = useParams();
@@ -16,6 +17,7 @@ export default function Visit() {
   const navigate = useNavigate();
 
   const [spaceGiftList, setSpaceGiftList] = useState<any>([]);
+  const [AllGiftListCount, setAllGiftListCount] = useState<number>();
   const [userInfo, setUserInfo] = useState<any>("");
 
   let tool: paper.Tool;
@@ -38,6 +40,7 @@ export default function Visit() {
     tool.activate();
 
     getOthersGift(params.id).then((res) => {
+      setAllGiftListCount(res.data.length);
       let list = res.data.filter((el) => {
         return el.status === "space";
       });
@@ -49,7 +52,7 @@ export default function Visit() {
     getOthersInfo(params.id).then((res) => {
       setUserInfo(res.data);
     });
-  }, []);
+  }, [params]);
 
   //캔버스에 svg세팅
   useEffect(() => {
@@ -64,39 +67,31 @@ export default function Visit() {
       const svgAttr = JSON.parse(gift.svgAttr);
       Paper.project.importSVG(gift.svg, {
         onLoad: function (item: any) {
-          let obj = { id: item.id, gift: gift };
+          // let obj = { id: item.id, gift: gift };
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);
-          if (item.firstChild.size._width < 300) {
+          if (item.firstChild.size._width < 200) {
             item.scale(1.5);
           } else {
             item.scale(0.15);
           }
+
+          const pos = new paper.Point(
+            item.position.x + 5,
+            item.position.y - 45
+          );
+          //  pos could really be anything here
+          const text = new paper.PointText(pos);
+          text.justification = "center";
+          text.fontWeight = "bold";
+          text.fontSize = 17;
+          text.content = gift.userFrom;
+          //  now use the adjusted drop point to set the center position of text.
+          text.position = pos;
+          text.data.type = "name";
+          text.data.id = gift.idx;
         },
       });
     });
-
-    // if (match.length <= spaceGiftList.length) {
-    //   spaceGiftList.forEach((gift: any) => {
-    //     const svgAttr = JSON.parse(gift.svgAttr);
-    //     Paper.project.importSVG(gift.svg, {
-    //       onLoad: function (item: any) {
-    //         //     console.log(item, "itemitem");
-    //         let obj = { id: item.id, gift: gift };
-    //         // setMatch([...match, obj]);
-    //         //   console.log("match", match, item);
-    //         match.push(obj);
-    //         item.position = new Paper.Point(svgAttr.x, svgAttr.y);
-    //         if (item.firstChild.size._width < 300) {
-    //           item.scale(1.5);
-    //         } else {
-    //           item.scale(0.15);
-    //         }
-    //       },
-    //     });
-    //   });
-    // } else {
-    //   return;
-    // }
   }
 
   const like = () => {
@@ -125,9 +120,14 @@ export default function Visit() {
           height={"45px"}
           onClick={() => navigate("/")}
         >
-          내공간으로 돌아가기
+          내 공간으로 돌아가기
         </NormalBtn>
-        <VisitAvatar userInfo={userInfo} />
+        <Avatar
+          userInfo={userInfo}
+          otherGift={spaceGiftList}
+          AllGiftListCount={AllGiftListCount}
+        />
+        {/**<VisitAvatar userInfo={userInfo} /> */}
       </CanvasBox>
     </Layout>
   );

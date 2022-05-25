@@ -53,7 +53,10 @@ export default function MsgInput() {
     <MainContainer>
       <SubContainer>
         <Receiver>
-          <div>🎁{giftState.gift.nickname}님에게</div>
+          <div>
+            🎁 {giftState.gift.nickname}
+            님에게
+          </div>
         </Receiver>
         <ImgListWrapper>
           <TitleWrapper>
