@@ -293,7 +293,6 @@ export default function Canvas(props: any) {
           onLoad: function (item: any) {
             console.log(gift, "itemitem");
             let obj = { id: item.id, gift: gift };
-            // setMatch([...match, obj]);
             console.log("match", item);
             match.push(obj);
             item.data.idx = gift.idx;
