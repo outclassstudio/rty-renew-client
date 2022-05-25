@@ -39,14 +39,21 @@ export default function MsgInput() {
 
     if (e.target.value.length >= 150) {
       Swal.fire({
-        title: "더이상 입력할 수 없어요",
+        title: "150자 이상 입력할 수 없어요",
         icon: "warning",
         confirmButtonText: "닫기",
       });
 
-      let str = e.target.value.slice(0, -1);
+      let str = e.target.value.slice(0, 150);
       e.target.value = str;
+      setLetterNum(str.length);
     }
+  };
+
+  //프리뷰 제거 함수
+  const removePreview = () => {
+    setPrvItem({ id: null, url: "" });
+    dispatch(setImg(null));
   };
 
   return (
@@ -60,7 +67,7 @@ export default function MsgInput() {
         </Receiver>
         <ImgListWrapper>
           <TitleWrapper>
-            메시지와 함께 보낼 이미지를 선택해주세요{" "}
+            메시지와 함께 보낼 이미지를 선택해주세요
             <img
               src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
               alt=""
@@ -75,7 +82,16 @@ export default function MsgInput() {
             />
           </ImgList>
           {prvItem.url ? (
-            <ImagePrv src={prvItem.url} alt="" />
+            <>
+              <CancelBtn
+                onClick={removePreview}
+                src={
+                  "https://cdn.discordapp.com/attachments/974114424036155505/978530134460096582/cancel_pink.png"
+                }
+                alt=""
+              />
+              <ImagePrv src={prvItem.url} alt="" />
+            </>
           ) : (
             <NoneImg>선택된 이미지가 없습니다</NoneImg>
           )}
@@ -152,7 +168,7 @@ const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 101%;
 
   img {
     width: 15px;
@@ -184,6 +200,14 @@ const ImagePrv = styled.img`
   height: 262px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 1) 0px 30px 30px -35px;
+`;
+
+const CancelBtn = styled.img`
+  margin-top: 110px;
+  margin-left: 343px;
+  position: fixed;
+  width: 14px;
+  cursor: pointer;
 `;
 
 const BoxWrapper = styled.div`

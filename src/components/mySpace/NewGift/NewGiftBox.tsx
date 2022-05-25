@@ -46,9 +46,6 @@ export const GiftBoxTitle = styled.div`
 `;
 
 export function NewGiftBox(props: any) {
-  const newGiftList = props.newGiftList;
-  const storageGiftList = props.storageGiftList;
-
   const [newList, setNewList] = useState<any>();
   const [storageList, setStorageList] = useState<any>();
 

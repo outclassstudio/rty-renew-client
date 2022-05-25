@@ -7,11 +7,13 @@ import { colorSet, DropdonwBg, fadeAction } from "../style/global";
 import MyPicker from "../components/MyPicker";
 import Swal from "sweetalert2";
 import { idCheck, strongPassword, nickNameCheck } from "../hooks/validation";
+import useDate from "../hooks/useDate";
 
 axios.defaults.withCredentials = true;
 
 export default function Signup() {
   const navigate = useNavigate();
+  const now = useDate();
 
   //회원가입 정보
   const [signUpInfo, setSignUpInfo] = useState({
@@ -26,7 +28,6 @@ export default function Signup() {
   const [errors, setErrors] = useState({
     idOverlap: true,
     emptyBoxCheck: false,
-    nickNameLength: false,
   });
 
   //메세지 렌더링 상태
@@ -39,24 +40,26 @@ export default function Signup() {
   const handleSignUpValue =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setSignUpInfo({ ...signUpInfo, [key]: e.target.value });
-
-      if (signUpInfo.nickname.length > 12) {
-        setErrors({ ...errors, nickNameLength: true });
-      } else {
-        setErrors({ ...errors, nickNameLength: false });
-      }
     };
 
   //날짜를 변경하는 함수
   const handleDateValue = (date: string) => {
-    setSignUpInfo({ ...signUpInfo, birth: date });
+    if (now.now < date) {
+      Swal.fire({
+        title: "미래 날짜는 입력할 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    } else {
+      setSignUpInfo({ ...signUpInfo, birth: date });
+    }
   };
 
   //아이디 중복 검사 함수
   const handleIdCheck = (): void => {
     if (idCheck(signUpInfo.userId)) {
       axios
-        .get(`http://192.168.10.153:8080/users/checkid/${signUpInfo.userId}`)
+        .get(`/users/checkid/${signUpInfo.userId}`)
         .then((res) => {
           setMessageRender(true);
           setErrors({ ...errors, idOverlap: res.data });
@@ -68,20 +71,11 @@ export default function Signup() {
     }
   };
 
-  //아이디 이미 존재할 경우 작동하는 함수
-  const idMatchConfirm = (): boolean => {
-    if (errors.idOverlap) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  //아이디가 이미 존재할경우 아이디 입력칸 하단에 에러메시지 표시하는 함수
+  //아이디가 이미 존재할경우 에러메시지 표시하는 함수
   const renderIdCheckMessage = () => {
-    if (signUpInfo.userId && idMatchConfirm()) {
+    if (signUpInfo.userId && errors.idOverlap) {
       return <ErrMsg className="err">이미 존재하는 아이디입니다</ErrMsg>;
-    } else if (signUpInfo.userId && !idMatchConfirm()) {
+    } else if (signUpInfo.userId && !errors.idOverlap) {
       return <ErrMsg className="ok">사용 가능한 아이디입니다</ErrMsg>;
     } else {
       setMessageRender(false);
@@ -129,14 +123,15 @@ export default function Signup() {
     setErrors({ ...errors, emptyBoxCheck: true });
     if (
       !errors.idOverlap &&
+      idCheck(signUpInfo.userId) &&
       strongPassword(signUpInfo.password) &&
+      nickNameCheck(signUpInfo.nickname) &&
       signUpInfo.password !== "" &&
       signUpInfo.passwordCheck !== "" &&
-      signUpInfo.password === signUpInfo.passwordCheck &&
-      !errors.nickNameLength
+      signUpInfo.password === signUpInfo.passwordCheck
     ) {
       axios
-        .post("http://192.168.10.153:8080/users/signup", {
+        .post("/users/signup", {
           id: signUpInfo.userId,
           nickname: signUpInfo.nickname,
           pwd: signUpInfo.password,
@@ -152,6 +147,14 @@ export default function Signup() {
               navigate("/");
             }
           });
+        })
+        .catch((err) => {
+          Swal.fire({
+            title: "입력을 확인해주세요",
+            text: `${err}`,
+            icon: "warning",
+            confirmButtonText: "닫기",
+          });
         });
     } else {
       if (!messageRender) {
@@ -166,6 +169,10 @@ export default function Signup() {
           icon: "warning",
           confirmButtonText: "닫기",
         });
+
+        if (!idCheck(signUpInfo.userId)) {
+          setErrors({ ...errors, idOverlap: true });
+        }
       }
     }
   };

@@ -206,6 +206,12 @@ export default function Userinfo() {
     setNewBirth(date);
   };
 
+  //비밀번호 정보 상태 저장
+  const handlePwValue =
+    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setChangePwdInfo({ ...changePwdInfo, [key]: e.target.value });
+    };
+
   //비밀번호 유효성 검사 결과 렌더링하는 함수
   const renderValidationCheckMessage = () => {
     if (
@@ -215,13 +221,6 @@ export default function Userinfo() {
       return <ErrMsg className="err">유효하지 않은 비밀번호입니다</ErrMsg>;
     }
   };
-
-  //비밀번호 정보 상태 저장
-  const handlePwValue =
-    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setChangePwdInfo({ ...changePwdInfo, [key]: e.target.value });
-      // console.log(signUpInfo);
-    };
 
   //비밀번호 불일치 오류메세지를 렌더하는 함수
   const renderFeedbackMessage = () => {
@@ -264,6 +263,7 @@ export default function Userinfo() {
     };
 
     if (
+      strongPassword(changePwdInfo.password) &&
       changePwdInfo.password !== "" &&
       changePwdInfo.passwordCheck !== "" &&
       changePwdInfo.password === changePwdInfo.passwordCheck

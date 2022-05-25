@@ -48,8 +48,8 @@ export default function Header({ title }: Props) {
   };
 
   //사람찾기 실행
-  const handleFindUser = (): void => {
-    // e.preventDefault();
+  const handleFindUser = (e: any): void => {
+    e.preventDefault();
 
     //*아이디값이 truthy하고 공백이 아닌 경우
     if (findUserId && !findUserId.match(checkBlank)) {
@@ -77,7 +77,7 @@ export default function Header({ title }: Props) {
 
   const findToEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleFindUser();
+      handleFindUser(e);
     } else if (e.key === "Escape") {
       closeListDropdown();
     }
