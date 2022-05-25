@@ -39,13 +39,14 @@ export default function MsgInput() {
 
     if (e.target.value.length >= 150) {
       Swal.fire({
-        title: "더이상 입력할 수 없어요",
+        title: "150자 이상 입력할 수 없어요",
         icon: "warning",
         confirmButtonText: "닫기",
       });
 
-      let str = e.target.value.slice(0, -1);
+      let str = e.target.value.slice(0, 150);
       e.target.value = str;
+      setLetterNum(str.length);
     }
   };
 

@@ -85,6 +85,7 @@ export default function Send() {
     if (checkSendGift()) {
       sendGift(giftState)
         .then(() => {
+          navigate("/giftlist");
           Swal.fire({
             title: "선물이 보내졌습니다",
             text: "👋100포인트가 추가됩니다!",
@@ -92,7 +93,6 @@ export default function Send() {
             confirmButtonText: "닫기",
           }).then((result) => {
             if (result.isConfirmed) {
-              navigate("/giftlist");
               dispatch(clearSendGift());
             }
           });
