@@ -5,6 +5,7 @@ import GiftListBox from "../components/GiftList/GiftListBox";
 import styled from "styled-components";
 import { colorSet, fadeAction } from "../style/global";
 import Loading from "../components/Loading";
+import NumberCarousel from "../components/GiftList/NumberCarousel";
 
 export default function GistList() {
   const [giftListData, setGiftListData] = useState<any>([]);
@@ -75,7 +76,13 @@ export default function GistList() {
                 })}
               </GridWrapper>
             </BoxWrapper>
-            <PageNumber>{numbers()}</PageNumber>
+            <PageNumber>
+              <NumberCarousel
+                giftListData={giftListData}
+                page={page}
+                handleSetPage={handleSetPage}
+              />
+            </PageNumber>
           </SubContainer>
         </MainContainer>
       )}
@@ -88,7 +95,7 @@ const MainContainer = styled.div`
 `;
 
 const SubContainer = styled.div`
-  min-width: 715px;
+  width: 715px;
   padding: 45px 65px 20px 65px;
   display: flex;
   flex-direction: column;
@@ -142,10 +149,11 @@ const GridWrapper = styled.div`
 `;
 
 const PageNumber = styled.div`
+  width: 715px;
   display: flex;
+  justify-content: center;
   gap: 5px;
   color: white;
-  justify-content: center;
   margin-top: 20px;
   font-weight: 200;
 `;

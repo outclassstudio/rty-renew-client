@@ -165,7 +165,7 @@ const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 101%;
 
   img {
     width: 15px;
