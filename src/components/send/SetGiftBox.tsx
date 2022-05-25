@@ -152,4 +152,9 @@ const CancelBtn = styled.img`
   position: fixed;
   width: 14px;
   cursor: pointer;
+  opacity: 0.5;
+
+  :hover {
+    opacity: 1;
+  }
 `;

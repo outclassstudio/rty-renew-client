@@ -98,7 +98,12 @@ export default function Send() {
           });
         })
         .catch((err) => {
-          console.log("실패!", err);
+          Swal.fire({
+            title: "에러가 있어요",
+            text: `${err}`,
+            icon: "error",
+            confirmButtonText: "닫기",
+          });
         });
     }
   };

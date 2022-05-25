@@ -84,21 +84,19 @@ export default function ViewAllInShopModal({
       }
 
       return (
-        <Wrapper key={idx}>
-          <ImageWrapper>
-            <SingleImage src={url} alt="" />
-            <Text>
-              <SubText className="a">{el.name}</SubText>
-              <SubText
-                className={mine ? (el.point === 0 ? "b" : "d") : "c"}
-                onClick={() => handleDirectBuy(el)}
-              >
-                {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
-              </SubText>
-            </Text>
-            {mine ? "" : <OverwrapText>미구입상품입니다</OverwrapText>}
-          </ImageWrapper>
-        </Wrapper>
+        <ImageWrapper key={idx}>
+          <SingleImage src={url} alt="" />
+          <Text>
+            <SubText className="a">{el.name}</SubText>
+            <SubText
+              className={mine ? (el.point === 0 ? "b" : "d") : "c"}
+              onClick={() => handleDirectBuy(el)}
+            >
+              {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
+            </SubText>
+          </Text>
+          {mine ? "" : <OverwrapText>미구입상품입니다</OverwrapText>}
+        </ImageWrapper>
       );
     });
   };
@@ -106,7 +104,12 @@ export default function ViewAllInShopModal({
   return (
     <MainWrapper>
       <PrvBoxWrapper>
-        🌈모든 {title} 보기
+        <PointWrapper>
+          <div>🌈모든 {title} 보기</div>
+          <div>
+            💡{myData.nickname}님의 포인트 : {myData.point} Point
+          </div>
+        </PointWrapper>
         <GridBox>{renderItems()}</GridBox>
         <NormalBtn
           onClick={handleOpenModal}
@@ -154,7 +157,7 @@ const PrvBoxWrapper = styled.div`
   background: ${colorSet.purple};
   color: white;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
-  padding: 25px 15px;
+  padding: 25px 35px;
   border-radius: 11px;
   gap: 20px;
   font-weight: bold;
@@ -163,16 +166,30 @@ const PrvBoxWrapper = styled.div`
   animation: 0.2s ease-out ${fadeExpand};
 `;
 
+const PointWrapper = styled.div`
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  div:nth-child(1) {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  div:nth-child(2) {
+    font-size: 13px;
+    font-weight: 300;
+  }
+`;
+
 const GridBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   align-items: center;
-  gap: 10px;
-`;
-
-const Wrapper = styled.div`
-  padding: 3px 10px 3px 15px;
+  gap: 22px 22px;
 `;
 
 const ImageWrapper = styled.div`

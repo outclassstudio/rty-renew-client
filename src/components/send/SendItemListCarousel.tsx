@@ -1,6 +1,4 @@
 import Slider from "react-slick";
-// import "./send-slick.css";
-// import "./send-slick-theme.css";
 import styled from "styled-components";
 import { colorSet } from "../../style/global";
 
@@ -14,10 +12,11 @@ export default function SendItemListCarousel({
     focusOnSelect: false,
     dots: false,
     infinite: false,
-    speed: 300,
+    speed: 200,
     slidesToShow: 4,
     slidesToScroll: 1,
     arrow: true,
+    draggable: false,
   };
 
   //carousel에 렌더링할 컴포넌트

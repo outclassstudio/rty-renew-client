@@ -23,10 +23,11 @@ export default function ItemListCarousel({
     focusOnSelect: false,
     dots: false,
     infinite: false,
-    speed: 300,
+    speed: 200,
     slidesToShow: 4,
     slidesToScroll: 1,
     arrow: true,
+    draggable: false,
   };
 
   //모달 열기 및 선택된 아이템 상태 업데이트
