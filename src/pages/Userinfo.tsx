@@ -299,7 +299,12 @@ export default function Userinfo() {
           });
         })
         .catch((err) => {
-          console.log("비번틀림", err);
+          Swal.fire({
+            title: "에러가 있어요",
+            text: `${err.response.data}`,
+            icon: "error",
+            confirmButtonText: "닫기",
+          });
         });
     } else {
       Swal.fire({

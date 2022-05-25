@@ -71,9 +71,8 @@ function App() {
         </Routes>
       ) : (
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/*" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<NotFound />} />
         </Routes>
       )}
     </Router>
