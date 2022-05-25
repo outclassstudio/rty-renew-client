@@ -18,6 +18,7 @@ export const StorageContainer = styled.div`
   margin-top: 115px;
   margin-left: 1165px;
   cursor: pointer;
+  user-select: none;
 `;
 
 export const ShowBox = styled.div``;

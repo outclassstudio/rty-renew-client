@@ -20,6 +20,7 @@ export const GiftIconBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: end;
+  user-select: none;
 `;
 
 export const GiftBox = styled.div`

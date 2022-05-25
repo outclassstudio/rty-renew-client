@@ -206,6 +206,7 @@ const HeaderDiv = styled.header`
   z-index: 2;
   background-color: ${colorSet.base};
   box-shadow: none;
+  user-select: none;
 `;
 
 const HeaderLeft = styled.div`

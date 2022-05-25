@@ -29,6 +29,7 @@ export const ThemeBtnBox = styled.div`
   justify-content: center;
   gap: 10px;
   margin-top: 30px;
+  user-select: none;
 `;
 
 export const Button = styled.button`

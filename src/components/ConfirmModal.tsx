@@ -36,6 +36,7 @@ export const ModalView = styled.div`
   @media screen and (max-width: 480px) {
     width: 70%;
   }
+  user-select: none;
 `;
 
 export const ContentBox = styled.div`
