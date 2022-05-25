@@ -48,9 +48,9 @@ export default function Canvas(props: any) {
   const [msg, setMsg] = useState<string>("");
   const [changeData, setChageData] = useState<any>();
   const [dropNewGift, setNewDropGift] = useState<any>([]);
-  const [dropStorage, setDropStorage] = useState<any>([]);
+  //const [dropStorage, setDropStorage] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
-  const [isSave, setIsSave] = useState(false);
+  const [curTag, setCurTag] = useState<any>();
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
   const [editClickedItem, setEditClickedItem] = useState<any>();
@@ -142,17 +142,23 @@ export default function Canvas(props: any) {
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
+        const nameTag = Paper.project.activeLayer.children.find(
+          (el) => el.data.id === test?.data.idx
+        );
+        if (nameTag) setCurTag(nameTag);
+        //click 한거 idx 랑 같은 text data.id 저장
         if (test?.data.type === "name") {
           editClickedItem.onMouseDrag = function abc() {};
           editClickedItem.onDoubleClick = function abc() {};
           return;
         }
-        console.log("eidtfunction", test, Paper.project.activeLayer.children);
+
         // setEditClickedItem(test);
         if (test) {
           if (!editClickedItem) {
             console.log("false09090", test);
             setEditClickedItem(test);
+
             test.bounds.selected = true;
             setSelected(test);
             setClickedId(test.id);
@@ -199,13 +205,15 @@ export default function Canvas(props: any) {
 
         setChageData(removeId[0].gift.idx);
         editClickedItem.bounds.selected = false;
+
+        //! 저장 상장 클릭 후  아이템 삭제하기
       } else if (isOpenSave && editClickedItem && !isConfirmModal) {
         setMsg("저장");
         dispatch(setConfirmModal(true));
         const editItem = match.filter(
           (el: any) => el.id === editClickedItem.id
         );
-
+        console.log(Paper.project.activeLayer.children, "final");
         //status 변경
         const changeData = {
           idx: editItem[0].gift.idx,
@@ -215,9 +223,11 @@ export default function Canvas(props: any) {
         setChageData(changeData);
         editClickedItem.bounds.selected = false;
       } else if (isConfirmRes && editClickedItem) {
+        curTag.remove();
         editClickedItem.remove();
         editClickedItem.bounds.selected = false;
         setEditClickedItem(null);
+        setCurTag(null);
         dispatch(setConfirmRes(false));
       } else if (
         !isConfirmRes &&
@@ -362,13 +372,13 @@ export default function Canvas(props: any) {
 
     //dropGift는 상태가  new, storage이다.
     // new or storage list에서  targetId와 같은건 삭제한다.
-    const filteredNew = dropNewGift.filter((el: any) => {
-      return el.idx !== Number(targetId);
-    });
+    // const filteredNew = dropNewGift.filter((el: any) => {
+    //   return el.idx !== Number(targetId);
+    // });
 
-    const filteredStorage = dropStorage.filter((el: any) => {
-      return el.idx !== Number(targetId);
-    });
+    // const filteredStorage = dropStorage.filter((el: any) => {
+    //   return el.idx !== Number(targetId);
+    // });
 
     //dropStorage;
 
@@ -376,9 +386,9 @@ export default function Canvas(props: any) {
     const targetItem = userGiftList.filter((el: any) => {
       return el.idx === Number(targetId);
     });
-    console.log("canvasfilteredList", targetItem, filteredStorage);
+    // console.log("canvasfilteredList", targetItem, filteredStorage);
 
-    console.log("drop", targetItem, dropNewGift, targetId);
+    // console.log("drop", targetItem, dropNewGift, targetId);
     const x = e.clientX - 320;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
