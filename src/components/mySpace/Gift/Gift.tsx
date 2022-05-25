@@ -68,8 +68,7 @@ export function Gift(props: any) {
       <MainWrapper onClick={closeModalHandler}>
         <PrvBoxWrapper>
           <Text>to. {openGift.userTo}</Text>
-          {/* {prvUrl ?  <Img src={openGift.img} alt="giftImg" /> : ""} */}
-          <Img src={openGift.img} alt="giftImg" />
+          <Img src={openGift.img} alt="" />
           <Content>
             <ContentImg>
               <div>{openGift.content}</div>
