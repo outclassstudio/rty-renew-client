@@ -19,6 +19,7 @@ import MyPicker from "../components/MyPicker";
 import { nickNameCheck, strongPassword } from "../hooks/validation";
 import { ErrMsg } from "./Signup";
 import Loading from "../components/Loading";
+import useDate from "../hooks/useDate";
 
 interface UserInfo {
   id: string | undefined;
@@ -36,6 +37,7 @@ interface PwInfo {
 export default function Userinfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const now = useDate();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -122,7 +124,7 @@ export default function Userinfo() {
     setNewNickname(e.target.value);
   };
 
-  //닉네임 변경 요청
+  //닉네임 및 생일 변경 요청
   const handleEditedInfoSend = (
     e: React.MouseEvent<HTMLButtonElement>
   ): void => {
@@ -143,17 +145,26 @@ export default function Userinfo() {
       });
     } else {
       if (newNickname !== "" && !nickNameCheck(String(newNickname))) {
-        patchUserInfo(data).then(() => {
-          Swal.fire({
-            title: "수정완료",
-            icon: "success",
-            confirmButtonText: "닫기",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.replace("/userinfo");
-            }
+        patchUserInfo(data)
+          .then(() => {
+            Swal.fire({
+              title: "수정완료",
+              icon: "success",
+              confirmButtonText: "닫기",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.replace("/userinfo");
+              }
+            });
+          })
+          .catch((err) => {
+            Swal.fire({
+              title: "에러가 있어요",
+              text: `${err}`,
+              icon: "error",
+              confirmButtonText: "닫기",
+            });
           });
-        });
       } else {
         Swal.fire({
           title: "입력을 확인해주세요",
@@ -203,7 +214,15 @@ export default function Userinfo() {
 
   //날짜변경 상태 업데이트
   const handleDateValue = (date: string) => {
-    setNewBirth(date);
+    if (now.now < date) {
+      Swal.fire({
+        title: "미래 날짜는 입력할 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    } else {
+      setNewBirth(date);
+    }
   };
 
   //비밀번호 정보 상태 저장
@@ -247,8 +266,7 @@ export default function Userinfo() {
         setCheckPw(res.data);
         setErrors({ ...errors, pwCheck: false });
       })
-      .catch((err) => {
-        console.log("비번잘못됨", err);
+      .catch(() => {
         setErrors({ ...errors, pwCheck: true });
       });
   };
