@@ -94,7 +94,16 @@ export function ConfirmModal(props: any) {
 
   const cancleModalHandler = () => {
     console.log("nono");
-    dispatch(setConfirmModal(false));
+    if (msg === "저장") {
+      dispatch(setConfirmRes(false));
+      dispatch(setIsOpenSave(!isOpenSave));
+      dispatch(setConfirmModal(false));
+    }
+    if (msg === "정말 삭제") {
+      dispatch(setConfirmRes(false));
+      dispatch(setIsOpenTrash(!isOpenTrash));
+      dispatch(setConfirmModal(false));
+    }
   };
 
   return (

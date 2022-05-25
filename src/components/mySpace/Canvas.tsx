@@ -119,11 +119,12 @@ export default function Canvas(props: any) {
     if (saveSpace && count >= 1) {
       console.log("impoirt");
       //  importSvg();
-      // Paper.project.activeLayer.children.forEach((el) => {
-      //   if (el.data.type === "name") {
-      //     el.visible = true;
-      //   }
-      // });
+      Paper.project.activeLayer.children.forEach((el) => {
+        if (el.data.type === "name") {
+          console.log("nameposition", el.position);
+          el.visible = true;
+        }
+      });
       if (editClickedItem) {
         setEditClickedItem(null);
         editClickedItem.bounds.selected = false;
@@ -141,6 +142,11 @@ export default function Canvas(props: any) {
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
+        if (test?.data.type === "name") {
+          editClickedItem.onMouseDrag = function abc() {};
+          editClickedItem.onDoubleClick = function abc() {};
+          return;
+        }
         console.log("eidtfunction", test, Paper.project.activeLayer.children);
         // setEditClickedItem(test);
         if (test) {
@@ -157,6 +163,14 @@ export default function Canvas(props: any) {
             test.bounds.selected = true;
             setClickedId(test.id);
           }
+          test.onMouseDrag = (e: any) => {
+            console.log("drag", e);
+            test.position.x += e.delta.x;
+            test.position.y += e.delta.y;
+
+            //! 움직인걸 찾아라!
+          };
+          return;
         } else {
           Paper.project.activeLayer.children.forEach((el) => {
             if (el.bounds.selected) {
@@ -173,48 +187,50 @@ export default function Canvas(props: any) {
         // test.onDoubleClick = (e: any) => {
         //   setIsOpenGift(true);
         // };
+      };
+      //! 쓰레기통 클릭 후  아이템 삭제하기
+      if (isOpenTrash && editClickedItem && !isConfirmModal) {
+        setMsg("정말 삭제");
+        dispatch(setConfirmModal(true));
 
-        test.onMouseDrag = (e: any) => {
-          console.log("drag", e);
-          test.position.x += e.delta.x;
-          test.position.y += e.delta.y;
+        const removeId = match.filter(
+          (el: any) => el.id === editClickedItem.id
+        );
 
-          //! 움직인걸 찾아라!
+        setChageData(removeId[0].gift.idx);
+        editClickedItem.bounds.selected = false;
+      } else if (isOpenSave && editClickedItem && !isConfirmModal) {
+        setMsg("저장");
+        dispatch(setConfirmModal(true));
+        const editItem = match.filter(
+          (el: any) => el.id === editClickedItem.id
+        );
+
+        //status 변경
+        const changeData = {
+          idx: editItem[0].gift.idx,
+          status: "storage",
+          userTo: window.localStorage.getItem("id"),
         };
-      };
+        setChageData(changeData);
+        editClickedItem.bounds.selected = false;
+      } else if (isConfirmRes && editClickedItem) {
+        editClickedItem.remove();
+        editClickedItem.bounds.selected = false;
+        setEditClickedItem(null);
+        dispatch(setConfirmRes(false));
+      } else if (
+        !isConfirmRes &&
+        editClickedItem &&
+        !editClickedItem.bounds.selected
+      ) {
+        console.log("여기??");
+        //  editClickedItem.bounds.selected = false;
+        setEditClickedItem(null);
+      }
     }
+
     setCount(count + 1);
-
-    //! 쓰레기통 클릭 후  아이템 삭제하기
-    if (isOpenTrash && editClickedItem && !isConfirmModal) {
-      setMsg("정말 삭제");
-      dispatch(setConfirmModal(true));
-
-      const removeId = match.filter((el: any) => el.id === editClickedItem.id);
-
-      setChageData(removeId[0].gift.idx);
-    }
-
-    //! 박스 클릭 후  아이템 저장하기
-    if (isOpenSave && editClickedItem && !isConfirmModal) {
-      setMsg("저장");
-      dispatch(setConfirmModal(true));
-      const editItem = match.filter((el: any) => el.id === editClickedItem.id);
-
-      //status 변경
-      const changeData = {
-        idx: editItem[0].gift.idx,
-        status: "storage",
-        userTo: window.localStorage.getItem("id"),
-      };
-      setChageData(changeData);
-    }
-    if (isConfirmRes) {
-      editClickedItem.remove();
-      setEditClickedItem(null);
-      dispatch(setConfirmRes(false));
-    }
-
     console.log("isConfirmRes", isConfirmRes);
   }, [
     saveSpace,
@@ -296,12 +312,12 @@ export default function Canvas(props: any) {
             const text = new paper.PointText(pos);
             text.justification = "center";
             text.fontWeight = "bold";
-            text.fontSize = 18;
-
+            text.fontSize = 17;
             text.content = gift.userFrom;
             //  now use the adjusted drop point to set the center position of text.
             text.position = pos;
             text.data.type = "name";
+            text.data.id = gift.idx;
           },
         });
       });
@@ -316,6 +332,12 @@ export default function Canvas(props: any) {
       const hitItem = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
       );
+
+      if (hitItem?.data.type === "name") {
+        hitItem.onMouseDrag = function abc() {};
+        hitItem.onDoubleClick = function abc() {};
+        return;
+      }
       if (hitItem) {
         setClickedId(hitItem.id);
         setIsOpenGift(true);
@@ -390,7 +412,7 @@ export default function Canvas(props: any) {
         console.log("svgSize", item.firstChild.size._width);
         match.push(obj);
         item.position = new Paper.Point(x, y);
-
+        item.data.idx = targetItem[0].idx;
         if (item.firstChild.size._width < 200) {
           // console.log("300");
           item.scale(1.5);
@@ -405,12 +427,13 @@ export default function Canvas(props: any) {
         const text = new paper.PointText(pos);
         text.justification = "center";
         text.fontWeight = "bold";
-        text.fontSize = 18;
+        text.fontSize = 16;
 
         text.content = targetItem[0].userFrom;
         //  now use the adjusted drop point to set the center position of text.
         text.position = pos;
         text.data.type = "name";
+        text.data.id = targetItem[0].idx;
 
         //  dispatch(setStorageGift(filteredStorage));
         // dispatch(setNewGift(filteredNew));
@@ -603,7 +626,7 @@ export default function Canvas(props: any) {
     e.stopPropagation();
   };
 
-  console.log("canvas2", match, isEditSpace);
+  console.log("canvas2", isEditSpace, editClickedItem);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function saveSpace12() {
@@ -614,16 +637,17 @@ export default function Canvas(props: any) {
     let activeLayer: paper.Item[] = [];
     Paper.project.activeLayer.children.forEach((el) => {
       activeLayer.push(el);
-      console.log(el.data.idx, el.position, el.id, "paper", match, activeLayer);
+      //console.log(el.data.idx, el.position, el.id, "paper", match, activeLayer);
     });
     const MoveArr: any = [];
 
     match.forEach((el: any) => {
       activeLayer.forEach((layer) => {
+        console.log("savelayer", layer.data.id);
         if (el.id === layer.id) {
+          console.log("savelayer1212", layer, layer.data.idx);
           const svgAttr = JSON.parse(el.gift.svgAttr);
-          console.log("equalId", el.gift.svgAttr, layer.position.x, svgAttr);
-
+          //   console.log("equalId", el.gift.svgAttr, layer.position.x, svgAttr);
           if (
             svgAttr.x !== layer.position.x ||
             svgAttr.y !== layer.position.y
@@ -634,10 +658,27 @@ export default function Canvas(props: any) {
               svgAttr: JSON.stringify(newPosition),
               userTo: localStorage.getItem("id"),
             };
-            //   JSON.stringify(data);
+
             MoveArr.push(data);
             console.log("spaveSpace211111", data);
           }
+        }
+        if (layer.data.type === "name") {
+          MoveArr.forEach((el: any) => {
+            if (el.idx === layer.data.id) {
+              const position = JSON.parse(el.svgAttr);
+              layer.position.x = position.x + 5;
+              layer.position.y = position.y - 45;
+            }
+          });
+          console.log(
+            "",
+            layer.data.idx,
+            //    JSON.parse(MoveArr[0].svgAttr),
+
+            el.gift.idx,
+            layer.data
+          ); // 요 포지션은 해당 아이템의 포지션 으로 바꿔준다.
         }
       });
     });
@@ -647,6 +688,7 @@ export default function Canvas(props: any) {
       changeGiftPosition(MoveArr).then((res) => {
         if (res.status === 200) {
           console.log(res, "changeGiftPosition");
+          //바뀐 위치 이름 포지션도 바꿔주자
         }
       });
     }
@@ -654,6 +696,12 @@ export default function Canvas(props: any) {
       editClickedItem.bounds.selected = false;
       setEditClickedItem(null);
     }
+    Paper.project.activeLayer.children.forEach((el) => {
+      if (el.data.type === "name") {
+        console.log("nameposition", el.position);
+        el.visible = true;
+      }
+    });
   }
 
   return (
