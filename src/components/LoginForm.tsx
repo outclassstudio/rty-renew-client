@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-// import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { getUserInfo } from "../apis/userApi";
 import { userInfo } from "../redux/actions";
@@ -13,7 +12,6 @@ axios.defaults.withCredentials = true;
 
 export default function LoginForm() {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -37,7 +35,6 @@ export default function LoginForm() {
         pwd: loginInfo.pwd,
       })
       .then((res) => {
-        console.log(res, "login");
         window.localStorage.setItem("token", res.data);
         window.localStorage.setItem("id", loginInfo.id);
         dispatch(loginChange());
@@ -49,7 +46,6 @@ export default function LoginForm() {
             dispatch(userInfo(res.data));
           });
         }
-        // navigate("/");
         window.location.replace("/");
       })
       .catch(() => {

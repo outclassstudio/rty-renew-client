@@ -125,7 +125,7 @@ export default function Signup() {
       !errors.idOverlap &&
       idCheck(signUpInfo.userId) &&
       strongPassword(signUpInfo.password) &&
-      nickNameCheck(signUpInfo.nickname) &&
+      !nickNameCheck(signUpInfo.nickname) &&
       signUpInfo.password !== "" &&
       signUpInfo.passwordCheck !== "" &&
       signUpInfo.password === signUpInfo.passwordCheck
