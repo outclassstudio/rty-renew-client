@@ -19,6 +19,7 @@ export const NewGiftContainer = styled.div`
   animation: ${fadeSlide} 0.3s ease-out;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 0px;
 
+  user-select: none;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
     display: none;

@@ -18,6 +18,7 @@ export const AvatarBox = styled.div`
   margin-top: 170px;
   margin-right: -23px;
   width: 150px;
+  user-select: none;
 `;
 
 export const MsgBox = styled.div`
@@ -121,12 +122,13 @@ export function Avatar(props: any) {
       });
 
       setEdit(!setEdit);
+      setStateMsg("");
     }
   };
 
   const inputChangeHandler = (e: any) => {
     //msg변경
-    console.log("입력중", e.target);
+
     if (e.target.value === " " || e.target.value === null) {
       alert("공백 불가");
     } else {
