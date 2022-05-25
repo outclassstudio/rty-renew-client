@@ -70,6 +70,7 @@ export const Circle = styled.div`
   border-radius: 50px;
   background: #00d3d3;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const P = styled.p`
