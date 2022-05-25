@@ -39,6 +39,7 @@ export const colorSet = {
   pink: "#ec047a",
   darkPink: "#b22490",
   skyBlue: "#72b0eb",
+  yellow: "#ffca60",
 };
 
 //페이드 애니메이션
