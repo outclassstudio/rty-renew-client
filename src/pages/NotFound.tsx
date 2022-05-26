@@ -20,10 +20,10 @@ export default function NotFound() {
           height={"30px"}
           onClick={(e) => {
             e.preventDefault();
-            navigate(-1);
+            navigate("/");
           }}
         >
-          돌아가기
+          홈으로
         </NormalBtn>
       </TextWrapper>
     </MainContainer>
@@ -37,7 +37,6 @@ const MainContainer = styled.div`
   background-position: center;
   background-size: cover;
   display: flex;
-  /* flex-direction: column*/
   justify-content: center;
   align-items: center;
 `;

@@ -68,6 +68,7 @@ function App() {
           <Route path="/giftlist" element={<GiftList />} />
           <Route path="/visit/:id" element={<Visit />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/notfound" element={<NotFound />} />
         </Routes>
       ) : (
         <Routes>
