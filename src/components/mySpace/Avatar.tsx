@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { colorSet } from "../../style/global";
 import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
+import { AllGift } from "./Gift/AllGift";
 
 export const AvatarBox = styled.div`
   display: flex;
@@ -96,6 +97,7 @@ export function Avatar(props: any) {
   const [stateMsg, setStateMsg] = useState("");
   const [isEditBtn, setIsEditBtn] = useState<Boolean>(false);
   const [isClickedAvatar, setIsClikedAvatar] = useState<Boolean>(false);
+  const [isAllGift, setIsAllGift] = useState<Boolean>(false);
 
   const otherUser = props.userInfo;
   const otherGift = props.AllGiftListCount;
@@ -151,6 +153,11 @@ export function Avatar(props: any) {
     dispatch(setNickname(otherUser.nickname));
   };
 
+  const openAllGiftHandler = () => {
+    //편지 모달 띄우기
+    setIsAllGift(true);
+  };
+
   return (
     <>
       {myInfo && !otherUser ? (
@@ -161,7 +168,7 @@ export function Avatar(props: any) {
                 <P>{userGiftList.length}</P>
               </Circle>
               <Circle>
-                <Letter />
+                <Letter onClick={openAllGiftHandler} />
               </Circle>
             </CircleBox>
           ) : (
@@ -215,6 +222,7 @@ export function Avatar(props: any) {
           <H3>내 이름은 {otherUser.nickname}!!</H3>
         </AvatarBox>
       ) : null}
+      {isAllGift ? <AllGift setIsAllGift={setIsAllGift} /> : null}
     </>
   );
 }
