@@ -51,15 +51,13 @@ export function Gift(props: any) {
 
   const newGifts = props.item;
   const id = props.id;
-  console.log(newGifts, "선물 줘", id);
 
   const openGiftArr = newGifts.filter((item: any) => {
     return item.id === id;
   });
   const openGift = openGiftArr[0].gift;
-  console.log("gift!!!!!!!!!!!111", openGift.gift);
+
   const closeModalHandler = () => {
-    console.log("close");
     props.setIsOpenGift(false);
   };
 
