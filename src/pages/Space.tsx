@@ -10,6 +10,7 @@ import {
   setClickBtn,
   setModalOpen,
   setNewGift,
+  setSpaceGift,
   setStorageGift,
   setUserInfo,
 } from "../redux/reducers/spaceReducer";
@@ -87,6 +88,7 @@ export default function Space() {
         (item: { status: string }) => item.status === "space"
       );
       setSpaceGiftList(space);
+      dispatch(setSpaceGift(space));
 
       const storage = userGiftList.filter(
         (item: { status: string }) => item.status === "storage"

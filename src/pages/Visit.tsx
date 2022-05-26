@@ -8,7 +8,6 @@ import styled from "styled-components";
 import { NormalBtn } from "../style/btnStyle.style";
 import Swal from "sweetalert2";
 import { getOthersInfo } from "../apis/userApi";
-import VisitAvatar from "../components/visit/VisitAvatar";
 import { Avatar } from "../components/mySpace/Avatar";
 
 export default function Visit() {
