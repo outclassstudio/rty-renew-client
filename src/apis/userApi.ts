@@ -44,6 +44,7 @@ export const changeTheme = async (img: string): Promise<AxiosResponse<any>> => {
     });
 };
 
+//메시지 마꾸기
 export const changeMsg = async (
   stateMsg: string
 ): Promise<AxiosResponse<any>> => {
@@ -61,6 +62,15 @@ export const findUser = async (
 ): Promise<AxiosResponse<string[]>> => {
   return apiClient()
     .get(`/users/find/${data}`)
+    .then((res) => {
+      return res;
+    });
+};
+
+//다른 사람 랜덤 찾기
+export const findRandomUser = async (): Promise<AxiosResponse<any[]>> => {
+  return apiClient()
+    .get(`/users/random`)
     .then((res) => {
       return res;
     });

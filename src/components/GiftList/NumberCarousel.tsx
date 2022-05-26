@@ -8,6 +8,7 @@ export default function NumberCarousel({
   giftListData,
   page,
   handleSetPage,
+  color,
 }: any) {
   //carousel 세팅
   const settings = {
@@ -41,6 +42,7 @@ export default function NumberCarousel({
           }}
           key={idx}
           className={el === page ? "selected" : ""}
+          color={color}
         >
           {el}
         </SingleNumber>
@@ -62,9 +64,7 @@ const CarouselWrapper = styled.div`
 
 const SingleNumber = styled.div`
   cursor: pointer;
-  color: white;
-  display: flex;
-  align-items: center;
+  color: ${(props) => props.color};
   margin: 0px 2px 5px 2px;
   font-size: 14px;
   font-family: "Jua", sans-serif;
