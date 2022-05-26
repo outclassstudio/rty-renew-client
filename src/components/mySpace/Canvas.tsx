@@ -16,12 +16,14 @@ import {
   setStorageGift,
 } from "../../redux/reducers/spaceReducer";
 import { changeGift, deleteGift, changeGiftPosition } from "../../apis/giftApi";
-import { PointText, projects, tool } from "paper/dist/paper-core";
+import { Color, PointText, projects, tool } from "paper/dist/paper-core";
 import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
 import { Storage } from "./Storage/Storage";
 import NewGiftIcon from "./NewGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
 import { debug } from "console";
+import { colorSet } from "../../style/global";
+type Color = "red" | "orange" | "yellow";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -50,8 +52,8 @@ export default function Canvas(props: any) {
   const [msg, setMsg] = useState<string>("");
   const [changeData, setChageData] = useState<any>();
   const [dropNewGift, setNewDropGift] = useState<any>([]);
-  //const [dropStorage, setDropStorage] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
+
   const [curTag, setCurTag] = useState<any>();
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
@@ -79,7 +81,7 @@ export default function Canvas(props: any) {
   const [selected, setSelected] = useState<any>();
 
   let tool: paper.Tool;
-
+  console.log("spaceGiftLists", spaceGiftLists);
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
@@ -133,10 +135,29 @@ export default function Canvas(props: any) {
           el.bounds.selected = false;
         }
       });
+
       Paper.view.onClick = (e: any) => {
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
+
+        // if (hit.type === "bounds") {
+        //   hit.item.onMouseDrag = (e: any) => {
+        //     console.log(e, "hit");
+        //     let path = editClickedItem;
+
+        //     var center: any = path.bounds.center;
+        //     var baseVec: any = center - e.lastPoint;
+        //     var nowVec: any = center - e.point;
+        //     const angle = nowVec.angle - baseVec.angle;
+        //     if (angle < 0) {
+        //       path.rotate(-45);
+        //     } else {
+        //       path.rotate(45);
+        //     }
+        //     console.log(editClickedItem, "roation");
+        //   };
+        // }
         const nameTag = Paper.project.activeLayer.children.find(
           (el) => el.data.id === test?.data.idx
         );
@@ -156,18 +177,34 @@ export default function Canvas(props: any) {
             test.bounds.selected = true;
             setSelected(test);
             setClickedId(test.id);
+
+            // // const myCircle = new Paper.Path.Circle(
+            // //   new Paper.Point(test.position.x, test.position.y),
+            // //   100
+            // // );
+            // let b = test.bounds.clone().expand(20, 20);
+            // myRectangle = new Paper.Path.Rectangle(b);
+            // myRectangle.position = new Paper.Point(test.bounds.center);
+            // myRectangle.data.type = "edit";
+            // //   myCircle.data.id = test.id;
+            // myRectangle.strokeColor = new Color(0b1111);
+            // myRectangle.strokeWidth = 10;
+
+            // setIsBox(!isBox);
           } else {
             editClickedItem.bounds.selected = false;
             setEditClickedItem(test);
             test.bounds.selected = true;
             setClickedId(test.id);
           }
+
           test.onMouseDrag = (e: any) => {
             test.position.x += e.delta.x;
             test.position.y += e.delta.y;
 
             //! 움직인걸 찾아라!
           };
+
           return;
         } else {
           Paper.project.activeLayer.children.forEach((el) => {
@@ -181,6 +218,31 @@ export default function Canvas(props: any) {
 
         if (!test) {
           return;
+        }
+      };
+      let count = editClickedItem?.data.rotation || 0;
+      tool.onKeyDown = (e: any) => {
+        console.log("tool1213", e.key);
+
+        //let path = editClickedItem;
+        if (e.key === "right") {
+          var center: any = editClickedItem.bounds.center;
+          var baseVec: any = center - e.lastPoint;
+          var nowVec: any = center - e.point;
+          const angle = nowVec.angle - baseVec.angle;
+          if (angle < 0) {
+            // editClickedItem.rotate(-45);
+            editClickedItem.rotation = -90;
+          } else {
+            editClickedItem.rotation = 90;
+            //editClickedItem.rotate(45);
+          }
+          count += 1;
+          editClickedItem.data.rotation = count;
+          if (count === 4) {
+            count = 0;
+          }
+          console.log(editClickedItem.data.rotation, count, "rotation");
         }
       };
 
@@ -284,16 +346,18 @@ export default function Canvas(props: any) {
 
   //! space에 저장된 선물 불러오기
   function importSvg() {
-    if (match.length <= spaceGiftList.length) {
-      spaceGiftList.forEach((gift: any) => {
+    if (match.length <= spaceGiftLists.length) {
+      spaceGiftLists.forEach((gift: any) => {
+        console.log(gift.svgAttr, "attr");
         const svgAttr = JSON.parse(gift.svgAttr);
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
             let obj = { id: item.id, gift: gift };
-
+            console.log("svgAttr", svgAttr);
             match.push(obj);
             item.data.idx = gift.idx;
             item.position = new Paper.Point(svgAttr.x, svgAttr.y);
+
             if (item.firstChild.size._width < 200) {
               item.scale(1.5);
             } else {
@@ -314,6 +378,19 @@ export default function Canvas(props: any) {
             text.position = pos;
             text.data.type = "name";
             text.data.id = gift.idx;
+
+            if (!svgAttr.rotation) {
+              return;
+            }
+
+            const rotateNum = Number(svgAttr.rotation);
+            item.data.rotation = rotateNum;
+            console.log(rotateNum, "rotateNum");
+            //! rotate
+            // for (let i = 0; i < rotateNum; i++) {
+            //  item.rotation(90);
+            // }
+            item.rotation = 90 * rotateNum;
           },
         });
       });
@@ -398,6 +475,7 @@ export default function Canvas(props: any) {
     let svgAttr = JSON.parse(targetItem[0].svgAttr);
     svgAttr.x = x;
     svgAttr.y = y;
+    svgAttr.rotation = 0;
     svgAttr = JSON.stringify(svgAttr);
     const chageData = {
       idx: targetItem[0].idx,
@@ -652,19 +730,28 @@ export default function Canvas(props: any) {
     match.forEach((el: any) => {
       activeLayer.forEach((layer) => {
         if (el.id === layer.id) {
+          //console.log("fnsdklnfkl", layer.data.rotation);
           const svgAttr = JSON.parse(el.gift.svgAttr);
+          // if (layer.data.rotation) {
+          //   console.log("fnsdklnfkl", layer);
+          //   el.gift.svgAttr.rotation = layer.data.rotation;
+          // }
 
           if (
             svgAttr.x !== layer.position.x ||
-            svgAttr.y !== layer.position.y
+            svgAttr.y !== layer.position.y ||
+            svgAttr.rotation !== layer.data.rotation
           ) {
-            const newPosition = { x: layer.position.x, y: layer.position.y };
+            const newPosition = {
+              x: layer.position.x,
+              y: layer.position.y,
+              rotation: layer.data.rotation,
+            };
             let data = {
               idx: layer.data.idx,
               svgAttr: JSON.stringify(newPosition),
               userTo: localStorage.getItem("id"),
             };
-
             MoveArr.push(data);
           }
         }
@@ -686,7 +773,7 @@ export default function Canvas(props: any) {
     } else {
       changeGiftPosition(MoveArr).then((res) => {
         if (res.status === 200) {
-          console.log(res, "changeGiftPosition");
+          console.log(res, "changeGiftPosition", MoveArr);
           //바뀐 위치 이름 포지션도 바꿔주자
         }
       });

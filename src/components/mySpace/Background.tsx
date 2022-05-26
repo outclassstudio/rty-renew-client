@@ -116,11 +116,9 @@ export default function Background() {
     });
   }, []);
 
-  console.log("themeList", themeList);
-
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
-      setCheckedItem([item]);
+      setCheckedItem([Number(item)]);
     } else {
       setCheckedItem(checkedItem.filter((el) => el !== item));
     }
@@ -128,14 +126,11 @@ export default function Background() {
 
   const changeThemeHandler = async () => {
     if (checkedItem.length !== 0) {
-      // dispatch(await editTheme(checkedItem[0]));
       changeTheme(checkedItem[0]).then((res) => {
         let info = res.data;
-        console.log(info, "Avatar");
         dispatch(setUserInfo(info));
       });
       dispatch(setModalOpen(false));
-      // window.location.replace("/");
     }
   };
 
@@ -152,16 +147,16 @@ export default function Background() {
             return (
               <SelectImg key={idx}>
                 <ImgBox>
-                  <Img src={theme.url} alt="theme" />
+                  <Img src={theme.data} alt="theme" />
                 </ImgBox>
                 <ImgName>{theme.name}</ImgName>
                 <SelectInput
                   type="checkbox"
-                  value={theme.name}
+                  value={theme.idx}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(theme.name) ? true : false}
+                  checked={checkedItem.includes(theme.idx) ? true : false}
                 ></SelectInput>
               </SelectImg>
             );
