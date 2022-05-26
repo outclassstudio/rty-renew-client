@@ -25,6 +25,7 @@ export default function Dropdown({ handleActiveDropdown }: any) {
       <Menu onClick={() => navigate("/send")}>선물보내기</Menu>
       <Menu onClick={() => navigate("/giftlist")}>보낸선물함</Menu>
       <Menu onClick={() => navigate("/shop")}>상점</Menu>
+      <Menu onClick={() => navigate("/find")}>다른공간방문</Menu>
       <Menu onClick={() => navigate("/userinfo")}>나의정보</Menu>
       <Menu className="logout" onClick={handleLogout}>
         로그아웃

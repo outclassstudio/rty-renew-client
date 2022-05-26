@@ -29,34 +29,6 @@ export default function GistList() {
     setPage(page);
   };
 
-  //페이지번호렌더링
-  const numbers = () => {
-    let numberArr: number[] = [];
-
-    if (giftListData.length === 0) {
-      numberArr.push(1);
-    } else {
-      let length: number = Math.ceil(giftListData.length / 12);
-      for (let i = 1; i <= length; i++) {
-        numberArr.push(i);
-      }
-    }
-
-    return numberArr.map((el: number, idx: number) => {
-      return (
-        <SingleNumber
-          onClick={() => {
-            handleSetPage(el);
-          }}
-          key={idx}
-          className={el === page ? "selected" : ""}
-        >
-          {el}
-        </SingleNumber>
-      );
-    });
-  };
-
   return (
     <Layout title={"보낸 선물 리스트"}>
       {isLoading ? (
@@ -81,6 +53,7 @@ export default function GistList() {
                 giftListData={giftListData}
                 page={page}
                 handleSetPage={handleSetPage}
+                color={"white"}
               />
             </PageNumber>
           </SubContainer>
