@@ -5,6 +5,7 @@ interface spaceState {
   isOpenNewGift: boolean;
   newGiftList: any;
   storageGiftList: any;
+  spaceGiftList: any;
   userInfo: Myinfo;
   myGift: any;
   isOpenStorage: boolean;
@@ -46,6 +47,7 @@ const initialState = {
   isOpenTrash: false,
   isOpenSave: false,
   storageGiftList: "",
+  spaceGiftList: "",
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -67,6 +69,9 @@ const spaceSlice = createSlice({
     },
     setStorageGift(state, action: PayloadAction<any>) {
       state.storageGiftList = action.payload;
+    },
+    setSpaceGift(state, action: PayloadAction<any>) {
+      state.spaceGiftList = action.payload;
     },
     setNewGift(state, action: PayloadAction<any>) {
       state.newGiftList = action.payload;
@@ -113,5 +118,6 @@ export const {
   setIsOpenTrash,
   setStorageGift,
   setNewGift,
+  setSpaceGift,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;

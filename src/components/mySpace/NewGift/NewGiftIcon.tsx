@@ -89,13 +89,11 @@ export default function NewGift() {
   return (
     <div>
       <GiftIconBox>
-        {newList && newList.length !== 0 ? (
-          <>
-            {console.log("newGifticon", newList.lengtht)}
-            <GiftCount>{newList.length}</GiftCount>
-            <NewGifIcon1 onClick={openGiftHandler} />
-          </>
-        ) : null}
+        <>
+          {console.log("newGifticon", newList.lengtht)}
+          <GiftCount>{newList.length}</GiftCount>
+          <NewGifIcon1 onClick={openGiftHandler} />
+        </>
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>
