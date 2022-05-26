@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Space from "./pages/Space";
 import Signup from "./pages/Signup";
@@ -74,8 +79,9 @@ function App() {
         </Routes>
       ) : (
         <Routes>
-          <Route path="/*" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       )}
     </Router>

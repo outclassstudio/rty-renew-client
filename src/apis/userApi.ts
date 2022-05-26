@@ -44,7 +44,7 @@ export const changeTheme = async (img: string): Promise<AxiosResponse<any>> => {
     });
 };
 
-//메시지 마꾸기
+//메시지 바꾸기
 export const changeMsg = async (
   stateMsg: string
 ): Promise<AxiosResponse<any>> => {
