@@ -28,7 +28,7 @@ export const getOthersInfo = async (
 //테마 불러오기
 export const getThemeList = async (): Promise<AxiosResponse> => {
   return apiClient()
-    .get(`/users/theme`)
+    .get(`/users/theme/${myId}`)
     .then((res) => {
       return res;
     });
