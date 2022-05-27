@@ -86,7 +86,6 @@ export const SelectInput = styled.input``;
 export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 25px;
   gap: 15px;
 `;
 

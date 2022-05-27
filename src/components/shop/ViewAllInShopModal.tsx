@@ -133,7 +133,9 @@ export default function ViewAllInShopModal({
           color={"white"}
           pageLimit={pageLimit}
         />
-        <GridBox>{renderItems()}</GridBox>
+        <GridWrapper>
+          <GridBox>{renderItems()}</GridBox>
+        </GridWrapper>
         <NormalBtn
           onClick={handleOpenModal}
           className="b"
@@ -175,14 +177,15 @@ const MainWrapper = styled.div`
 const PrvBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   background: ${colorSet.purple};
+  height: 750px;
   color: white;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
-  padding: 25px 35px;
+  padding: 22px 37px;
   border-radius: 11px;
-  gap: 20px;
+  gap: 10px;
   font-weight: bold;
   font-size: 20px;
   z-index: 2;
@@ -194,7 +197,7 @@ const PointWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 
   div:nth-child(1) {
     font-size: 22px;
@@ -207,12 +210,17 @@ const PointWrapper = styled.div`
   }
 `;
 
+const GridWrapper = styled.div`
+  height: 582px;
+  margin-bottom: 10px;
+`;
+
 const GridBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   align-items: center;
-  gap: 22px 22px;
+  gap: 20px;
 `;
 
 const ImageWrapper = styled.div`

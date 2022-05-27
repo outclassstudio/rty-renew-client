@@ -70,7 +70,6 @@ export default function UserBox({ data }: any) {
 
 const BoxContainer = styled.div`
   display: flex;
-  /* flex-direction: column; */
   width: 255px;
   height: 129px;
   background: #e9e9e9;

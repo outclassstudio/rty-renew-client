@@ -12,6 +12,7 @@ import {
   setIsOpenSave,
   setStorageGift,
 } from "../../../redux/reducers/spaceReducer";
+import { colorSet } from "../../../style/global";
 
 export const StorageContainer = styled.div`
   position: fixed;
@@ -107,7 +108,9 @@ export function Storage(props: any) {
               />
             </ShowBox>
           )}
-          {isShowStorage ? <StorageICon onClick={isOpenHandler} /> : null}
+          {isShowStorage ? (
+            <StorageICon fill="#ec047a" onClick={isOpenHandler} />
+          ) : null}
         </StorageContainer>
       )}
     </>

@@ -9,7 +9,8 @@ import { useSelector } from "react-redux";
 import { colorSet } from "../../style/global";
 import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
-import { AllGift } from "./Gift/AllGift";
+import AllGift from "./Gift/AllGift";
+import Swal from "sweetalert2";
 
 export const AvatarBox = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ export const AvatarBox = styled.div`
   position: fixed;
   margin-top: 170px;
   margin-right: -23px;
-  width: 150px;
+  width: 160px;
   user-select: none;
 `;
 
@@ -26,10 +27,10 @@ export const MsgBox = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  min-width: 160px;
+  /* min-width: 160px; */
   height: 45px;
   background-color: ${colorSet.purple};
-  border-radius: 10px;
+  border-radius: 15px;
   margin: 10px;
   padding: 0px 10px;
   color: white;
@@ -45,12 +46,12 @@ export const MsgBox = styled.div`
 `;
 
 export const MsgEditBtn = styled.button`
-  border: 1px solid;
+  border: 1px solid white;
   background-color: transparent;
   width: 36px;
   cursor: pointer;
   /* margin: 5px; */
-  border-radius: 10px;
+  border-radius: 40%;
 `;
 
 export const H3 = styled.div`
@@ -58,31 +59,47 @@ export const H3 = styled.div`
   color: white;
   font-family: "Hanna", sans-serif;
   text-shadow: 1px 1px 0px black;
+  font-size: 18px;
+  word-break: break-all;
 `;
 
 export const Input = styled.input`
-  margin: 2px;
+  width: 130px;
+  font-size: 13px;
+  /* margin: 2px; */
 `;
 
 export const Circle = styled.div`
-  justify-content: center;
   display: flex;
-  width: 56px;
-  margin: 5px;
-  border-radius: 50px;
+  justify-content: center;
+  width: 40px;
+  margin: 3px;
+  border-radius: 50%;
   background: #00d3d3;
   align-items: center;
   cursor: pointer;
+  padding-left: 1px;
 `;
 
-export const P = styled.p`
+const MyMsg = styled.div`
+  min-width: 130px;
+  font-size: 13px;
+`;
+
+export const P = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
-  font-size: 20pxd;
+  font-size: 18px;
+  color: white;
+  margin-bottom: 2px;
 `;
 
 export const CircleBox = styled.div`
   display: flex;
-  margin: 1px;
+  height: 45px;
+  margin: 10px;
 `;
 
 export function Avatar(props: any) {
@@ -94,10 +111,10 @@ export function Avatar(props: any) {
   // const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
   const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
-  const [stateMsg, setStateMsg] = useState("");
-  const [isEditBtn, setIsEditBtn] = useState<Boolean>(false);
-  const [isClickedAvatar, setIsClikedAvatar] = useState<Boolean>(false);
-  const [isAllGift, setIsAllGift] = useState<Boolean>(false);
+  const [stateMsg, setStateMsg] = useState<any>("");
+  const [isEditBtn, setIsEditBtn] = useState<boolean>(false);
+  const [isClickedAvatar, setIsClikedAvatar] = useState<boolean>(false);
+  const [isAllGift, setIsAllGift] = useState<boolean>(false);
 
   const otherUser = props.userInfo;
   const otherGift = props.AllGiftListCount;
@@ -108,13 +125,18 @@ export function Avatar(props: any) {
     getUserInfo().then((res) => {
       let user = res.data;
       setMyInfo(user);
+      setStateMsg(user.msg);
     });
   }, [dispatch, userGiftList]);
 
   const editBtnHandler = () => {
     const blank_pattern = /^\s+|\s+$/g;
     if (blank_pattern.test(stateMsg) === true) {
-      alert("공백 불가");
+      Swal.fire({
+        title: "공백은 안 돼요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
     } else {
       changeMsg(stateMsg).then((res) => {
         let info = res.data;
@@ -132,7 +154,11 @@ export function Avatar(props: any) {
     //msg변경
 
     if (e.target.value === " " || e.target.value === null) {
-      alert("공백 불가");
+      Swal.fire({
+        title: "공백은 안 돼요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
     } else {
       setStateMsg(e.target.value);
     }
@@ -168,14 +194,14 @@ export function Avatar(props: any) {
                 <P>{userGiftList.length}</P>
               </Circle>
               <Circle>
-                <Letter onClick={openAllGiftHandler} />
+                <Letter width="24" fill="white" onClick={openAllGiftHandler} />
               </Circle>
             </CircleBox>
           ) : (
             <MsgBox>
               {editType ? (
                 <>
-                  <input
+                  <Input
                     type="text"
                     maxLength={10}
                     onChange={inputChangeHandler}
@@ -185,6 +211,7 @@ export function Avatar(props: any) {
                     <svg
                       width="24"
                       height="24"
+                      fill="white"
                       xmlns="http://www.w3.org/2000/svg"
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -194,7 +221,7 @@ export function Avatar(props: any) {
                   </MsgEditBtn>
                 </>
               ) : (
-                <p>{myInfo.msg}</p>
+                <MyMsg>{myInfo.msg}</MyMsg>
               )}
             </MsgBox>
           )}
@@ -210,7 +237,7 @@ export function Avatar(props: any) {
                 <P>{otherGift}</P>
               </Circle>
               <Circle onClick={sendGiftHandler}>
-                <Letter />
+                <Letter width="24" fill="white" />
               </Circle>
             </CircleBox>
           ) : (
