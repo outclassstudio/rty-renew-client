@@ -21,14 +21,6 @@ import { ErrMsg } from "./Signup";
 import Loading from "../components/Loading";
 import useDate from "../hooks/useDate";
 
-interface UserInfo {
-  id: string | undefined;
-  nickname: string | undefined;
-  point: number;
-  birth: string | undefined;
-  theme: string | undefined;
-}
-
 interface PwInfo {
   current: string;
   password: string;
@@ -52,7 +44,7 @@ export default function Userinfo() {
   const [activePicker, setActivePicker] = useState(false);
 
   //유저정보 저장
-  const [userInfo, setUserInfo] = useState<UserInfo>({
+  const [userInfo, setUserInfo] = useState<Users.myinfoDTO>({
     id: "",
     nickname: "",
     point: 0,
@@ -79,15 +71,8 @@ export default function Userinfo() {
   //유저정보 불러오기
   useEffect(() => {
     getUserInfo().then((res) => {
-      console.log(res.data, "테마의 정체");
       setIsLoading(false);
-      setUserInfo({
-        id: res.data.id,
-        nickname: res.data.nickname,
-        point: res.data.point,
-        birth: res.data.birth,
-        theme: res.data.theme,
-      });
+      setUserInfo(res.data);
       setNewNickname(res.data.nickname);
     });
   }, []);

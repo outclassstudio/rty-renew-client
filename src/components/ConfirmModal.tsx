@@ -10,6 +10,7 @@ import {
   setMyGift,
   setStorageGift,
 } from "../redux/reducers/spaceReducer";
+import { fadeAction, fadeExpand } from "../style/global";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -18,6 +19,10 @@ export const ModalBackground = styled.div`
   height: 100vh;
   left: 0;
   top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${fadeAction} 0.2s ease-out;
 `;
 
 export const ModalView = styled.div`
@@ -27,12 +32,11 @@ export const ModalView = styled.div`
   position: absolute;
   width: 450px;
   padding: 2rem 1rem 2rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   border-radius: 6px;
   background-color: #efefef;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  animation: ${fadeExpand} 0.2s ease-out;
+
   @media screen and (max-width: 480px) {
     width: 70%;
   }
@@ -45,10 +49,22 @@ export const ContentBox = styled.div`
   justify-content: center;
 `;
 
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+`;
+
 export const Button = styled.button`
   width: 90px;
   height: 40px;
   margin: 5px;
+`;
+
+const Icon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export function ConfirmModal(props: any) {
@@ -110,11 +126,26 @@ export function ConfirmModal(props: any) {
   return (
     <ModalBackground>
       <ModalView>
+        <Icon className="swal2-icon swal2-error swal2-icon-show">
+          <div className="swal2-icon-content">!</div>
+        </Icon>
         <ContentBox>
           <div>
-            <p>{msg} 하시겠습니까?</p>
-            <Button onClick={okModalHandler}>OK</Button>
-            <Button onClick={cancleModalHandler}>NO</Button>
+            <div className="swal2-title">{msg} 하시겠습니까?</div>
+            <BtnWrapper>
+              <Button
+                className="swal2-confirm swal2-styled"
+                onClick={okModalHandler}
+              >
+                OK
+              </Button>
+              <Button
+                className="swal2-deny swal2-styled"
+                onClick={cancleModalHandler}
+              >
+                NO
+              </Button>
+            </BtnWrapper>
           </div>
         </ContentBox>
       </ModalView>

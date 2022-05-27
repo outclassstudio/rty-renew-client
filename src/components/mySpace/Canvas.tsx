@@ -220,6 +220,7 @@ export default function Canvas(props: any) {
           return;
         }
       };
+
       let count = editClickedItem?.data.rotation || 0;
       tool.onKeyDown = (e: any) => {
         console.log("tool1213", e.key);
@@ -295,7 +296,7 @@ export default function Canvas(props: any) {
   }, [
     saveSpace,
     editClickedItem,
-    isConfirmRes,
+    userGiftList,
     isOpenTrash,
     isOpenSave,
     isConfirmRes,
@@ -364,18 +365,15 @@ export default function Canvas(props: any) {
               item.scale(0.15);
             }
             // //! text
-            const pos = new paper.Point(
-              item.position.x + 5,
-              item.position.y - 45
-            );
-            //  pos could really be anything here
+            const pos = new paper.Point(item.position.x, item.position.y - 45);
             const text = new paper.PointText(pos);
             text.justification = "center";
             text.fontWeight = "bold";
-            text.fontSize = 17;
+            text.fontSize = 15;
+            text.fillColor = new paper.Color(1, 1, 1);
+            text.shadowOffset = new paper.Point(1, 1);
+            text.shadowColor = new paper.Color(0, 0, 0);
             text.content = gift.userFrom;
-            //  now use the adjusted drop point to set the center position of text.
-            text.position = pos;
             text.data.type = "name";
             text.data.id = gift.idx;
 
@@ -438,7 +436,7 @@ export default function Canvas(props: any) {
     );
     if (spaceGiftLists.length === 15) {
       Swal.fire({
-        icon: "info",
+        icon: "warning",
         title: `더 이상 추가할 수 없습니다.`,
         text: "최대 15개까지 SPACE에 저장할 수 있습니다.",
         timer: 3000,
@@ -508,16 +506,16 @@ export default function Canvas(props: any) {
         }
 
         // //! text
-        const pos = new paper.Point(item.position.x + 5, item.position.y - 45);
+        const pos = new paper.Point(item.position.x, item.position.y - 45);
         //  pos could really be anything here
         const text = new paper.PointText(pos);
         text.justification = "center";
         text.fontWeight = "bold";
-        text.fontSize = 16;
-
+        text.fontSize = 15;
+        text.fillColor = new paper.Color(1, 1, 1);
+        text.shadowOffset = new paper.Point(1, 1);
+        text.shadowColor = new paper.Color(0, 0, 0);
         text.content = targetItem[0].userFrom;
-        //  now use the adjusted drop point to set the center position of text.
-        text.position = pos;
         text.data.type = "name";
         text.data.id = targetItem[0].idx;
 
