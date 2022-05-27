@@ -54,6 +54,7 @@ export default function GistList() {
                 page={page}
                 handleSetPage={handleSetPage}
                 color={"white"}
+                pageLimit={12}
               />
             </PageNumber>
           </SubContainer>

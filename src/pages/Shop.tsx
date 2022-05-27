@@ -12,11 +12,13 @@ import ViewAllInShopModal from "../components/shop/ViewAllInShopModal";
 export default function Shop() {
   const [img, setImg] = useState<any>([]);
   const [svg, setSvg] = useState<any>([]);
+  const [theme, setTheme] = useState<any>([]);
   const [myIdList, setmyIdList] = useState<any>([]);
   const [myData, setMyData] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [svgModal, setSvgModal] = useState<boolean>(false);
   const [imgModal, setImgModal] = useState<boolean>(false);
+  const [themeModal, setThemeModal] = useState<boolean>(false);
 
   //아이템 및 유저정보 불러와서 세팅 함수
   const handleGetItem = () => {
@@ -33,6 +35,11 @@ export default function Shop() {
         return el.type === "svg";
       });
       setSvg(svg);
+
+      const theme = res.data.filter((el) => {
+        return el.type === "theme";
+      });
+      setTheme(theme);
 
       getMyItems().then((res) => {
         let ids = res.data.map((el: any) => {
@@ -60,6 +67,8 @@ export default function Shop() {
       setSvgModal((prev) => !prev);
     } else if (type === "img") {
       setImgModal((prev) => !prev);
+    } else if (type === "theme") {
+      setThemeModal((prev) => !prev);
     }
   };
 
@@ -106,6 +115,24 @@ export default function Shop() {
               />
             </CarouselWrapper>
           </SubContainer>
+          <SubContainer className="c">
+            <Text>
+              🎪테마 구입하기
+              <img
+                src="https://cdn.discordapp.com/attachments/974114424036155505/978082271208800256/menusgrey.png"
+                alt=""
+                onClick={() => handleActiveViewAll("theme")}
+              />
+            </Text>
+            <CarouselWrapper>
+              <ItemListCarousel
+                myData={myData}
+                myIdList={myIdList}
+                img={theme}
+                handleGetItem={handleGetItem}
+              />
+            </CarouselWrapper>
+          </SubContainer>
           {svgModal ? (
             <ViewAllInShopModal
               myData={myData}
@@ -128,6 +155,17 @@ export default function Shop() {
           ) : (
             ""
           )}
+          {themeModal ? (
+            <ViewAllInShopModal
+              myData={myData}
+              myIdList={myIdList}
+              data={theme}
+              handleActiveViewAll={handleActiveViewAll}
+              handleGetItem={handleGetItem}
+            />
+          ) : (
+            ""
+          )}
         </MainContainer>
       )}
     </Layout>
@@ -141,7 +179,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
 `;
 
 const SubContainer = styled.div`
@@ -155,19 +193,23 @@ const SubContainer = styled.div`
   &.b {
     animation: 0.7s ease-in-out ${fadeMoveActionDelay};
   }
+
+  &.c {
+    animation: 0.8s ease-in-out ${fadeMoveActionDelay};
+  }
 `;
 
 const CarouselWrapper = styled.div`
   box-shadow: rgba(50, 50, 93, 0.3) 0px 0px 15px 0px;
   background: #4c3e9f;
-  padding: 30px 45px 30px 45px;
+  padding: 24px 40px;
 `;
 
 const Text = styled.div`
-  font-size: 25px;
+  font-size: 22px;
   font-weight: bold;
   color: ${colorSet.base};
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;

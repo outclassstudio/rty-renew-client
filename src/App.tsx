@@ -81,7 +81,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          {/* <Route path="/*" element={<Navigate to="/login" />} /> */}
+          {/* <Route path="/*" element={<Navigate to="/" />} /> */}
         </Routes>
       )}
     </Router>

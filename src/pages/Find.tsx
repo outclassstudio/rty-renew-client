@@ -92,7 +92,7 @@ export default function Find() {
   };
 
   return (
-    <Layout title={"다른 사람 공간 방문"}>
+    <Layout title={"친구 찾기"}>
       <SearchBarWrapper onSubmit={handleFindUser}>
         <SubWrapper>
           <SearchBar
@@ -107,30 +107,12 @@ export default function Find() {
             />
           </button>
         </SubWrapper>
-        <Title onClick={handleRandomFind}>새로운 사람을 찾아보고 싶다면?</Title>
+        <Title onClick={handleRandomFind}>새로운 친구를 찾아보고 싶다면?</Title>
       </SearchBarWrapper>
       {isLoading ? (
         <Loading />
       ) : (
         <MainContainer>
-          <SearchBarWrapper onSubmit={handleFindUser}>
-            <SubWrapper>
-              <SearchBar
-                onChange={handleUserIdInput}
-                type="text"
-                placeholder="아이디 또는 닉네임을 입력해주세요"
-              />
-              <button>
-                <img
-                  src="https://cdn.discordapp.com/attachments/974114424036155505/979187559706001428/search_base.png"
-                  alt=""
-                />
-              </button>
-            </SubWrapper>
-            <Title onClick={handleRandomFind}>
-              새로운 사람을 찾아보고 싶다면?
-            </Title>
-          </SearchBarWrapper>
           {resultMsg ? (
             <SearchResult>
               "{searchWord}" 검색어로 {userList.length}개의 검색결과가 있습니다.
@@ -152,6 +134,7 @@ export default function Find() {
                 page={page}
                 handleSetPage={handleSetPage}
                 color={"black"}
+                pageLimit={16}
               />
             </PageNumber>
           )}
@@ -187,7 +170,6 @@ const Title = styled.div`
 `;
 
 const UserBoxWrapper = styled.div`
-  height: 591px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin-top: 15px;
@@ -206,7 +188,6 @@ const SearchBarWrapper = styled.form`
   padding: 12px 20px;
   gap: 10px;
   background: #9e9e9e52;
-  border-radius: 10px;
   color: white;
   margin-bottom: 50px;
   animation: ${fadeAction} 0.6s ease-in-out;

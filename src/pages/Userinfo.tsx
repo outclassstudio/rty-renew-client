@@ -26,6 +26,7 @@ interface UserInfo {
   nickname: string | undefined;
   point: number;
   birth: string | undefined;
+  theme: string | undefined;
 }
 
 interface PwInfo {
@@ -56,6 +57,7 @@ export default function Userinfo() {
     nickname: "",
     point: 0,
     birth: "",
+    theme: undefined,
   });
 
   //비밀번호 변경 정보
@@ -77,12 +79,14 @@ export default function Userinfo() {
   //유저정보 불러오기
   useEffect(() => {
     getUserInfo().then((res) => {
+      console.log(res.data, "테마의 정체");
       setIsLoading(false);
       setUserInfo({
         id: res.data.id,
         nickname: res.data.nickname,
         point: res.data.point,
         birth: res.data.birth,
+        theme: res.data.theme,
       });
       setNewNickname(res.data.nickname);
     });
@@ -135,6 +139,7 @@ export default function Userinfo() {
       point: userInfo.point,
       birth: newBirth,
       nickname: newNickname,
+      themeroute: userInfo.theme,
     };
 
     if (userInfo.nickname === newNickname && userInfo.birth === newBirth) {

@@ -24,7 +24,7 @@ export default function ItemListCarousel({
     dots: false,
     infinite: false,
     speed: 200,
-    slidesToShow: 4,
+    slidesToShow: 6,
     slidesToScroll: 1,
     arrow: true,
     draggable: false,
@@ -186,7 +186,7 @@ const Wrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 217px;
+  width: 146px;
   display: flex;
   flex-direction: column;
   background: white;
@@ -201,8 +201,8 @@ const ImageWrapper = styled.div`
 `;
 
 const SingleImage = styled.img`
-  width: 217px;
-  height: 167px;
+  width: 146px;
+  height: 111px;
   border-radius: 10px 10px 0px 0px;
 `;
 
@@ -211,8 +211,6 @@ const Text = styled.div`
   justify-content: center;
   align-items: center;
   color: white;
-  font-size: 16px;
-  font-weight: bold;
   border-radius: 0px 0px 10px 10px;
 `;
 
@@ -220,10 +218,11 @@ const SubText = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  width: 109px;
-  height: 20px;
-  padding: 14px 0px 14px 0px;
-  font-size: 14px;
+  width: 73px;
+  height: 10px;
+  padding: 12px 0px 12px 0px;
+  font-size: 12px;
+  font-weight: bold;
   cursor: default;
 
   &.a {
@@ -276,8 +275,9 @@ const OverwrapText = styled.div`
   position: fixed;
   color: #ffffff;
   background: #8383839e;
-  width: 217px;
-  height: 167px;
+  width: 146px;
+  height: 111px;
+  font-size: 13px;
   border-radius: 10px 10px 0px 0px;
 
   :hover {

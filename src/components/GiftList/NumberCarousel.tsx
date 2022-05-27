@@ -9,6 +9,7 @@ export default function NumberCarousel({
   page,
   handleSetPage,
   color,
+  pageLimit,
 }: any) {
   //carousel 세팅
   const settings = {
@@ -28,7 +29,7 @@ export default function NumberCarousel({
     if (giftListData.length === 0) {
       numberArr.push(1);
     } else {
-      let length: number = Math.ceil(giftListData.length / 12);
+      let length: number = Math.ceil(giftListData.length / pageLimit);
       for (let i = 1; i <= length; i++) {
         numberArr.push(i);
       }
