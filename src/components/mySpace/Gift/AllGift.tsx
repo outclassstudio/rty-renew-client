@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { BtnBox } from "../Background";
 import { GiftItem } from "./GiftItem";
+import { Gift } from "./Gift";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -60,6 +61,7 @@ export function AllGift(props: any) {
   //All Gift Modal
   const setIsAllGift = props.setIsAllGift;
   //gift 불러오기
+  const [myGiftList, setMyGiftList] = useState([]);
 
   const myGift = useSelector((state: any) => state.spaceReducer.myGift);
 
@@ -75,38 +77,65 @@ export function AllGift(props: any) {
     (state: any) => state.spaceReducer.spaceGiftList
   );
 
-  console.log(
-    "AllGift",
-    myGift,
-    "new",
-    newGiftList,
-    "storage",
-    storageGiftList,
-    " space",
-    spaceGiftList
-  );
+  const [isOpenGift, setIsOpenGift] = useState(false);
+  const [clickedItem, setClickedItem] = useState();
+
+  useEffect(() => {
+    setMyGiftList(myGift);
+  }, []);
+
   useEffect(() => {
     console.log(myGift);
-  }, [myGift, newGiftList, storageGiftList, spaceGiftList]);
+  }, [clickedItem]);
 
   const openModalHandler = () => {
     setIsAllGift(false);
   };
 
+  const AllGiftHandler = () => {
+    setMyGiftList(myGift);
+  };
+
+  const newGiftHandler = () => {
+    setMyGiftList(newGiftList);
+  };
+
+  const spaceGiftHandler = () => {
+    setMyGiftList(spaceGiftList);
+  };
+
+  const storageGiftHandler = () => {
+    setMyGiftList(storageGiftList);
+  };
+
+  const viewGiftHandler = () => {
+    console.log("viewGiftHandler", isOpenGift);
+    setIsOpenGift(!isOpenGift);
+  };
+
   return (
     <>
-      <ModalBackground onClick={openModalHandler}>
+      <ModalBackground>
+        {/*isOpenGift ? <Gift giftItem={clickedItem} /> : null*/}
         <ModalView>
           <BtnBox>
-            <GiftBtn>All</GiftBtn>
-            <GiftBtn>New</GiftBtn>
-            <GiftBtn>Space</GiftBtn>
-            <GiftBtn>Storage</GiftBtn>
+            <GiftBtn onClick={AllGiftHandler}>All</GiftBtn>
+            <GiftBtn onClick={newGiftHandler}>New</GiftBtn>
+            <GiftBtn onClick={spaceGiftHandler}>Space</GiftBtn>
+            <GiftBtn onClick={storageGiftHandler}>Storage</GiftBtn>
+            <GiftBtn onClick={openModalHandler}>닫기</GiftBtn>
           </BtnBox>
           <GiftItemBox>
-            {myGift &&
-              myGift.map((giftInfo: any, idx: number) => {
-                return <GiftItem {...giftInfo} key={idx.toString()} />;
+            {myGiftList &&
+              myGiftList.map((item: any, idx: number) => {
+                return (
+                  <GiftItem
+                    item={item}
+                    key={idx.toString()}
+                    viewGiftHandler={viewGiftHandler}
+                    setClickedItem={setClickedItem}
+                  />
+                );
               })}
           </GiftItemBox>
         </ModalView>

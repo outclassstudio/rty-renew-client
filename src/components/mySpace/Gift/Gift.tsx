@@ -42,20 +42,24 @@ export const Img = styled.img`
 
 export function Gift(props: any) {
   //Gift Modal
-
+  console.log(props, "GIFTTTT");
   //gift 불러오기
   const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
   useEffect(() => {
     console.log(newGiftLists);
   }, [newGiftLists]);
 
+  const giftItem = props.giftItem;
+
   const newGifts = props.item;
   const id = props.id;
 
-  const openGiftArr = newGifts.filter((item: any) => {
-    return item.id === id;
-  });
-  const openGift = openGiftArr[0].gift;
+  const openGiftArr =
+    !giftItem &&
+    newGifts.filter((item: any) => {
+      return item.id === id;
+    });
+  const openGift = openGiftArr && openGiftArr[0].gift;
 
   const closeModalHandler = () => {
     props.setIsOpenGift(false);
@@ -65,13 +69,13 @@ export function Gift(props: any) {
     <>
       <MainWrapper onClick={closeModalHandler}>
         <PrvBoxWrapper>
-          <Text>to. {openGift.userTo}</Text>
-          <Img src={openGift.img} alt="" />
+          <Text>to. {giftItem ? giftItem.userTo : openGift.userTo}</Text>
+          <Img src={giftItem ? giftItem.img : openGift.img} alt="img" />
           <Content>
             <ContentImg>
-              <div>{openGift.content}</div>
+              <div>{giftItem ? giftItem.content : openGift.content}</div>
             </ContentImg>
-            <div>from . {openGift.userFrom}</div>
+            <div>from . {giftItem ? giftItem.userFrom : openGift.userFrom}</div>
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>
@@ -99,7 +103,7 @@ const MainWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 100;
   padding: 0px;
   border-radius: 11px;
   cursor: default;

@@ -78,17 +78,7 @@ export function NewGiftBox(props: any) {
       setNewList(newGiftLists);
     }
 
-    console.log("storageGiftLists", storageGiftLists);
-    // console.log(
-    //   "newGiftBox",
-    //   isOpenGiftBox,
-    //   clickGiftBox,
-    //   newList,
-    //   "   newGiftList,",
-    //   newGiftLists,
-    //   storageList,
-    //   storageGiftLists
-    // );
+    // console.log("storageGiftLists", storageGiftLists);
   }, [newGiftLists, storageGiftLists]);
 
   //newGift icon click modal msg new Gift, data newList
