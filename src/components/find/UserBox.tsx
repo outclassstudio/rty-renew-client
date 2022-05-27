@@ -4,16 +4,29 @@ import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
+import Swal from "sweetalert2";
 
 export default function UserBox({ data }: any) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleVisitOthers = (id: string): void => {
+    if (id === window.localStorage.getItem("id")) {
+      Swal.fire({
+        title: "자신의 페이지는 방문할 수 없어요",
+        icon: "warning",
+        confirmButtonText: "닫기",
+      });
+    } else {
+      navigate(`/visit/${id}`);
+    }
+  };
+
   return (
     <BoxContainer>
       <ThumbnailWrapper>
         <Thumbnail src={data.theme} />
-        <Title>⭐{data.nickname}님</Title>
+        <Title>{data.nickname}님</Title>
       </ThumbnailWrapper>
       <GroupWrapper>
         <Left>
@@ -34,7 +47,7 @@ export default function UserBox({ data }: any) {
               }
               alt=""
               onClick={() => {
-                navigate(`/visit/${data.id}`);
+                handleVisitOthers(data.id);
               }}
             />
           </Icon>

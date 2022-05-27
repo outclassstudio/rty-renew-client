@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { buyItem } from "../../apis/buyApi";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
+import NumberCarousel from "../GiftList/NumberCarousel";
 
 export default function ViewAllInShopModal({
   data,
@@ -13,13 +14,26 @@ export default function ViewAllInShopModal({
   handleGetItem,
 }: any) {
   const [title, setTitle] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(16);
+  const [pageLimit, setPageLimit] = useState<number>(16);
+
+  //번호선택 및 범위지정
+  const handleSetPage = (page: number) => {
+    setStart((page - 1) * 16);
+    setEnd(page * 16);
+    setPage(page);
+  };
 
   //제목설정
   useEffect(() => {
     if (data[0].type === "svg") {
       setTitle("선물상자");
-    } else {
+    } else if (data[0].type === "img") {
       setTitle("이미지");
+    } else {
+      setTitle("테마");
     }
   }, []);
 
@@ -64,14 +78,16 @@ export default function ViewAllInShopModal({
   const handleOpenModal = () => {
     if (data[0].type === "svg") {
       handleActiveViewAll("svg");
-    } else {
+    } else if (data[0].type === "img") {
       handleActiveViewAll("img");
+    } else {
+      handleActiveViewAll("theme");
     }
   };
 
   //아이템 컴포넌트
   const renderItems = () => {
-    return data.map((el: any, idx: number) => {
+    return data.slice(start, end).map((el: any, idx: number) => {
       const mine = myIdList.includes(el.idx);
 
       let url;
@@ -110,6 +126,13 @@ export default function ViewAllInShopModal({
             💡{myData.nickname}님의 포인트 : {myData.point} Point
           </div>
         </PointWrapper>
+        <NumberCarousel
+          giftListData={data}
+          page={page}
+          handleSetPage={handleSetPage}
+          color={"white"}
+          pageLimit={pageLimit}
+        />
         <GridBox>{renderItems()}</GridBox>
         <NormalBtn
           onClick={handleOpenModal}

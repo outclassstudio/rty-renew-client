@@ -13,7 +13,7 @@ const PointWrapper = styled.div`
   box-shadow: rgba(50, 50, 93, 0.3) 0px 0px 15px 0px;
   background: ${colorSet.purple};
   border-radius: 10px;
-  padding: 22px 30px;
+  padding: 18px 30px;
   color: white;
   animation: 0.6s ease-in-out ${fadeAction};
   font-size: 17px;

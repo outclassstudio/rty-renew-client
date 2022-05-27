@@ -14,7 +14,7 @@ export const getUserInfo = async (): Promise<
     });
 };
 
-//나의 정보 조회
+//남의 정보 조회
 export const getOthersInfo = async (
   id: string | undefined
 ): Promise<AxiosResponse<Users.myinfoDTO>> => {

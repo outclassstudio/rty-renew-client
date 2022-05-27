@@ -45,9 +45,10 @@ const ModalTitle = styled.div`
 
 export const ImgContainer = styled.div`
   /* width: 400px; */
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   justify-content: center;
-  flex-direction: row;
+  /* flex-direction: row; */
   padding: 35px 20px;
   gap: 15px;
   background: white;
@@ -86,7 +87,6 @@ export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 25px;
-  margin-bottom: 50px;
   gap: 15px;
 `;
 

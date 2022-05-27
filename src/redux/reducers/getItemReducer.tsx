@@ -28,6 +28,7 @@ const getItemSlice = createSlice({
     setGetSvg(state, action: PayloadAction<getSingleItem[]>) {
       state.svg = action.payload;
     },
+
     deleteStoreItems(state) {
       state.svg = [];
       state.img = [];
