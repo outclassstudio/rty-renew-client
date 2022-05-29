@@ -17,6 +17,7 @@ interface spaceState {
   isOpenTrash: boolean;
   isOpenSave: boolean;
   isCliked: boolean;
+  isRandom: boolean;
 }
 
 interface Myinfo {
@@ -50,6 +51,7 @@ const initialState = {
   storageGiftList: "",
   spaceGiftList: "",
   isCliked: false,
+  isRandom: false,
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -105,6 +107,9 @@ const spaceSlice = createSlice({
     setIsClicked(state, action: PayloadAction<any>) {
       state.isCliked = action.payload;
     },
+    setIsRandom(state, action: PayloadAction<any>) {
+      state.isRandom = action.payload;
+    },
   },
 });
 
@@ -125,5 +130,6 @@ export const {
   setNewGift,
   setSpaceGift,
   setIsClicked,
+  setIsRandom,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;

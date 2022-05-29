@@ -4,6 +4,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setIsOpenTrash } from "../../../redux/reducers/spaceReducer";
+import { ToolTip } from "../../ToolTip";
 
 export const WastebasketIconBox = styled.div`
   width: 150px;
@@ -13,6 +14,9 @@ export const WastebasketIconBox = styled.div`
   margin-left: 1170px;
   z-index: 1;
   cursor: pointer;
+  & :hover {
+    background-color: yellow;
+  }
 `;
 
 export function WastebasketIcon() {
@@ -32,7 +36,13 @@ export function WastebasketIcon() {
     <>
       {isOpenSave ? null : (
         <WastebasketIconBox onClick={clickTrashHandler}>
-          {isOpenTrash ? <TrashOpen width="75" /> : <GarbageTrash width="80" />}
+          <ToolTip>
+            {isOpenTrash ? (
+              <TrashOpen width="75" />
+            ) : (
+              <GarbageTrash width="80" />
+            )}
+          </ToolTip>
         </WastebasketIconBox>
       )}
     </>

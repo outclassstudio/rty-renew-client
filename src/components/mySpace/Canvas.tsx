@@ -10,6 +10,7 @@ import {
   setConfirmRes,
   setIsOpenSave,
   setIsOpenTrash,
+  setIsRandom,
   setMyGift,
   setNewGift,
   setSpaceGift,
@@ -65,6 +66,8 @@ export default function Canvas(props: any) {
   );
   const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
 
+  const isRandom = useSelector((state: any) => state.spaceReducer.isRandom);
+
   const spaceGiftLists = useSelector(
     (state: any) => state.spaceReducer.spaceGiftList
   );
@@ -109,7 +112,13 @@ export default function Canvas(props: any) {
     if (saveSpace && count !== 1) {
       saveSpace12();
     }
-  }, [isEditSpace, isEditMove, saveSpace, count, saveSpace12]);
+  }, [saveSpace, count, saveSpace12]);
+
+  useEffect(() => {
+    if (isRandom) {
+      giftRandomHandler();
+    }
+  }, [isRandom]);
 
   useEffect(() => {
     tool = new paper.Tool();
@@ -713,6 +722,21 @@ export default function Canvas(props: any) {
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  //gift random handler
+  const giftRandomHandler = () => {
+    Paper.project.activeLayer.children.forEach((el) => {
+      const randomX = Math.floor(Math.random() * 1090) + 53;
+
+      const randomY = Math.floor(Math.random() * 680) + 55;
+
+      if (el.data.type !== "name") {
+        el.position.x = randomX;
+        el.position.y = randomY;
+      }
+    });
+    dispatch(setIsRandom(false));
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
