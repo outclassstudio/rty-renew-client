@@ -175,7 +175,16 @@ export default function Space() {
           >
             {editAvatar ? "수정 중" : "나의 메시지 수정"}
           </NormalBtn>
-
+          {editSpace ? (
+            <NormalBtn
+              className={editSpace ? "a" : "b"}
+              width={"300px"}
+              height={"50px"}
+              onClick={randomHandler}
+            >
+              랜덤 배치
+            </NormalBtn>
+          ) : null}
           {editSpace ? (
             <NormalBtn
               className={editSpace ? "b" : "a"}
@@ -195,16 +204,6 @@ export default function Space() {
               나의 공간 수정
             </NormalBtn>
           )}
-          {editSpace ? (
-            <NormalBtn
-              className={editSpace ? "a" : "b"}
-              width={"300px"}
-              height={"50px"}
-              onClick={randomHandler}
-            >
-              랜덤 배치
-            </NormalBtn>
-          ) : null}
         </ThemeBtnBox>
       </MainContainer>
     </Layout>
