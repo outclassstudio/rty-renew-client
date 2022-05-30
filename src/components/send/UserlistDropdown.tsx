@@ -1,11 +1,18 @@
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { FindUserIdUpdate } from "../../redux/reducers/findUserReducer";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
 
-export default function UserlistDropdown({ userList, closeDropdown }: any) {
+export default function UserlistDropdown({
+  userList,
+  closeDropdown,
+  findUserId,
+}: any) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //선택한 아이디로 상태업데이트
   const handleSetToUser = (id: string, nickname: string): void => {
@@ -22,22 +29,32 @@ export default function UserlistDropdown({ userList, closeDropdown }: any) {
     }
   };
 
+  //친구찾기페이지로 전환
+  const handleSeemore = () => {
+    console.log("찾아지나", findUserId);
+    dispatch(FindUserIdUpdate(findUserId));
+    navigate("/find");
+  };
+
   return (
     <>
       <MainWrapper>
-        {userList.length !== 0
-          ? userList.map((el: any, idx: number) => {
-              return (
-                <SingleUser
-                  key={idx}
-                  onClick={() => handleSetToUser(el.id, el.nickname)}
-                >
-                  <span>{el.nickname}</span>
-                  <span>( {el.id} )</span>
-                </SingleUser>
-              );
-            })
-          : ""}
+        <BoxWrapper>
+          {userList.length !== 0
+            ? userList.map((el: any, idx: number) => {
+                return (
+                  <SingleUser
+                    key={idx}
+                    onClick={() => handleSetToUser(el.id, el.nickname)}
+                  >
+                    <span>{el.nickname}</span>
+                    <span>( {el.id} )</span>
+                  </SingleUser>
+                );
+              })
+            : ""}
+        </BoxWrapper>
+        <SingleUser onClick={handleSeemore}>더보기...</SingleUser>
       </MainWrapper>
       <DropdonwBg onClick={closeDropdown}></DropdonwBg>
     </>
@@ -64,6 +81,13 @@ const MainWrapper = styled.div`
   width: 360px;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;
   z-index: 1;
+`;
+
+const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 390px;
+  overflow: hidden;
 `;
 
 const SingleUser = styled.div`
