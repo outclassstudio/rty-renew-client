@@ -13,6 +13,7 @@ import {
   setSpaceGift,
   setStorageGift,
   setUserInfo,
+  setIsRandom,
 } from "../redux/reducers/spaceReducer";
 import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
@@ -126,7 +127,13 @@ export default function Space() {
     setSaveSpace(true);
     setEditSpace(false);
   };
-  console.log("moveeditttt", editMove);
+
+  const randomHandler = () => {
+    //canvas icon random
+    dispatch(setIsRandom(true));
+    console.log("randomHandler", randomHandler);
+  };
+
   return (
     <Layout title={"내 공간"}>
       <MainContainer>
@@ -188,6 +195,16 @@ export default function Space() {
               나의 공간 수정
             </NormalBtn>
           )}
+          {editSpace ? (
+            <NormalBtn
+              className={editSpace ? "a" : "b"}
+              width={"300px"}
+              height={"50px"}
+              onClick={randomHandler}
+            >
+              random
+            </NormalBtn>
+          ) : null}
         </ThemeBtnBox>
       </MainContainer>
     </Layout>

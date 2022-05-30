@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Gift } from "./Gift";
 import styled from "styled-components";
 
 export const ItemBox = styled.div`
@@ -21,18 +23,24 @@ export const P = styled.p`
   color: white;
 `;
 
-export function GiftItem(giftInfo: any) {
-  const svgStr = giftInfo.svg;
+export function GiftItem(props: any) {
+  // const item = props.item;
+
+  const clickBtn = props.viewGiftHandler;
+  const svgStr = props.item.svg;
   const svg = new Blob([svgStr], { type: "image/svg+xml" });
   const url = URL.createObjectURL(svg);
+  props.setClickedItem(props.item);
+
+  const itemClickHandler = () => {};
 
   return (
     <>
       <ItemBox>
-        <ImgBox>
+        <ImgBox onClick={clickBtn}>
           <img src={url} alt="giftItem" />
         </ImgBox>
-        <P>From. {giftInfo.userFrom}</P>
+        <P>From.{props.item.userFrom}</P>
       </ItemBox>
     </>
   );
