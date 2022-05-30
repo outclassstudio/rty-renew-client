@@ -725,9 +725,9 @@ export default function Canvas(props: any) {
   //gift random handler
   const giftRandomHandler = () => {
     Paper.project.activeLayer.children.forEach((el) => {
-      const randomX = Math.floor(Math.random() * 1090) + 53;
+      const randomX = Math.floor(Math.random() * 1090) + 65;
 
-      const randomY = Math.floor(Math.random() * 680) + 55;
+      const randomY = Math.floor(Math.random() * 750) + 65;
 
       if (el.data.type !== "name") {
         el.position.x = randomX;

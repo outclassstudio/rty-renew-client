@@ -4,7 +4,9 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setIsOpenTrash } from "../../../redux/reducers/spaceReducer";
-import { ToolTip } from "../../ToolTip";
+import closeTrash from "../../../assets/images/trashClose.png";
+import openTrash from "../../../assets/images/trashOpen.png";
+import { Img, ImgBox } from "../Storage/Storage";
 
 const ToolTipText = styled("span")({
   width: "240px",
@@ -16,8 +18,8 @@ const ToolTipText = styled("span")({
   padding: "10px",
   position: "absolute",
   zIndex: 1,
-  bottom: "100%",
-  left: "-20%",
+  bottom: "90%",
+  left: "-43%",
   marginLeft: "-60px",
 
   ":after": {
@@ -33,11 +35,9 @@ const ToolTipText = styled("span")({
 });
 
 export const WastebasketIconBox = styled.div`
-  width: 150px;
-  height: 150px;
   position: fixed;
-  margin-top: 205px;
-  margin-left: 1170px;
+  margin-top: 210px;
+  margin-left: 1164px;
   z-index: 2;
   cursor: pointer;
 `;
@@ -80,9 +80,13 @@ export function WastebasketIcon() {
               ) : null}
             </HoverBox>
             {isOpenTrash ? (
-              <TrashOpen width="75" />
+              <ImgBox>
+                <Img src={openTrash} alt="openTrash" title="(쓰레기통)" />
+              </ImgBox>
             ) : (
-              <GarbageTrash width="80" />
+              <ImgBox>
+                <Img src={closeTrash} alt="closeTrash" />
+              </ImgBox>
             )}
           </WastebasketIconBox>
         </>
