@@ -146,7 +146,6 @@ export function Avatar(props: any) {
       });
 
       setEdit(!setEdit);
-      setStateMsg("");
     }
   };
 

@@ -42,7 +42,7 @@ export default function Find() {
 
         if (res.data.length !== 0) {
           setUserList(res.data);
-          setFindUserId("");
+          // setFindUserId("");
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           setUserList([]);
@@ -121,7 +121,7 @@ export default function Find() {
             ""
           )}
           {randomResult ? (
-            <SearchResult>아래 유저의 공간에 방문해보면 어떨까요?</SearchResult>
+            <SearchResult>아래 친구의 공간에 방문해보면 어떨까요?</SearchResult>
           ) : (
             ""
           )}

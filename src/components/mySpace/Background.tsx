@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { userInfo } from "../../redux/actions/index";
 import { changeTheme, getThemeList } from "../../apis/userApi";
 import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
+import NumberCarousel from "../GiftList/NumberCarousel";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -31,6 +31,7 @@ export const ModalView = styled.div`
   background-color: ${colorSet.purple};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   animation: ${fadeExpand} 0.3s ease-in-out;
+  gap: 15px;
 
   @media screen and (max-width: 480px) {
     width: 70%;
@@ -40,7 +41,6 @@ export const ModalView = styled.div`
 const ModalTitle = styled.div`
   color: white;
   font-size: 20px;
-  margin-bottom: 25px;
 `;
 
 export const ImgContainer = styled.div`
@@ -87,6 +87,7 @@ export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 15px;
+  margin-top: 10px;
 `;
 
 export const SaveBtn = styled.button`
@@ -105,13 +106,14 @@ export default function Background() {
   const dispatch = useDispatch();
   const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
   const [themeList, setThemeList] = useState<Array<any>>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(12);
 
   useEffect(() => {
     getThemeList().then((res) => {
       if (res.status === 200) {
         setThemeList(res.data);
-        setIsLoading(true);
       }
     });
   }, []);
@@ -138,12 +140,26 @@ export default function Background() {
     dispatch(setModalOpen(false));
   };
 
+  //번호선택 및 범위지정
+  const handleSetPage = (page: number) => {
+    setStart((page - 1) * 12);
+    setEnd(page * 12);
+    setPage(page);
+  };
+
   return (
     <ModalBackground>
       <ModalView>
         <ModalTitle>🎨테마를 선택해주세요</ModalTitle>
+        <NumberCarousel
+          giftListData={themeList}
+          page={page}
+          handleSetPage={handleSetPage}
+          color={"white"}
+          pageLimit={12}
+        />
         <ImgContainer>
-          {themeList.map((theme, idx) => {
+          {themeList.slice(start, end).map((theme, idx) => {
             return (
               <SelectImg key={idx}>
                 <ImgBox>
