@@ -12,6 +12,7 @@ import {
   setIsOpenSave,
   setStorageGift,
 } from "../../../redux/reducers/spaceReducer";
+import { colorSet } from "../../../style/global";
 
 const ToolTipText = styled("span")({
   width: "240px",
@@ -177,7 +178,9 @@ export function Storage(props: any) {
               />
             </ShowBox>
           )}
-          {isShowStorage ? <StorageICon onClick={isOpenHandler} /> : null}
+          {isShowStorage ? (
+            <StorageICon fill="#ec047a" onClick={isOpenHandler} />
+          ) : null}
         </StorageContainer>
       )}
     </>

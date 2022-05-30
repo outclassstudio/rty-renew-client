@@ -15,6 +15,7 @@ interface Props {
 
 export default function Header({ title }: Props) {
   const navigate = useNavigate();
+
   //서치바 활성화 부분
   const [activeSearch, setActiveSearch] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
@@ -110,7 +111,7 @@ export default function Header({ title }: Props) {
           <SubText
             className={activeClass ? (activeSearch ? "" : "fadeOut") : ""}
           >
-            다른사람의 공간을 방문해보세요 ▶
+            다른 사람 공간 빠르게 찾기 ▶
           </SubText>
         )}
         <SearchBar

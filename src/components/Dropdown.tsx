@@ -22,10 +22,11 @@ export default function Dropdown({ handleActiveDropdown }: any) {
     <MainDiv>
       <Menu className="user">{window.localStorage.getItem("id")}님</Menu>
       <Menu onClick={() => navigate("/")}>내 공간</Menu>
-      <Menu onClick={() => navigate("/send")}>선물보내기</Menu>
-      <Menu onClick={() => navigate("/giftlist")}>보낸선물함</Menu>
+      <Menu onClick={() => navigate("/send")}>선물 보내기</Menu>
+      <Menu onClick={() => navigate("/giftlist")}>보낸 선물함</Menu>
       <Menu onClick={() => navigate("/shop")}>상점</Menu>
-      <Menu onClick={() => navigate("/userinfo")}>나의정보</Menu>
+      <Menu onClick={() => navigate("/find")}>친구 찾기</Menu>
+      <Menu onClick={() => navigate("/userinfo")}>나의 정보</Menu>
       <Menu className="logout" onClick={handleLogout}>
         로그아웃
       </Menu>

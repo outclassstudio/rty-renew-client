@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { buyItem } from "../../apis/buyApi";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
+import NumberCarousel from "../GiftList/NumberCarousel";
 
 export default function ViewAllInShopModal({
   data,
@@ -13,13 +14,26 @@ export default function ViewAllInShopModal({
   handleGetItem,
 }: any) {
   const [title, setTitle] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(16);
+  const [pageLimit, setPageLimit] = useState<number>(16);
+
+  //번호선택 및 범위지정
+  const handleSetPage = (page: number) => {
+    setStart((page - 1) * 16);
+    setEnd(page * 16);
+    setPage(page);
+  };
 
   //제목설정
   useEffect(() => {
     if (data[0].type === "svg") {
       setTitle("선물상자");
-    } else {
+    } else if (data[0].type === "img") {
       setTitle("이미지");
+    } else {
+      setTitle("테마");
     }
   }, []);
 
@@ -64,14 +78,16 @@ export default function ViewAllInShopModal({
   const handleOpenModal = () => {
     if (data[0].type === "svg") {
       handleActiveViewAll("svg");
-    } else {
+    } else if (data[0].type === "img") {
       handleActiveViewAll("img");
+    } else {
+      handleActiveViewAll("theme");
     }
   };
 
   //아이템 컴포넌트
   const renderItems = () => {
-    return data.map((el: any, idx: number) => {
+    return data.slice(start, end).map((el: any, idx: number) => {
       const mine = myIdList.includes(el.idx);
 
       let url;
@@ -84,21 +100,19 @@ export default function ViewAllInShopModal({
       }
 
       return (
-        <Wrapper key={idx}>
-          <ImageWrapper>
-            <SingleImage src={url} alt="" />
-            <Text>
-              <SubText className="a">{el.name}</SubText>
-              <SubText
-                className={mine ? (el.point === 0 ? "b" : "d") : "c"}
-                onClick={() => handleDirectBuy(el)}
-              >
-                {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
-              </SubText>
-            </Text>
-            {mine ? "" : <OverwrapText>미구입상품입니다</OverwrapText>}
-          </ImageWrapper>
-        </Wrapper>
+        <ImageWrapper key={idx}>
+          <SingleImage src={url} alt="" />
+          <Text>
+            <SubText className="a">{el.name}</SubText>
+            <SubText
+              className={mine ? (el.point === 0 ? "b" : "d") : "c"}
+              onClick={() => handleDirectBuy(el)}
+            >
+              {el.point === 0 ? "기본아이템" : `💰${el.point}P`}
+            </SubText>
+          </Text>
+          {mine ? "" : <OverwrapText>미구입상품입니다</OverwrapText>}
+        </ImageWrapper>
       );
     });
   };
@@ -106,8 +120,22 @@ export default function ViewAllInShopModal({
   return (
     <MainWrapper>
       <PrvBoxWrapper>
-        🌈모든 {title} 보기
-        <GridBox>{renderItems()}</GridBox>
+        <PointWrapper>
+          <div>🌈모든 {title} 보기</div>
+          <div>
+            💡{myData.nickname}님의 포인트 : {myData.point} Point
+          </div>
+        </PointWrapper>
+        <NumberCarousel
+          giftListData={data}
+          page={page}
+          handleSetPage={handleSetPage}
+          color={"white"}
+          pageLimit={pageLimit}
+        />
+        <GridWrapper>
+          <GridBox>{renderItems()}</GridBox>
+        </GridWrapper>
         <NormalBtn
           onClick={handleOpenModal}
           className="b"
@@ -149,18 +177,42 @@ const MainWrapper = styled.div`
 const PrvBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   background: ${colorSet.purple};
+  height: 750px;
   color: white;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
-  padding: 25px 15px;
+  padding: 22px 37px;
   border-radius: 11px;
-  gap: 20px;
+  gap: 10px;
   font-weight: bold;
   font-size: 20px;
   z-index: 2;
   animation: 0.2s ease-out ${fadeExpand};
+`;
+
+const PointWrapper = styled.div`
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  div:nth-child(1) {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  div:nth-child(2) {
+    font-size: 13px;
+    font-weight: 300;
+  }
+`;
+
+const GridWrapper = styled.div`
+  height: 582px;
+  margin-bottom: 10px;
 `;
 
 const GridBox = styled.div`
@@ -168,11 +220,7 @@ const GridBox = styled.div`
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   align-items: center;
-  gap: 10px;
-`;
-
-const Wrapper = styled.div`
-  padding: 3px 10px 3px 15px;
+  gap: 20px;
 `;
 
 const ImageWrapper = styled.div`

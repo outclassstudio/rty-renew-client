@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Space from "./pages/Space";
 import Signup from "./pages/Signup";
@@ -6,6 +11,9 @@ import Userinfo from "./pages/Userinfo";
 import Send from "./pages/Send";
 import GiftList from "./pages/GiftList";
 import Visit from "./pages/Visit";
+import Find from "./pages/Find";
+import Shop from "./pages/Shop";
+import NotFound from "./pages/NotFound";
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -14,7 +22,6 @@ import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
 import { setMyGift } from "./redux/reducers/spaceReducer";
 import { getGift } from "./apis/giftApi";
-import Shop from "./pages/Shop";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -66,11 +73,15 @@ function App() {
           <Route path="/send" element={<Send />} />
           <Route path="/giftlist" element={<GiftList />} />
           <Route path="/visit/:id" element={<Visit />} />
+          <Route path="/find" element={<Find />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/notfound" element={<NotFound />} />
         </Routes>
       ) : (
         <Routes>
-          <Route path="/*" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/*" element={<Login />} />
         </Routes>
       )}
     </Router>

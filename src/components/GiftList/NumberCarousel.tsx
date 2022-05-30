@@ -8,6 +8,8 @@ export default function NumberCarousel({
   giftListData,
   page,
   handleSetPage,
+  color,
+  pageLimit,
 }: any) {
   //carousel 세팅
   const settings = {
@@ -27,7 +29,7 @@ export default function NumberCarousel({
     if (giftListData.length === 0) {
       numberArr.push(1);
     } else {
-      let length: number = Math.ceil(giftListData.length / 12);
+      let length: number = Math.ceil(giftListData.length / pageLimit);
       for (let i = 1; i <= length; i++) {
         numberArr.push(i);
       }
@@ -41,6 +43,7 @@ export default function NumberCarousel({
           }}
           key={idx}
           className={el === page ? "selected" : ""}
+          color={color}
         >
           {el}
         </SingleNumber>
@@ -62,9 +65,7 @@ const CarouselWrapper = styled.div`
 
 const SingleNumber = styled.div`
   cursor: pointer;
-  color: white;
-  display: flex;
-  align-items: center;
+  color: ${(props) => props.color};
   margin: 0px 2px 5px 2px;
   font-size: 14px;
   font-family: "Jua", sans-serif;
