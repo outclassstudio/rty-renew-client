@@ -12,7 +12,8 @@ import {
   setIsOpenSave,
   setStorageGift,
 } from "../../../redux/reducers/spaceReducer";
-import { colorSet } from "../../../style/global";
+import openBox from "../../../assets/images/openBox.png";
+import closeBox from "../../../assets/images/closeBox.png";
 
 const ToolTipText = styled("span")({
   width: "240px",
@@ -24,8 +25,8 @@ const ToolTipText = styled("span")({
   padding: "10px",
   position: "absolute",
   zIndex: 1,
-  bottom: "100%",
-  left: "-2%",
+  bottom: "90%",
+  left: "-43%",
   marginLeft: "-60px",
   ":after": {
     content: '""',
@@ -75,6 +76,16 @@ export const StorageContainer = styled.div`
 export const ShowBox = styled.div``;
 
 export const HoverBox = styled.div``;
+
+export const ImgBox = styled.div`
+  width: 75px;
+  height: 75px;
+  margin-top: 20px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+`;
 
 export function Storage(props: any) {
   const dispatch = useDispatch();
@@ -139,9 +150,13 @@ export function Storage(props: any) {
                   ) : null}
                 </HoverBox>
                 {isOpenSave ? (
-                  <OpenBox width="85" fill="white" onClick={clickBoxHandler} />
+                  <ImgBox onClick={clickBoxHandler}>
+                    <Img src={openBox} alt="OpenBox" />
+                  </ImgBox>
                 ) : (
-                  <CloseBox fill="white" onClick={clickBoxHandler} />
+                  <ImgBox onClick={clickBoxHandler}>
+                    <Img src={closeBox} alt="closeBox" />
+                  </ImgBox>
                 )}
               </StorageContainer>
             </>

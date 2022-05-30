@@ -202,7 +202,7 @@ export default function Space() {
               height={"50px"}
               onClick={randomHandler}
             >
-              random
+              랜덤 배치
             </NormalBtn>
           ) : null}
         </ThemeBtnBox>
