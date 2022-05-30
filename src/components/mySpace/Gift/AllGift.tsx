@@ -82,6 +82,7 @@ export default function AllGift(props: any) {
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(12);
+  const [currentGiftStatus, setCurrentGiftStatus] = useState<string>("all");
 
   //번호선택 및 범위지정
   const handleSetPage = (page: number) => {
@@ -126,18 +127,22 @@ export default function AllGift(props: any) {
 
   const AllGiftHandler = () => {
     setMyGiftList(myGift);
+    setCurrentGiftStatus("all");
   };
 
   const newGiftHandler = () => {
     setMyGiftList(newGiftList);
+    setCurrentGiftStatus("new");
   };
 
   const spaceGiftHandler = () => {
     setMyGiftList(spaceGiftList);
+    setCurrentGiftStatus("space");
   };
 
   const storageGiftHandler = () => {
     setMyGiftList(storageGiftList);
+    setCurrentGiftStatus("storage");
   };
 
   const viewGiftHandler = () => {
@@ -152,7 +157,7 @@ export default function AllGift(props: any) {
         <BtnBox>
           <NormalBtn
             onClick={AllGiftHandler}
-            className="b"
+            className={currentGiftStatus === "all" ? "b" : "a"}
             width={"110px"}
             height={"40px"}
           >
@@ -160,7 +165,7 @@ export default function AllGift(props: any) {
           </NormalBtn>
           <NormalBtn
             onClick={newGiftHandler}
-            className="c"
+            className={currentGiftStatus === "new" ? "b" : "a"}
             width={"110px"}
             height={"40px"}
           >
@@ -168,7 +173,7 @@ export default function AllGift(props: any) {
           </NormalBtn>
           <NormalBtn
             onClick={spaceGiftHandler}
-            className="c"
+            className={currentGiftStatus === "space" ? "b" : "a"}
             width={"110px"}
             height={"40px"}
           >
@@ -176,7 +181,7 @@ export default function AllGift(props: any) {
           </NormalBtn>
           <NormalBtn
             onClick={storageGiftHandler}
-            className="c"
+            className={currentGiftStatus === "storage" ? "b" : "a"}
             width={"110px"}
             height={"40px"}
           >

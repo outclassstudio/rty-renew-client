@@ -70,7 +70,11 @@ export default function FindUser() {
           placeholder="아이디 또는 닉네임을 입력해주세요"
         />
         {activeDropdown ? (
-          <UserlistDropdown userList={userList} closeDropdown={closeDropdown} />
+          <UserlistDropdown
+            userList={userList}
+            closeDropdown={closeDropdown}
+            findUserId={findUserId}
+          />
         ) : (
           ""
         )}
