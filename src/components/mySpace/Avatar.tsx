@@ -59,7 +59,7 @@ export const H3 = styled.div`
   color: white;
   font-family: "Hanna", sans-serif;
   text-shadow: 1px 1px 0px black;
-  font-size: 18px;
+  font-size: 16px;
   word-break: break-all;
 `;
 
@@ -241,7 +241,7 @@ export function Avatar(props: any) {
             </CircleBox>
           ) : (
             <MsgBox>
-              <p>{otherUser.msg}</p>
+              <MyMsg>{otherUser.msg}</MyMsg>
             </MsgBox>
           )}
           <MyAvatar onClick={clickAvatarHandler} />
