@@ -197,7 +197,7 @@ export default function Space() {
           )}
           {editSpace ? (
             <NormalBtn
-              className={editSpace ? "b" : "a"}
+              className={editSpace ? "a" : "b"}
               width={"300px"}
               height={"50px"}
               onClick={randomHandler}

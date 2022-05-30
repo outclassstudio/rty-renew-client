@@ -69,6 +69,7 @@ export const StorageContainer = styled.div`
   margin-left: 1165px;
   cursor: pointer;
   user-select: none;
+  z-index: 1;
 `;
 
 export const ShowBox = styled.div``;

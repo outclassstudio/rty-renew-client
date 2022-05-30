@@ -38,7 +38,7 @@ export const WastebasketIconBox = styled.div`
   position: fixed;
   margin-top: 205px;
   margin-left: 1170px;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
 `;
 

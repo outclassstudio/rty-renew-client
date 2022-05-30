@@ -15,6 +15,7 @@ export const NewGiftContainer = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+  z-index: 0;
 `;
 
 export const ItemContainer = styled.div`

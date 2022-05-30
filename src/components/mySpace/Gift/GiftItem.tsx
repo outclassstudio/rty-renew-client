@@ -40,11 +40,7 @@ export function GiftItem(props: any) {
         <ImgBox onClick={clickBtn}>
           <img src={url} alt="giftItem" />
         </ImgBox>
-<<<<<<< HEAD
         <P>From.{props.item.userFrom}</P>
-=======
-        <P>From. {giftInfo.userFrom}</P>
->>>>>>> 415179685243a5157ad8679fd8e3fcd4269f1fbd
       </ItemBox>
     </>
   );

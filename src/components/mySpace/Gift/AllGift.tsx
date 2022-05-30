@@ -118,7 +118,7 @@ export default function AllGift(props: any) {
 
   useEffect(() => {
     console.log(myGift);
-  }, [clickedItem]);
+  }, [myGiftList]);
 
   const openModalHandler = () => {
     setIsAllGift(false);
@@ -146,66 +146,73 @@ export default function AllGift(props: any) {
   };
 
   return (
-    <>
-<<<<<<< HEAD
-      <ModalBackground>
-        {/*isOpenGift ? <Gift giftItem={clickedItem} /> : null*/}
-=======
-      <ModalContainer>
->>>>>>> 415179685243a5157ad8679fd8e3fcd4269f1fbd
-        <ModalView>
-          🎁받은 선물 리스트
-          <BtnBox>
-<<<<<<< HEAD
-            <GiftBtn onClick={AllGiftHandler}>All</GiftBtn>
-            <GiftBtn onClick={newGiftHandler}>New</GiftBtn>
-            <GiftBtn onClick={spaceGiftHandler}>Space</GiftBtn>
-            <GiftBtn onClick={storageGiftHandler}>Storage</GiftBtn>
-            <GiftBtn onClick={openModalHandler}>닫기</GiftBtn>
-=======
-            <NormalBtn className="b" width={"110px"} height={"40px"}>
-              All
-            </NormalBtn>
-            <NormalBtn className="c" width={"110px"} height={"40px"}>
-              New
-            </NormalBtn>
-            <NormalBtn className="c" width={"110px"} height={"40px"}>
-              Space
-            </NormalBtn>
-            <NormalBtn className="c" width={"110px"} height={"40px"}>
-              Storage
-            </NormalBtn>
->>>>>>> 415179685243a5157ad8679fd8e3fcd4269f1fbd
-          </BtnBox>
-          <NumberCarousel
-            giftListData={myGift}
-            page={page}
-            handleSetPage={handleSetPage}
-            color={"white"}
-            pageLimit={12}
-          />
-          <GiftItemBox>
-<<<<<<< HEAD
-            {myGiftList &&
-              myGiftList.map((item: any, idx: number) => {
-                return (
-                  <GiftItem
-                    item={item}
-                    key={idx.toString()}
-                    viewGiftHandler={viewGiftHandler}
-                    setClickedItem={setClickedItem}
-                  />
-                );
-=======
-            {myGift &&
-              myGift.slice(start, end).map((giftInfo: any, idx: number) => {
-                return <GiftItem {...giftInfo} key={idx.toString()} />;
->>>>>>> 415179685243a5157ad8679fd8e3fcd4269f1fbd
-              })}
-          </GiftItemBox>
-        </ModalView>
-        <ModalBackground onClick={openModalHandler}></ModalBackground>
-      </ModalContainer>
-    </>
+    <ModalContainer>
+      <ModalView>
+        🎁받은 선물 리스트
+        <BtnBox>
+          <NormalBtn
+            onClick={AllGiftHandler}
+            className="b"
+            width={"110px"}
+            height={"40px"}
+          >
+            All
+          </NormalBtn>
+          <NormalBtn
+            onClick={newGiftHandler}
+            className="c"
+            width={"110px"}
+            height={"40px"}
+          >
+            New
+          </NormalBtn>
+          <NormalBtn
+            onClick={spaceGiftHandler}
+            className="c"
+            width={"110px"}
+            height={"40px"}
+          >
+            Space
+          </NormalBtn>
+          <NormalBtn
+            onClick={storageGiftHandler}
+            className="c"
+            width={"110px"}
+            height={"40px"}
+          >
+            Storage
+          </NormalBtn>
+          <NormalBtn
+            onClick={openModalHandler}
+            className="c"
+            width={"110px"}
+            height={"40px"}
+          >
+            닫기
+          </NormalBtn>
+        </BtnBox>
+        <NumberCarousel
+          giftListData={myGiftList}
+          page={page}
+          handleSetPage={handleSetPage}
+          color={"white"}
+          pageLimit={12}
+        />
+        <GiftItemBox>
+          {myGiftList &&
+            myGiftList.slice(start, end).map((item: any, idx: number) => {
+              return (
+                <GiftItem
+                  item={item}
+                  key={idx.toString()}
+                  viewGiftHandler={viewGiftHandler}
+                  setClickedItem={setClickedItem}
+                />
+              );
+            })}
+        </GiftItemBox>
+      </ModalView>
+      <ModalBackground onClick={openModalHandler}></ModalBackground>
+    </ModalContainer>
   );
 }
