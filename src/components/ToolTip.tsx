@@ -8,8 +8,6 @@ const ToolTipBox = styled.div`
   & :hover{
     visibility: "visible",
   },
- 
-
 `;
 
 const ToolTipText = styled("span")({
