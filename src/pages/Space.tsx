@@ -29,20 +29,31 @@ export const SpaceContainer = styled.div`
 export const ThemeBtnBox = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 30px;
   user-select: none;
+  margin-top: 20px;
 `;
 
 export const Button = styled.button`
   width: 290px;
-  height: 70px;
-  margin: 15px;
+  height: 60px;
   cursor: pointer;
-  background: darkorange;
-  border-radius: 10px;
+  background: #194470;
+  border-radius: 5px;
   border: transparent;
   font-size: medium;
+  font-weight: 500;
+  font-size: 17px;
+  color: #fff;
+  border: 4px solid #194470;
+  margin-right: 20px;
+  color: #f9f9f;
+  &:hover {
+    box-shadow: 0 0 40px 40px #fff inset;
+    color: #194470;
+  }
+  &.cliked {
+    background: #7c8eff;
+  }
 `;
 
 export const InfoBox = styled.div`
@@ -159,50 +170,22 @@ export default function Space() {
           ) : null}
         </SpaceContainer>
         <ThemeBtnBox>
-          <NormalBtn
-            className="a"
-            width={"300px"}
-            height={"50px"}
-            onClick={changeThemeHandler}
-          >
-            테마 변경
-          </NormalBtn>
-          <NormalBtn
-            className="a"
-            width={"300px"}
-            height={"50px"}
-            onClick={editAvatarHandler}
-          >
+          <Button onClick={changeThemeHandler}>테마 변경</Button>
+          <Button onClick={editAvatarHandler}>
             {editAvatar ? "수정 중" : "나의 메시지 수정"}
-          </NormalBtn>
+          </Button>
           {editSpace ? (
-            <NormalBtn
-              className={editSpace ? "a" : "b"}
-              width={"300px"}
-              height={"50px"}
-              onClick={randomHandler}
-            >
-              랜덤 배치
-            </NormalBtn>
+            <Button onClick={randomHandler}>랜덤 배치</Button>
           ) : null}
           {editSpace ? (
-            <NormalBtn
-              className={editSpace ? "b" : "a"}
-              width={"300px"}
-              height={"50px"}
+            <Button
+              className={editSpace ? "cliked" : ""}
               onClick={saveSpaceHandler}
             >
               완료
-            </NormalBtn>
+            </Button>
           ) : (
-            <NormalBtn
-              className={editSpace ? "b" : "a"}
-              width={"300px"}
-              height={"50px"}
-              onClick={editSpaceHandler}
-            >
-              나의 공간 수정
-            </NormalBtn>
+            <Button onClick={editSpaceHandler}>나의 공간 수정</Button>
           )}
         </ThemeBtnBox>
       </MainContainer>

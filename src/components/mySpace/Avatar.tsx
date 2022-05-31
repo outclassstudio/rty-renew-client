@@ -16,20 +16,34 @@ export const AvatarBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
+  position: absolute;
   margin-top: 170px;
   margin-right: -23px;
-  width: 160px;
+  width: 240px;
+  height: 365px;
   user-select: none;
+  top: 54px;
+  left: 930px;
+  @media screen and (max-width: 1600px) {
+    top: 54px;
+    left: 606px;
+  }
+  @media screen and (max-width: 1200px) {
+    top: 54px;
+    left: 406px;
+  }
+  @media screen and (max-width: 720px) {
+    top: 54px;
+    left: 206px;
+  }
 `;
 
 export const MsgBox = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  /* min-width: 160px; */
-  height: 45px;
-  background-color: ${colorSet.purple};
+  height: 50px;
+  background-color: #3a0ca3;
   border-radius: 15px;
   margin: 10px;
   padding: 0px 10px;
@@ -59,31 +73,78 @@ export const H3 = styled.div`
   color: white;
   font-family: "Hanna", sans-serif;
   text-shadow: 1px 1px 0px black;
-  font-size: 16px;
+  font-size: 21px;
   word-break: break-all;
 `;
 
 export const Input = styled.input`
-  width: 130px;
+  border-radius: 4px;
+  width: 147px;
   font-size: 13px;
-  /* margin: 2px; */
+  margin-right: 20px;
+  background: transparent;
+  height: 30px;
 `;
 
 export const Circle = styled.div`
   display: flex;
   justify-content: center;
-  width: 40px;
+  width: 55px;
   margin: 3px;
   border-radius: 50%;
   background: #00d3d3;
   align-items: center;
   cursor: pointer;
   padding-left: 1px;
+  &:hover {
+    outline: 0;
+    box-shadow: 0 0 40px 40px #f13838 inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
 `;
 
 const MyMsg = styled.div`
-  min-width: 130px;
-  font-size: 13px;
+  align-items: center;
+  font-size: 22px;
+  display: flex;
+  font-weight: 900;
+`;
+
+const ArrowBox = styled.div`
+  display: flex;
+  position: relative;
+  background: #a4b0ff;
+  border: 4px solid #194470;
+  width: 240px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  height: 70px;
+  color: #fff;
+  :after,
+  :before {
+    top: 101%;
+    left: 50%;
+    border: solid transparent;
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  :after {
+    border-color: rgba(136, 183, 213, 0);
+    border-top-color: #a4b0ff;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  :before {
+    border-color: rgba(194, 225, 245, 0);
+    border-top-color: #194470;
+    border-width: 16px;
+    margin-left: -16px;
+  }
 `;
 
 export const P = styled.div`
@@ -96,10 +157,24 @@ export const P = styled.div`
   margin-bottom: 2px;
 `;
 
+export const EditBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+`;
+
 export const CircleBox = styled.div`
   display: flex;
-  height: 45px;
+  height: 60px;
   margin: 10px;
+`;
+export const ContentBox = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 250px;
+  height: 100px;
+  align-items: center;
 `;
 
 export function Avatar(props: any) {
@@ -187,43 +262,51 @@ export function Avatar(props: any) {
     <>
       {myInfo && !otherUser ? (
         <AvatarBox>
-          {isClickedAvatar ? (
-            <CircleBox>
-              <Circle>
-                <P>{userGiftList.length}</P>
-              </Circle>
-              <Circle>
-                <Letter width="24" fill="white" onClick={openAllGiftHandler} />
-              </Circle>
-            </CircleBox>
-          ) : (
-            <MsgBox>
-              {editType ? (
-                <>
-                  <Input
-                    type="text"
-                    maxLength={10}
-                    onChange={inputChangeHandler}
-                    value={stateMsg}
+          <ContentBox>
+            {isClickedAvatar ? (
+              <CircleBox>
+                <Circle>
+                  <P>{userGiftList.length}</P>
+                </Circle>
+                <Circle>
+                  <Letter
+                    width="24"
+                    fill="white"
+                    onClick={openAllGiftHandler}
                   />
-                  <MsgEditBtn onClick={editBtnHandler}>
-                    <svg
-                      width="24"
-                      height="24"
-                      fill="white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                    >
-                      <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
-                    </svg>
-                  </MsgEditBtn>
-                </>
-              ) : (
-                <MyMsg>{myInfo.msg}</MyMsg>
-              )}
-            </MsgBox>
-          )}
+                </Circle>
+              </CircleBox>
+            ) : (
+              <ArrowBox>
+                {editType ? (
+                  <>
+                    <EditBox>
+                      <Input
+                        type="text"
+                        maxLength={10}
+                        onChange={inputChangeHandler}
+                        value={stateMsg}
+                      />
+                      <MsgEditBtn onClick={editBtnHandler}>
+                        <svg
+                          width="24"
+                          height="24"
+                          fill="white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                        >
+                          <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
+                        </svg>
+                      </MsgEditBtn>
+                    </EditBox>
+                  </>
+                ) : (
+                  <MyMsg>{myInfo.msg}</MyMsg>
+                )}
+              </ArrowBox>
+            )}
+          </ContentBox>
           <MyAvatar onClick={clickAvatarHandler} />
           <H3>내 이름은 {myInfo.nickname}!!</H3>
         </AvatarBox>

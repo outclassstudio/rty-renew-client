@@ -9,15 +9,18 @@ export const ItemBox = styled.div`
   flex-direction: column;
   width: 140px;
   height: 130px;
+
+  padding: 5px;
 `;
 
 export const ImgBox = styled.div`
-  width: 90px;
+  width: 75px;
   height: 90px;
+  margin-bottom: 5px;
 `;
 
 export const P = styled.p`
-  margin-top: 10px;
+  margin: 1px;
   font-size: 14px;
   font-weight: bold;
   color: white;
@@ -30,6 +33,7 @@ export function GiftItem(props: any) {
   const svgStr = props.item.svg;
   const svg = new Blob([svgStr], { type: "image/svg+xml" });
   const url = URL.createObjectURL(svg);
+  const date = props.item.date.substr(0, 10);
   props.setClickedItem(props.item);
 
   const itemClickHandler = () => {};
@@ -41,6 +45,7 @@ export function GiftItem(props: any) {
           <img src={url} alt="giftItem" />
         </ImgBox>
         <P>From.{props.item.userFrom}</P>
+        <P>{date}</P>
       </ItemBox>
     </>
   );

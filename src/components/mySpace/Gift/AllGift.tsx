@@ -30,38 +30,50 @@ const ModalBackground = styled.div`
   z-index: 3;
 `;
 
+const SelectBox = styled.select`
+  background: transparent;
+  border: 1px sole;
+  border: 1px solid #fff;
+  border-radius: 0.6em;
+  color: #fff;
+  height: 40px;
+  font-weight: 500;
+`;
+
 export const ModalView = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
   position: absolute;
-  width: 700px;
-  height: 600px;
+  width: 650px;
+  height: 580px;
   padding: 2rem 1rem 2rem;
-  border-radius: 10px;
-  border-radius: 6px;
-  background-color: ${colorSet.purple};
+  border-radius: 26px;
+  background-color: #194470;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   color: white;
   font-size: 20px;
   z-index: 4;
-
-  @media screen and (max-width: 480px) {
-    width: 70%;
-  }
 `;
 
 export const GiftItemBox = styled.div`
   display: grid;
   margin-top: 50px;
   max-width: 700px;
-  margin: 0 auto;
-  /* display: grid; */
-  grid-template-columns: repeat(4, 1fr);
+  margin: 30px 0 0 0;
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  gap: 25px;
-  padding: 0 20px;
+  gap: 35px;
+  padding: 15px;
+  background: #04315e;
+  border-radius: 5px;
+  overflow: hidden;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 // export const Img = styled.img`
@@ -69,12 +81,58 @@ export const GiftItemBox = styled.div`
 //   height: 100%;
 // `;
 
-export const GiftBtn = styled.button`
-  width: 89px;
+export const GiftAllBtn = styled.button`
+  width: 100px;
   height: 40px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #f13838;
+  border-radius: 0.6em;
+  color: #f9f9f9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #f13838 inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
+`;
+
+export const GiftBtn = styled.button`
+  width: 100px;
+  height: 40px;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #7c8eff;
+  border-radius: 0.6em;
+  color: #f9f9f9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #7c8eff inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
 `;
 
 export default function AllGift(props: any) {
@@ -93,7 +151,8 @@ export default function AllGift(props: any) {
   //All Gift Modal
   const setIsAllGift = props.setIsAllGift;
   //gift 불러오기
-  const [myGiftList, setMyGiftList] = useState([]);
+  const [myGiftList, setMyGiftList] = useState<Array<any>>([]);
+  const [selected, setSelected] = useState("");
 
   const myGift = useSelector((state: any) => state.spaceReducer.myGift);
 
@@ -117,7 +176,7 @@ export default function AllGift(props: any) {
   }, []);
 
   useEffect(() => {
-    console.log(myGift);
+    console.log("myGift", myGiftList);
   }, [myGiftList]);
 
   const openModalHandler = () => {
@@ -125,19 +184,39 @@ export default function AllGift(props: any) {
   };
 
   const AllGiftHandler = () => {
-    setMyGiftList(myGift);
+    if (selected === "old") {
+      const oldList = [...myGift].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(myGift);
+    }
   };
 
   const newGiftHandler = () => {
-    setMyGiftList(newGiftList);
+    if (selected === "old") {
+      const oldList = [...newGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(newGiftList);
+    }
   };
 
   const spaceGiftHandler = () => {
-    setMyGiftList(spaceGiftList);
+    if (selected === "old") {
+      const oldList = [...spaceGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(spaceGiftList);
+    }
   };
 
   const storageGiftHandler = () => {
-    setMyGiftList(storageGiftList);
+    if (selected === "old") {
+      const oldList = [...storageGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(storageGiftList);
+    }
   };
 
   const viewGiftHandler = () => {
@@ -145,62 +224,54 @@ export default function AllGift(props: any) {
     setIsOpenGift(!isOpenGift);
   };
 
+  const onChangeHandler = (e: any) => {
+    setSelected(e.target.value);
+    if (e.target.value === "new") {
+      const copyList = [...myGiftList];
+      const newList = [...copyList].reverse();
+      setMyGiftList(newList);
+    } else if (e.target.value === "old") {
+      const copyList = [...myGiftList];
+      const oldList = [...copyList].reverse();
+      setMyGiftList(oldList);
+    }
+  };
+
   return (
     <ModalContainer>
       <ModalView>
         🎁받은 선물 리스트
         <BtnBox>
-          <NormalBtn
-            onClick={AllGiftHandler}
-            className="b"
-            width={"110px"}
-            height={"40px"}
-          >
+          <GiftAllBtn onClick={AllGiftHandler} className="all">
             All
-          </NormalBtn>
-          <NormalBtn
-            onClick={newGiftHandler}
-            className="c"
-            width={"110px"}
-            height={"40px"}
-          >
+          </GiftAllBtn>
+          <GiftBtn onClick={newGiftHandler} className="c">
             New
-          </NormalBtn>
-          <NormalBtn
-            onClick={spaceGiftHandler}
-            className="c"
-            width={"110px"}
-            height={"40px"}
-          >
+          </GiftBtn>
+          <GiftBtn onClick={spaceGiftHandler} className="c">
             Space
-          </NormalBtn>
-          <NormalBtn
-            onClick={storageGiftHandler}
-            className="c"
-            width={"110px"}
-            height={"40px"}
-          >
+          </GiftBtn>
+          <GiftBtn onClick={storageGiftHandler} className="c">
             Storage
-          </NormalBtn>
-          <NormalBtn
-            onClick={openModalHandler}
-            className="c"
-            width={"110px"}
-            height={"40px"}
-          >
+          </GiftBtn>
+          <SelectBox onChange={onChangeHandler} value={selected}>
+            <option value="new">최신순</option>
+            <option value="old">오래된순</option>
+          </SelectBox>
+          {/*   <GiftBtn onClick={openModalHandler} className="c">
             닫기
-          </NormalBtn>
+  </GiftBtn>*/}
         </BtnBox>
-        <NumberCarousel
+        {/*    <NumberCarousel
           giftListData={myGiftList}
           page={page}
           handleSetPage={handleSetPage}
           color={"white"}
           pageLimit={12}
-        />
+  />*/}
         <GiftItemBox>
           {myGiftList &&
-            myGiftList.slice(start, end).map((item: any, idx: number) => {
+            myGiftList.map((item: any, idx: number) => {
               return (
                 <GiftItem
                   item={item}

@@ -4,8 +4,6 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { getGift } from "../../../apis/giftApi";
 import { ReactComponent as StorageICon } from "../../../assets/images/svg/storage.svg";
-import { ReactComponent as OpenBox } from "../../../assets/images/svg/openBox.svg";
-import { ReactComponent as CloseBox } from "../../../assets/images/svg/closeBox.svg";
 import {
   setClickGiftBox,
   setOpenGiftBox,
@@ -18,7 +16,7 @@ import closeBox from "../../../assets/images/closeBox.png";
 const ToolTipText = styled("span")({
   width: "240px",
   height: "80px",
-  backgroundColor: "blue",
+  backgroundColor: "#92B4EC",
   color: "#fff",
   textAlign: "center",
   borderRadius: "6px",
@@ -26,23 +24,24 @@ const ToolTipText = styled("span")({
   position: "absolute",
   zIndex: 1,
   bottom: "90%",
-  left: "-43%",
+  left: "-46%",
   marginLeft: "-60px",
+  border: "5px solid #194470",
   ":after": {
     content: '""',
     position: "absolute",
     top: "100%",
-    left: "50%",
+    left: "45%",
     marginLeft: "-5px",
-    borderWidth: "5px",
+    borderWidth: "15px",
     borderStyle: "solid",
-    borderColor: "blue transparent transparent transparent",
+    borderColor: "#194470 transparent transparent transparent",
   },
 });
 
 const ToolTipText1 = styled("span")({
   width: "180px",
-  backgroundColor: "blue",
+  backgroundColor: "#92B4EC",
   color: "#fff",
   textAlign: "center",
   borderRadius: "6px",
@@ -52,15 +51,17 @@ const ToolTipText1 = styled("span")({
   bottom: "120%",
   left: "-2%",
   marginLeft: "-60px",
+  border: "5px solid #194470",
+
   ":after": {
     content: '""',
     position: "absolute",
-    top: "100%",
+    top: "102%",
     left: "32%",
     marginLeft: "-5px",
-    borderWidth: "5px",
+    borderWidth: "15px",
     borderStyle: "solid",
-    borderColor: "blue transparent transparent transparent",
+    borderColor: "#194470 transparent transparent transparent",
   },
 });
 
@@ -164,6 +165,7 @@ export function Storage(props: any) {
         </>
       ) : (
         <StorageContainer
+          onClick={isShowHandler}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
@@ -181,7 +183,6 @@ export function Storage(props: any) {
                 src={
                   "https://cdn.discordapp.com/attachments/974114424036155505/978184305668923402/minus.png"
                 }
-                onClick={isShowHandler}
               />
             </ShowBox>
           ) : (
@@ -190,12 +191,11 @@ export function Storage(props: any) {
                 src={
                   "https://cdn.discordapp.com/attachments/974114424036155505/978184305916403762/plus.png"
                 }
-                onClick={isShowHandler}
               />
             </ShowBox>
           )}
           {isShowStorage ? (
-            <StorageICon fill="#ec047a" onClick={isOpenHandler} />
+            <StorageICon fill="#f13838" onClick={isOpenHandler} />
           ) : null}
         </StorageContainer>
       )}
