@@ -30,38 +30,50 @@ const ModalBackground = styled.div`
   z-index: 3;
 `;
 
+const SelectBox = styled.select`
+  background: transparent;
+  border: 1px sole;
+  border: 1px solid #fff;
+  border-radius: 0.6em;
+  color: #fff;
+  height: 40px;
+  font-weight: 500;
+`;
+
 export const ModalView = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
   position: absolute;
-  width: 700px;
-  height: 600px;
+  width: 650px;
+  height: 580px;
   padding: 2rem 1rem 2rem;
-  border-radius: 10px;
-  border-radius: 6px;
-  background-color: ${colorSet.purple};
+  border-radius: 26px;
+  background-color: #194470;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   color: white;
   font-size: 20px;
   z-index: 4;
-
-  @media screen and (max-width: 480px) {
-    width: 70%;
-  }
 `;
 
 export const GiftItemBox = styled.div`
   display: grid;
   margin-top: 50px;
   max-width: 700px;
-  margin: 0 auto;
-  /* display: grid; */
-  grid-template-columns: repeat(4, 1fr);
+  margin: 30px 0 0 0;
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  gap: 25px;
-  padding: 0 20px;
+  gap: 35px;
+  padding: 15px;
+  background: #04315e;
+  border-radius: 5px;
+  overflow: hidden;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 // export const Img = styled.img`
@@ -69,12 +81,72 @@ export const GiftItemBox = styled.div`
 //   height: 100%;
 // `;
 
-export const GiftBtn = styled.button`
-  width: 89px;
+export const GiftAllBtn = styled.button`
+  width: 100px;
   height: 40px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: ${(props) =>
+    props.itemProp === "all" ? "#f13838" : "transparent"};
+  border: 2px solid #f13838;
+  border-radius: 0.6em;
+  color: #f9f9f9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #f13838 inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
+`;
+
+export const GiftBtn = styled.button`
+  width: 100px;
+  height: 40px;
+  box-sizing: border-box;
+  appearance: none;
+
+  border: 2px solid #7c8eff;
+  border-radius: 0.6em;
+  color: #f9f9f9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #7c8eff inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
+
+  &.space {
+    background-color: ${(props) =>
+      props.itemProp === "space" ? "#7c8eff" : "transparent"};
+  }
+  &.storage {
+    background-color: ${(props) =>
+      props.itemProp === "storage" ? "#7c8eff" : "transparent"};
+  }
+  &.new {
+    background-color: ${(props) =>
+      props.itemProp === "new" ? "#7c8eff" : "transparent"};
+  }
 `;
 
 export default function AllGift(props: any) {
@@ -94,7 +166,9 @@ export default function AllGift(props: any) {
   //All Gift Modal
   const setIsAllGift = props.setIsAllGift;
   //gift 불러오기
-  const [myGiftList, setMyGiftList] = useState([]);
+  const [myGiftList, setMyGiftList] = useState<Array<any>>([]);
+  const [selected, setSelected] = useState("");
+  const [selectedItem, setSelectedItem] = useState("");
 
   const myGift = useSelector((state: any) => state.spaceReducer.myGift);
 
@@ -118,31 +192,51 @@ export default function AllGift(props: any) {
   }, []);
 
   useEffect(() => {
-    console.log(myGift);
-  }, [myGiftList]);
+    console.log("myGift", myGiftList);
+  }, [myGiftList, selected]);
 
   const openModalHandler = () => {
     setIsAllGift(false);
   };
 
   const AllGiftHandler = () => {
-    setMyGiftList(myGift);
-    setCurrentGiftStatus("all");
+    if (selected === "old") {
+      const oldList = [...myGift].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(myGift);
+    }
+    setSelectedItem("all");
   };
 
   const newGiftHandler = () => {
-    setMyGiftList(newGiftList);
-    setCurrentGiftStatus("new");
+    if (selected === "old") {
+      const oldList = [...newGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(newGiftList);
+    }
+    setSelectedItem("new");
   };
 
   const spaceGiftHandler = () => {
-    setMyGiftList(spaceGiftList);
-    setCurrentGiftStatus("space");
+    if (selected === "old") {
+      const oldList = [...spaceGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(spaceGiftList);
+    }
+    setSelectedItem("space");
   };
 
   const storageGiftHandler = () => {
-    setMyGiftList(storageGiftList);
-    setCurrentGiftStatus("storage");
+    if (selected === "old") {
+      const oldList = [...storageGiftList].reverse();
+      setMyGiftList(oldList);
+    } else {
+      setMyGiftList(storageGiftList);
+    }
+    setSelectedItem("storage");
   };
 
   const viewGiftHandler = () => {
@@ -150,62 +244,70 @@ export default function AllGift(props: any) {
     setIsOpenGift(!isOpenGift);
   };
 
+  const onChangeHandler = (e: any) => {
+    setSelected(e.target.value);
+    if (e.target.value === "new") {
+      const copyList = [...myGiftList];
+      const newList = [...copyList].reverse();
+      setMyGiftList(newList);
+    } else if (e.target.value === "old") {
+      const copyList = [...myGiftList];
+      const oldList = [...copyList].reverse();
+      setMyGiftList(oldList);
+    }
+  };
+
   return (
     <ModalContainer>
       <ModalView>
         🎁받은 선물 리스트
         <BtnBox>
-          <NormalBtn
+          <GiftAllBtn
             onClick={AllGiftHandler}
-            className={currentGiftStatus === "all" ? "b" : "a"}
-            width={"110px"}
-            height={"40px"}
+            className="all"
+            itemProp={selectedItem}
           >
             All
-          </NormalBtn>
-          <NormalBtn
+          </GiftAllBtn>
+          <GiftBtn
             onClick={newGiftHandler}
-            className={currentGiftStatus === "new" ? "b" : "a"}
-            width={"110px"}
-            height={"40px"}
+            className="new"
+            itemProp={selectedItem}
           >
             New
-          </NormalBtn>
-          <NormalBtn
+          </GiftBtn>
+          <GiftBtn
             onClick={spaceGiftHandler}
-            className={currentGiftStatus === "space" ? "b" : "a"}
-            width={"110px"}
-            height={"40px"}
+            className="space"
+            itemProp={selectedItem}
           >
             Space
-          </NormalBtn>
-          <NormalBtn
+          </GiftBtn>
+          <GiftBtn
             onClick={storageGiftHandler}
-            className={currentGiftStatus === "storage" ? "b" : "a"}
-            width={"110px"}
-            height={"40px"}
+            className="storage"
+            itemProp={selectedItem}
           >
             Storage
-          </NormalBtn>
-          <NormalBtn
-            onClick={openModalHandler}
-            className="c"
-            width={"110px"}
-            height={"40px"}
-          >
+          </GiftBtn>
+          <SelectBox onChange={onChangeHandler} value={selected}>
+            <option value="new">최신순</option>
+            <option value="old">오래된순</option>
+          </SelectBox>
+          {/*   <GiftBtn onClick={openModalHandler} className="c">
             닫기
-          </NormalBtn>
+  </GiftBtn>*/}
         </BtnBox>
-        <NumberCarousel
+        {/*    <NumberCarousel
           giftListData={myGiftList}
           page={page}
           handleSetPage={handleSetPage}
           color={"white"}
           pageLimit={12}
-        />
+  />*/}
         <GiftItemBox>
           {myGiftList &&
-            myGiftList.slice(start, end).map((item: any, idx: number) => {
+            myGiftList.map((item: any, idx: number) => {
               return (
                 <GiftItem
                   item={item}

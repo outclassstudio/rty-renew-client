@@ -25,10 +25,9 @@ export const ModalView = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  /* width: 600px; */
-  padding: 25px 40px 25px 40px;
+  padding: 25px;
   border-radius: 10px;
-  background-color: ${colorSet.purple};
+  background-color: #194470;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   animation: ${fadeExpand} 0.3s ease-in-out;
   gap: 15px;
@@ -44,20 +43,18 @@ const ModalTitle = styled.div`
 `;
 
 export const ImgContainer = styled.div`
-  /* width: 400px; */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
-  /* flex-direction: row; */
-  padding: 35px 20px;
+  padding: 20px;
   gap: 15px;
   background: white;
-  /* border-radius: 10px; */
+  border-radius: 10px;
 `;
 
 export const ImgBox = styled.div`
   width: 160px;
-  height: 120px;
+  height: 150px;
   margin: 0 5px 5px 5px;
   border-radius: 5px;
 `;
@@ -91,15 +88,45 @@ export const BtnBox = styled.div`
 `;
 
 export const SaveBtn = styled.button`
-  width: 60px;
-  padding: 5px;
+  width: 80px;
+  padding: 10px;
   margin: 2px;
+  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #fff;
+  font-weight: 700;
+  color: #fff;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #7c8eff inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
 `;
 
 export const CloseBtn = styled.button`
-  padding: 5px;
-  width: 60px;
+  width: 80px;
+  padding: 10px;
   margin: 2px;
+  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #fff;
+  font-weight: 700;
+  color: #fff;
+  &:hover {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #7c8eff inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
 `;
 
 export default function Background() {
@@ -114,6 +141,7 @@ export default function Background() {
     getThemeList().then((res) => {
       if (res.status === 200) {
         setThemeList(res.data);
+        console.log(themeList, "themeList", res.data);
       }
     });
   }, []);
@@ -151,13 +179,16 @@ export default function Background() {
     <ModalBackground>
       <ModalView>
         <ModalTitle>🎨테마를 선택해주세요</ModalTitle>
-        <NumberCarousel
-          giftListData={themeList}
-          page={page}
-          handleSetPage={handleSetPage}
-          color={"white"}
-          pageLimit={12}
-        />
+        {themeList.length > 4 ? (
+          <NumberCarousel
+            giftListData={themeList}
+            page={page}
+            handleSetPage={handleSetPage}
+            color={"white"}
+            pageLimit={12}
+          />
+        ) : null}
+
         <ImgContainer>
           {themeList.slice(start, end).map((theme, idx) => {
             return (
@@ -179,22 +210,8 @@ export default function Background() {
           })}
         </ImgContainer>
         <BtnBox>
-          <NormalBtn
-            className="c"
-            width={"80px"}
-            height={"30px"}
-            onClick={changeThemeHandler}
-          >
-            저장
-          </NormalBtn>
-          <NormalBtn
-            className="b"
-            width={"80px"}
-            height={"30px"}
-            onClick={closeThemeHandler}
-          >
-            닫기
-          </NormalBtn>
+          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
+          <CloseBtn onClick={closeThemeHandler}>닫기</CloseBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>
