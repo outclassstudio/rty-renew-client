@@ -1,5 +1,3 @@
-import { ReactComponent as GarbageTrash } from "../../../assets/images/svg/trashClose.svg";
-import { ReactComponent as TrashOpen } from "../../../assets/images/svg/trashOpen.svg";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
@@ -54,9 +52,7 @@ export function WastebasketIcon() {
 
   const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
 
-  useEffect(() => {
-    console.log("isHover", isHover);
-  }, [isHover]);
+  useEffect(() => {}, [isHover]);
 
   const clickTrashHandler = () => {
     dispatch(setIsOpenTrash(!isOpenTrash));

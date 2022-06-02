@@ -37,7 +37,6 @@ export function GiftItem(props: any) {
   const url = URL.createObjectURL(svg);
   const date = props.item.date.substr(0, 10);
 
-  console.log("item", props.item);
   const visitHandler = () => {
     navigate(`/visit/${props.item.userFrom}`);
   };

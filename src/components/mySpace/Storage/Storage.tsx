@@ -96,14 +96,7 @@ export function Storage(props: any) {
   const [isHover, setIsHover] = useState(false);
   const [isShowStorage, setIsShowStorage] = useState<Boolean>(false);
   //get Item status가 storage인것만 가져오기
-  useEffect(() => {
-    // getGift().then((res) => {
-    //   const allData = res.data;
-    //   const storageData = allData.filter((el) => el.status === "storage");
-    //   console.log(isShowStorage, "storageData", allData);
-    //   setStorageList(storageData);
-    // });
-  }, [isShowStorage, isHover]);
+  useEffect(() => {}, [isShowStorage, isHover]);
 
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox

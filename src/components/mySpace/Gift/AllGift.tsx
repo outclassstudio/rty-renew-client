@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { NormalBtn } from "../../../style/btnStyle.style";
-import { colorSet } from "../../../style/global";
-import NumberCarousel from "../../GiftList/NumberCarousel";
 import { BtnBox } from "../Background";
 import { GiftItem } from "./GiftItem";
-import { Gift } from "./Gift";
 
 export const ModalContainer = styled.div`
   position: fixed;
@@ -75,11 +71,6 @@ export const GiftItemBox = styled.div`
     display: none;
   }
 `;
-
-// export const Img = styled.img`
-//   width: 100%;
-//   height: 100%;
-// `;
 
 export const GiftAllBtn = styled.button`
   width: 100px;
@@ -150,19 +141,6 @@ export const GiftBtn = styled.button`
 `;
 
 export default function AllGift(props: any) {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-  const [start, setStart] = useState<number>(0);
-  const [end, setEnd] = useState<number>(12);
-  const [currentGiftStatus, setCurrentGiftStatus] = useState<string>("all");
-
-  //번호선택 및 범위지정
-  const handleSetPage = (page: number) => {
-    setStart((page - 1) * 12);
-    setEnd(page * 12);
-    setPage(page);
-  };
-
   //All Gift Modal
   const setIsAllGift = props.setIsAllGift;
   //gift 불러오기
@@ -185,15 +163,12 @@ export default function AllGift(props: any) {
   );
 
   const [isOpenGift, setIsOpenGift] = useState(false);
-  const [clickedItem, setClickedItem] = useState();
 
   useEffect(() => {
     setMyGiftList(myGift);
   }, []);
 
-  useEffect(() => {
-    console.log("myGift", myGiftList);
-  }, [myGiftList, selected]);
+  useEffect(() => {}, [myGiftList, selected]);
 
   const openModalHandler = () => {
     setIsAllGift(false);
@@ -240,7 +215,6 @@ export default function AllGift(props: any) {
   };
 
   const viewGiftHandler = () => {
-    console.log("viewGiftHandler", isOpenGift);
     setIsOpenGift(!isOpenGift);
   };
 
@@ -313,7 +287,6 @@ export default function AllGift(props: any) {
                   item={item}
                   key={idx.toString()}
                   viewGiftHandler={viewGiftHandler}
-                  setClickedItem={setClickedItem}
                 />
               );
             })}

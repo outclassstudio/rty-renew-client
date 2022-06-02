@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { changeTheme, getThemeList } from "../../apis/userApi";
 import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
-import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 import NumberCarousel from "../GiftList/NumberCarousel";
 
@@ -141,7 +140,6 @@ export default function Background() {
     getThemeList().then((res) => {
       if (res.status === 200) {
         setThemeList(res.data);
-        console.log(themeList, "themeList", res.data);
       }
     });
   }, []);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Paper from "paper";
-import { DragEvent, useCallback, useEffect, useRef, useState } from "react";
+import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Gift } from "./Gift/Gift";
 import Background from "./Background";
@@ -11,20 +11,15 @@ import {
   setIsOpenSave,
   setIsOpenTrash,
   setIsRandom,
-  setMyGift,
   setNewGift,
   setSpaceGift,
   setStorageGift,
 } from "../../redux/reducers/spaceReducer";
-import { changeGift, deleteGift, changeGiftPosition } from "../../apis/giftApi";
-import { Color, PointText, projects, tool } from "paper/dist/paper-core";
+import { changeGift, changeGiftPosition } from "../../apis/giftApi";
 import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
 import { Storage } from "./Storage/Storage";
 import NewGiftIcon from "./NewGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
-import { debug } from "console";
-import { colorSet } from "../../style/global";
-type Color = "red" | "orange" | "yellow";
 
 export const CanvasBox = styled.div`
   margin-top: 50px;
@@ -47,7 +42,7 @@ export default function Canvas(props: any) {
 
   const isEditSpace = props.editSpace;
   const spaceGiftList = props.giftList;
-  const isEditMove = props.editMove;
+
   const saveSpace = props.saveSpace;
   const [count, setCount] = useState<number>(1);
   const [msg, setMsg] = useState<string>("");
@@ -84,7 +79,6 @@ export default function Canvas(props: any) {
   const [selected, setSelected] = useState<any>();
 
   let tool: paper.Tool;
-  console.log("spaceGiftLists", spaceGiftLists);
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
@@ -124,7 +118,6 @@ export default function Canvas(props: any) {
     tool = new paper.Tool();
     tool.activate();
 
-    console.log("tool", tool);
     if (saveSpace && count >= 1) {
       //  importSvg();
       Paper.project.activeLayer.children.forEach((el) => {
@@ -232,8 +225,6 @@ export default function Canvas(props: any) {
 
       let count = editClickedItem?.data.rotation || 0;
       tool.onKeyDown = (e: any) => {
-        console.log("tool1213", e.key);
-
         //let path = editClickedItem;
         if (e.key === "right") {
           var center: any = editClickedItem.bounds.center;
@@ -252,7 +243,6 @@ export default function Canvas(props: any) {
           if (count === 4) {
             count = 0;
           }
-          console.log(editClickedItem.data.rotation, count, "rotation");
         }
       };
 
@@ -311,59 +301,14 @@ export default function Canvas(props: any) {
     isConfirmRes,
   ]);
 
-  console.log(
-    "canvas",
-    "props",
-    props,
-    "selecotr",
-    "userInfo",
-    userInfo,
-    "userGiftList",
-    userGiftList
-  );
-  console.log("spacelist", spaceGiftList.length, spaceGiftLists.length);
-  //! test isOpenTrash
-
-  //! test save
-
-  //! test tiger
-  // const tiger = () => {
-  //   const url = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/106114/tiger.svg`;
-  //   let a;
-  //   Paper.project.importSVG(url, function (item: any) {
-  //     a = item;
-  //     a.scale(0.2);
-  //     a.position = new paper.Point(
-  //       a.bounds.width + 500 / 2,
-  //       a.bounds.height + 800 / 2
-  //     );
-  //     console.log("aa", a.bounds.top);
-  //     var pos = new paper.Point(a.bounds.top);
-  //     // pos could really be anything here
-  //     var text = new paper.PointText(pos);
-  //     text.justification = "center";
-  //     text.fontWeight = "bold";
-  //     text.fontSize = 24;
-
-  //     text.content = "save";
-  //     // now use the adjusted drop point to set the center position
-  //     // of text.
-  //     text.position = pos;
-  //   });
-  // };
-
-  //유저정보 불러오기
-
   //! space에 저장된 선물 불러오기
   function importSvg() {
     if (match.length <= spaceGiftLists.length) {
       spaceGiftLists.forEach((gift: any) => {
-        console.log(gift.svgAttr, "attr");
         const svgAttr = JSON.parse(gift.svgAttr);
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
             let obj = { id: item.id, gift: gift };
-            console.log("svgAttr", svgAttr);
             match.push(obj);
             item.data.idx = gift.idx;
             item.position = new Paper.Point(svgAttr.x, svgAttr.y);
@@ -392,7 +337,6 @@ export default function Canvas(props: any) {
 
             const rotateNum = Number(svgAttr.rotation);
             item.data.rotation = rotateNum;
-            console.log(rotateNum, "rotateNum");
             //! rotate
             // for (let i = 0; i < rotateNum; i++) {
             //  item.rotation(90);
@@ -437,12 +381,7 @@ export default function Canvas(props: any) {
   const dropHandler = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(
-      "drop spacelist",
-      "spacelist",
-      spaceGiftList.length,
-      spaceGiftLists
-    );
+
     if (spaceGiftLists.length === 15) {
       Swal.fire({
         icon: "warning",
@@ -752,12 +691,7 @@ export default function Canvas(props: any) {
     match.forEach((el: any) => {
       activeLayer.forEach((layer) => {
         if (el.id === layer.id) {
-          //console.log("fnsdklnfkl", layer.data.rotation);
           const svgAttr = JSON.parse(el.gift.svgAttr);
-          // if (layer.data.rotation) {
-          //   console.log("fnsdklnfkl", layer);
-          //   el.gift.svgAttr.rotation = layer.data.rotation;
-          // }
 
           if (
             svgAttr.x !== layer.position.x ||
@@ -795,7 +729,6 @@ export default function Canvas(props: any) {
     } else {
       changeGiftPosition(MoveArr).then((res) => {
         if (res.status === 200) {
-          console.log(res, "changeGiftPosition", MoveArr);
           //바뀐 위치 이름 포지션도 바꿔주자
         }
       });

@@ -84,7 +84,6 @@ export default function Space() {
       setMyInfo(user);
       dispatch(setUserInfo(user));
     });
-    console.log("spapce", userGiftList);
 
     if (userGiftList) {
       const newGift = userGiftList.filter(
@@ -112,7 +111,6 @@ export default function Space() {
     // dispatch(setMyGift(gift));
   }, [dispatch, userGiftList]);
 
-  console.log("new", newGiftList, "space", spaceGiftList, "myInfo", myInfo);
   //change Theme
   const changeThemeHandler = () => {
     dispatch(setModalOpen(true));
@@ -131,7 +129,6 @@ export default function Space() {
   };
 
   const saveSpaceHandler = () => {
-    console.log("clickssss");
     setSaveSpace(true);
     setEditSpace(false);
   };
@@ -139,7 +136,6 @@ export default function Space() {
   const randomHandler = () => {
     //canvas icon random
     dispatch(setIsRandom(true));
-    console.log("randomHandler", randomHandler);
   };
 
   return (

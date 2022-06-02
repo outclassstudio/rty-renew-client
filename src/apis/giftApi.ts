@@ -43,7 +43,6 @@ export const changeGift = (
   return apiClient()
     .patch(`/gift/${data.idx}`, data)
     .then((res) => {
-      console.log(res, "giftres");
       return res;
     });
 };
@@ -55,7 +54,6 @@ export const changeGiftPosition = (
   return apiClient()
     .patch("/gift/update", data)
     .then((res) => {
-      console.log(res, "changeGiftPosition");
       return res;
     });
 };

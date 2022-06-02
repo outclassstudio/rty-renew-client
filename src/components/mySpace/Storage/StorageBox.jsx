@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import StorageItem from "./StorageItem";
 
 export const NewGiftContainer = styled.div`
@@ -24,12 +22,8 @@ export const ItemContainer = styled.div`
   align-items: center;
 `;
 export function StorageBox(props) {
-  const storageHandler = props.setIsOpenStorage;
   const storageList = props.storageList;
-  console.log("storageList", storageList);
-  const closeModalHandler = () => {
-    storageHandler(false);
-  };
+
   return (
     <>
       <NewGiftContainer>
