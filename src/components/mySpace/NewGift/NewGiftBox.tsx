@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import NewGiftItem from "./NewGiftItem";
 import { useEffect, useState } from "react";
-import StorageItem from "../Storage/StorageItem";
-import { getGift } from "../../../apis/giftApi";
 import { colorSet, fadeSlide } from "../../../style/global";
 
 export const NewGiftContainer = styled.div`
@@ -77,8 +75,6 @@ export function NewGiftBox(props: any) {
       setStorageList(storageGiftLists);
       setNewList(newGiftLists);
     }
-
-    // console.log("storageGiftLists", storageGiftLists);
   }, [newGiftLists, storageGiftLists]);
 
   //newGift icon click modal msg new Gift, data newList

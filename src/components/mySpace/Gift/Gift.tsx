@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { colorSet, fadeAction, fadeExpand } from "../../../style/global";
 
 export const ModalBackground = styled.div`
@@ -42,12 +42,10 @@ export const Img = styled.img`
 
 export function Gift(props: any) {
   //Gift Modal
-  console.log(props, "GIFTTTT");
+
   //gift 불러오기
   const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  useEffect(() => {
-    console.log(newGiftLists);
-  }, [newGiftLists]);
+  useEffect(() => {}, [newGiftLists]);
 
   const giftItem = props.giftItem;
 

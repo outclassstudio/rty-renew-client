@@ -51,9 +51,6 @@ export default function NewGift() {
   //선물함을 클릭하면 선물함 리스트 컴포넌트가 보인다.
   const dispatch = useDispatch();
 
-  const isOpenGift = useSelector(
-    (state: any) => state.spaceReducer.isOpenNewGift
-  );
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
@@ -69,7 +66,6 @@ export default function NewGift() {
 
   useEffect(() => {
     setNewList(newGiftLists);
-    console.log("newGifticon", newGiftLists, giftLists, newList);
   }, []);
 
   useEffect(() => {
@@ -77,7 +73,6 @@ export default function NewGift() {
   }, [newGiftList, isOpenGiftBox]);
 
   const openGiftHandler = () => {
-    console.log("clickopenGiftHandler");
     getGift().then((res) => {
       const storge = res.data.filter((el) => el.status === "new");
       dispatch(setNewGift(storge));
@@ -90,7 +85,6 @@ export default function NewGift() {
     <div>
       <GiftIconBox>
         <>
-          {console.log("newGifticon", newList.lengtht)}
           <GiftCount>{newList.length}</GiftCount>
           <NewGifIcon1 onClick={openGiftHandler} />
         </>

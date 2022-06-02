@@ -149,7 +149,6 @@ export default function Signup() {
           });
         })
         .catch((err) => {
-          console.log("에러메시지", err);
           Swal.fire({
             title: "입력을 확인해주세요",
             text: `${err.response.data}`,

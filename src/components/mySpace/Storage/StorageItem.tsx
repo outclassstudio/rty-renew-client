@@ -15,7 +15,6 @@ export const ItemP = styled.p`
 
 const StorageItem = (props: any) => {
   const data = props.item;
-  console.log(data, "data");
   const svgStr = data.svg;
   const svg = new Blob([svgStr], { type: "image/svg+xml" });
   const url = URL.createObjectURL(svg);

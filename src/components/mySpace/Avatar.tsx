@@ -5,7 +5,6 @@ import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
 import { changeMsg, getUserInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { colorSet } from "../../style/global";
 import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import AllGift from "./Gift/AllGift";
@@ -15,26 +14,12 @@ export const AvatarBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
+  position: fixed;
   margin-top: 170px;
   margin-right: -23px;
   width: 170px;
   height: 365px;
   user-select: none;
-  top: 54px;
-  left: 890px;
-  @media screen and (max-width: 1600px) {
-    top: 54px;
-    left: 606px;
-  }
-  @media screen and (max-width: 1200px) {
-    top: 54px;
-    left: 406px;
-  }
-  @media screen and (max-width: 720px) {
-    top: 54px;
-    left: 206px;
-  }
 `;
 
 export const MsgBox = styled.div`
@@ -243,7 +228,6 @@ export function Avatar(props: any) {
   };
 
   const sendGiftHandler = () => {
-    console.log("other user send click", otherUser);
     // 클릭한 유저에게 선물 보내기 페이지 라우팅
 
     navigate("/send", { state: otherUser.id });

@@ -78,7 +78,6 @@ export function ConfirmModal(props: any) {
   const msg = props.msg;
   // const setIsConfirmRes = props.setIsConfirmRes;
   const okModalHandler = () => {
-    console.log("okokok", changeData, msg);
     //dispatch(setConfirmRes(true));
     //기능 수행 후 모달 해제
     if (msg === "저장") {
@@ -100,7 +99,6 @@ export function ConfirmModal(props: any) {
 
       deleteGift(changeData).then((res) => {
         if (res.status === 200) {
-          console.log("okokok", "delete");
           dispatch(setMyGift(res.data));
           dispatch(setConfirmModal(false));
           dispatch(setIsOpenTrash(!isOpenTrash));
@@ -110,7 +108,6 @@ export function ConfirmModal(props: any) {
   };
 
   const cancleModalHandler = () => {
-    console.log("nono");
     if (msg === "저장") {
       dispatch(setConfirmRes(false));
       dispatch(setIsOpenSave(!isOpenSave));

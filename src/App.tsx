@@ -43,7 +43,6 @@ function App() {
           setIsGift(true);
         }
       });
-      console.log("userGiftResApp");
     }
   };
 
