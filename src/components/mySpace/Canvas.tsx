@@ -413,7 +413,7 @@ export default function Canvas(props: any) {
       return el.idx === Number(targetId);
     });
 
-    const x = e.clientX - 320;
+    const x = e.clientX - 420;
     const y = e.clientY - 100;
     const targetSvg = targetItem[0].svg;
 
