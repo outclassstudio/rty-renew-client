@@ -15,11 +15,8 @@ import {
   setUserInfo,
   setIsRandom,
 } from "../redux/reducers/spaceReducer";
-import { userInfo } from "../redux/actions";
 import { useSelector } from "react-redux";
-import { NormalBtn } from "../style/btnStyle.style";
 import { fadeAction } from "../style/global";
-import React from "react";
 
 export const SpaceContainer = styled.div`
   display: flex;
@@ -43,10 +40,10 @@ export const Button = styled.button`
   font-size: medium;
   font-weight: 500;
   font-size: 17px;
-  color: #fff;
+  color: white;
   border: 4px solid #194470;
   margin-right: 20px;
-  color: #f9f9f;
+
   &:hover {
     box-shadow: 0 0 40px 40px #fff inset;
     color: #194470;

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { userInfo } from "../../redux/actions/index";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
 import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
 import { changeMsg, getUserInfo } from "../../apis/userApi";
@@ -23,7 +22,7 @@ export const AvatarBox = styled.div`
   height: 365px;
   user-select: none;
   top: 54px;
-  left: 990px;
+  left: 890px;
   @media screen and (max-width: 1600px) {
     top: 54px;
     left: 606px;
@@ -73,7 +72,7 @@ export const H3 = styled.div`
   color: white;
   font-family: "Hanna", sans-serif;
   text-shadow: 1px 1px 0px black;
-  font-size: 21px;
+  font-size: 17px;
   word-break: break-all;
 `;
 
@@ -216,7 +215,6 @@ export function Avatar(props: any) {
       changeMsg(stateMsg).then((res) => {
         let info = res.data;
         setMyInfo(info);
-        dispatch(userInfo(info));
         setIsEditBtn(false);
       });
 
