@@ -19,11 +19,11 @@ export const AvatarBox = styled.div`
   position: absolute;
   margin-top: 170px;
   margin-right: -23px;
-  width: 240px;
+  width: 170px;
   height: 365px;
   user-select: none;
   top: 54px;
-  left: 930px;
+  left: 990px;
   @media screen and (max-width: 1600px) {
     top: 54px;
     left: 606px;
@@ -313,20 +313,22 @@ export function Avatar(props: any) {
       ) : null}
       {otherUser ? (
         <AvatarBox>
-          {isClickedAvatar ? (
-            <CircleBox>
-              <Circle>
-                <P>{otherGift}</P>
-              </Circle>
-              <Circle onClick={sendGiftHandler}>
-                <Letter width="24" fill="white" />
-              </Circle>
-            </CircleBox>
-          ) : (
-            <MsgBox>
-              <MyMsg>{otherUser.msg}</MyMsg>
-            </MsgBox>
-          )}
+          <ContentBox>
+            {isClickedAvatar ? (
+              <CircleBox>
+                <Circle>
+                  <P>{otherGift}</P>
+                </Circle>
+                <Circle onClick={sendGiftHandler}>
+                  <Letter width="24" fill="white" />
+                </Circle>
+              </CircleBox>
+            ) : (
+              <ArrowBox>
+                <MyMsg>{otherUser.msg}</MyMsg>
+              </ArrowBox>
+            )}
+          </ContentBox>
           <MyAvatar onClick={clickAvatarHandler} />
           <H3>내 이름은 {otherUser.nickname}!!</H3>
         </AvatarBox>

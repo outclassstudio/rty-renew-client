@@ -86,7 +86,8 @@ export const GiftAllBtn = styled.button`
   height: 40px;
   box-sizing: border-box;
   appearance: none;
-  background-color: transparent;
+  background-color: ${(props) =>
+    props.itemProp === "all" ? "#f13838" : "transparent"};
   border: 2px solid #f13838;
   border-radius: 0.6em;
   color: #f9f9f9;
@@ -113,7 +114,7 @@ export const GiftBtn = styled.button`
   height: 40px;
   box-sizing: border-box;
   appearance: none;
-  background-color: transparent;
+
   border: 2px solid #7c8eff;
   border-radius: 0.6em;
   color: #f9f9f9;
@@ -132,6 +133,19 @@ export const GiftBtn = styled.button`
   &:focus {
     color: #fff;
     outline: 0;
+  }
+
+  &.space {
+    background-color: ${(props) =>
+      props.itemProp === "space" ? "#7c8eff" : "transparent"};
+  }
+  &.storage {
+    background-color: ${(props) =>
+      props.itemProp === "storage" ? "#7c8eff" : "transparent"};
+  }
+  &.new {
+    background-color: ${(props) =>
+      props.itemProp === "new" ? "#7c8eff" : "transparent"};
   }
 `;
 
@@ -153,6 +167,7 @@ export default function AllGift(props: any) {
   //gift 불러오기
   const [myGiftList, setMyGiftList] = useState<Array<any>>([]);
   const [selected, setSelected] = useState("");
+  const [selectedItem, setSelectedItem] = useState("");
 
   const myGift = useSelector((state: any) => state.spaceReducer.myGift);
 
@@ -177,7 +192,7 @@ export default function AllGift(props: any) {
 
   useEffect(() => {
     console.log("myGift", myGiftList);
-  }, [myGiftList]);
+  }, [myGiftList, selected]);
 
   const openModalHandler = () => {
     setIsAllGift(false);
@@ -190,6 +205,7 @@ export default function AllGift(props: any) {
     } else {
       setMyGiftList(myGift);
     }
+    setSelectedItem("all");
   };
 
   const newGiftHandler = () => {
@@ -199,6 +215,7 @@ export default function AllGift(props: any) {
     } else {
       setMyGiftList(newGiftList);
     }
+    setSelectedItem("new");
   };
 
   const spaceGiftHandler = () => {
@@ -208,6 +225,7 @@ export default function AllGift(props: any) {
     } else {
       setMyGiftList(spaceGiftList);
     }
+    setSelectedItem("space");
   };
 
   const storageGiftHandler = () => {
@@ -217,6 +235,7 @@ export default function AllGift(props: any) {
     } else {
       setMyGiftList(storageGiftList);
     }
+    setSelectedItem("storage");
   };
 
   const viewGiftHandler = () => {
@@ -242,16 +261,32 @@ export default function AllGift(props: any) {
       <ModalView>
         🎁받은 선물 리스트
         <BtnBox>
-          <GiftAllBtn onClick={AllGiftHandler} className="all">
+          <GiftAllBtn
+            onClick={AllGiftHandler}
+            className="all"
+            itemProp={selectedItem}
+          >
             All
           </GiftAllBtn>
-          <GiftBtn onClick={newGiftHandler} className="c">
+          <GiftBtn
+            onClick={newGiftHandler}
+            className="new"
+            itemProp={selectedItem}
+          >
             New
           </GiftBtn>
-          <GiftBtn onClick={spaceGiftHandler} className="c">
+          <GiftBtn
+            onClick={spaceGiftHandler}
+            className="space"
+            itemProp={selectedItem}
+          >
             Space
           </GiftBtn>
-          <GiftBtn onClick={storageGiftHandler} className="c">
+          <GiftBtn
+            onClick={storageGiftHandler}
+            className="storage"
+            itemProp={selectedItem}
+          >
             Storage
           </GiftBtn>
           <SelectBox onChange={onChangeHandler} value={selected}>
