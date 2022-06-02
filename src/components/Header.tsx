@@ -23,7 +23,7 @@ export default function Header({ title }: Props) {
 
   //사람검색 부분
   const [findUserId, setFindUserId] = useState<string>("");
-  const [userList, setUserList] = useState<any[]>([]);
+  const [userList, setUserList] = useState<Users.otherUserDTO[]>([]);
   const [activeFindDropdown, setActiveFindDropdown] = useState<boolean>(false);
 
   //서치바 on/off
@@ -143,6 +143,7 @@ export default function Header({ title }: Props) {
               <HeaderUserlist
                 userList={userList}
                 closeDropdown={closeListDropdown}
+                findUserId={findUserId}
               />
             ) : (
               ""

@@ -4,7 +4,12 @@ import styled from "styled-components";
 import { RootState } from "../../redux/reducers";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
-export default function PreviewModal({ data, handleCloseModal }: any) {
+interface Props {
+  data: Gift.sendGiftDTO;
+  handleCloseModal: () => void;
+}
+
+export default function PreviewModal({ data, handleCloseModal }: Props) {
   const itemState = useSelector((state: RootState) => state.getItemReducer);
   const [prvUrl, setPrvUrl] = useState<string>("");
 
@@ -29,7 +34,6 @@ export default function PreviewModal({ data, handleCloseModal }: any) {
               <div>{data.content}</div>
             </ContentImg>
             <div>from . {data.userFrom}</div>
-            {/* <div>{data.date}에 보낸 선물입니다.</div> */}
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>

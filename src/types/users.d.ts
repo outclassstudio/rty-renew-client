@@ -17,4 +17,11 @@ declare namespace Users {
     id: string | null;
     npwd: string;
   }
+
+  interface otherUserDTO {
+    id: string;
+    nickname: string;
+    birth: string;
+    theme: string;
+  }
 }

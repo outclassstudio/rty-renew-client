@@ -27,6 +27,11 @@ interface PwInfo {
   passwordCheck: string;
 }
 
+interface Errors {
+  emptyBoxCheck: boolean;
+  pwCheck: boolean;
+}
+
 export default function Userinfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,7 +68,7 @@ export default function Userinfo() {
   const [checkPw, setCheckPw] = useState<boolean>(false);
 
   //에러상태묶음
-  const [errors, setErrors] = useState<any>({
+  const [errors, setErrors] = useState<Errors>({
     emptyBoxCheck: false,
     pwCheck: false,
   });

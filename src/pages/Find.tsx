@@ -57,7 +57,6 @@ export default function Find() {
 
         if (res.data.length !== 0) {
           setUserList(res.data);
-          // setFindUserId("");
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           setUserList([]);

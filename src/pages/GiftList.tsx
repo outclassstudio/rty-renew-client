@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import NumberCarousel from "../components/GiftList/NumberCarousel";
 
 export default function GistList() {
-  const [giftListData, setGiftListData] = useState<any>([]);
+  const [giftListData, setGiftListData] = useState<Gift.singleGiftDTO[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);

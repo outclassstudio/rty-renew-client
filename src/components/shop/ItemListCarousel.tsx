@@ -8,12 +8,19 @@ import ImageModal from "./ImageModal";
 import { buyItem } from "../../apis/buyApi";
 import Swal from "sweetalert2";
 
+interface Props {
+  img: Buy.singleItemDTO[];
+  myIdList: number[];
+  myData: Users.myinfoDTO;
+  handleGetItem: () => void;
+}
+
 export default function ItemListCarousel({
   img,
   myIdList,
   myData,
   handleGetItem,
-}: any) {
+}: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<any>({});
   const [myItem, setMyItem] = useState<boolean>(false);
@@ -121,7 +128,7 @@ export default function ItemListCarousel({
 
   //슬라이더 요소 컴포넌트
   const sliders = () => {
-    return img.map((el: any, idx: number) => {
+    return img.map((el: Buy.singleItemDTO, idx: number) => {
       const mine = myIdList.includes(el.idx);
 
       let url;

@@ -4,7 +4,6 @@ import { colorSet } from "../style/global";
 export default function Loading() {
   return (
     <LoadingWrapper>
-      {/* <div>로딩중...</div> */}
       <img
         src={
           "https://cdn.discordapp.com/attachments/974114424036155505/976337872934297650/Spinner-1s-200px.gif"

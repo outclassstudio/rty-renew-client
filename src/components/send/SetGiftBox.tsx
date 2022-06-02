@@ -8,10 +8,15 @@ import { RootState } from "../../redux/reducers";
 import SendItemListCarousel from "./SendItemListCarousel";
 import ViewAllItemsModal from "./ViewAllItemsModal";
 
+interface PrvSvg {
+  id: null | number;
+  svg: string;
+}
+
 export default function SetGiftBox() {
   const dispatch = useDispatch();
   const svgState = useSelector((state: RootState) => state.getItemReducer);
-  const [prvSvg, setPrvSvg] = useState<any>({ id: null, svg: "" });
+  const [prvSvg, setPrvSvg] = useState<PrvSvg>({ id: null, svg: "" });
   const [viewAll, setViewAll] = useState<boolean>(false);
 
   //선물포장 선택하는 함수
