@@ -2,11 +2,24 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import { colorSet } from "../../style/global";
 
+interface Props {
+  data: getSingleItem[];
+  handleSetPrv: (idx: number, url: string) => void;
+  prvItem: { id: null | number; url?: string; svg?: string };
+}
+
+interface getSingleItem {
+  idx: number;
+  type: string;
+  data: string;
+  point?: number;
+}
+
 export default function SendItemListCarousel({
   data,
   handleSetPrv,
   prvItem,
-}: any) {
+}: Props) {
   //carousel 세팅
   const settings = {
     focusOnSelect: false,

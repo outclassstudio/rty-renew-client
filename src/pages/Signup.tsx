@@ -433,7 +433,7 @@ export const ErrMsg = styled.div`
 
 const PickerWrapper = styled.div`
   position: fixed;
-  margin-top: 15px;
+  margin-top: 65px;
   margin-left: 340px;
   z-index: 1;
 `;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface Size {
   width?: string;
   height?: string;
+  background?: string;
 }
 
 export const NormalBtn = styled.button<Size>`
@@ -12,6 +13,7 @@ export const NormalBtn = styled.button<Size>`
   align-items: center;
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  background: ${(props) => props.background};
   color: white;
   border: none;
   border-radius: 5px;

@@ -6,7 +6,11 @@ import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
 
-export default function UserBox({ data }: any) {
+interface Props {
+  data: Users.otherUserDTO;
+}
+
+export default function UserBox({ data }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

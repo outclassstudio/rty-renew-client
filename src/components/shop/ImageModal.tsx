@@ -3,12 +3,19 @@ import styled from "styled-components";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { fadeAction, fadeExpand } from "../../style/global";
 
+interface Props {
+  image: Buy.singleItemDTO;
+  closeModal: () => void;
+  myItem: boolean;
+  handleBuyItem: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
 export default function ImageModal({
   image,
   closeModal,
   myItem,
   handleBuyItem,
-}: any) {
+}: Props) {
   const [imgUrl, setImgUrl] = useState<string>("");
 
   //이미지 분류하여 url 상태 세팅

@@ -5,7 +5,11 @@ import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { colorSet } from "../style/global";
 
-export default function Dropdown({ handleActiveDropdown }: any) {
+interface Props {
+  handleActiveDropdown: () => void;
+}
+
+export default function Dropdown({ handleActiveDropdown }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

@@ -6,18 +6,25 @@ import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 import NumberCarousel from "../GiftList/NumberCarousel";
 
+interface Props {
+  data: Buy.singleItemDTO[];
+  handleActiveViewAll: (type: string) => void;
+  myData: Users.myinfoDTO;
+  myIdList: number[];
+  handleGetItem: () => void;
+}
+
 export default function ViewAllInShopModal({
   data,
   handleActiveViewAll,
   myData,
   myIdList,
   handleGetItem,
-}: any) {
+}: Props) {
   const [title, setTitle] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(16);
-  const [pageLimit, setPageLimit] = useState<number>(16);
 
   //번호선택 및 범위지정
   const handleSetPage = (page: number) => {
@@ -87,7 +94,7 @@ export default function ViewAllInShopModal({
 
   //아이템 컴포넌트
   const renderItems = () => {
-    return data.slice(start, end).map((el: any, idx: number) => {
+    return data.slice(start, end).map((el: Buy.singleItemDTO, idx: number) => {
       const mine = myIdList.includes(el.idx);
 
       let url;
@@ -131,7 +138,7 @@ export default function ViewAllInShopModal({
           page={page}
           handleSetPage={handleSetPage}
           color={"white"}
-          pageLimit={pageLimit}
+          pageLimit={16}
         />
         <GridWrapper>
           <GridBox>{renderItems()}</GridBox>

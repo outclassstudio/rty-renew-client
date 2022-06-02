@@ -2,12 +2,26 @@ import styled from "styled-components";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
+interface Props {
+  data: getSingleItem[];
+  handleSetPrv: (idx: number, url: string) => void;
+  prvItem: { id: null | number; url?: string; svg?: string };
+  handleActiveViewAll: () => void;
+}
+
+interface getSingleItem {
+  idx: number;
+  type: string;
+  data: string;
+  point?: number;
+}
+
 export default function ViewAllItemsModal({
   data,
   handleSetPrv,
   prvItem,
   handleActiveViewAll,
-}: any) {
+}: Props) {
   //아이템 선택과 동시에 preview업데이트, 모달창 종료
   const handleSetItem = (idx: number, url: string) => {
     handleSetPrv(idx, url);

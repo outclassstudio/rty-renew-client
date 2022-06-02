@@ -8,7 +8,7 @@ import UserlistDropdown from "./UserlistDropdown";
 
 export default function FindUser() {
   const [findUserId, setFindUserId] = useState<string>("");
-  const [userList, setUserList] = useState<any[]>([]);
+  const [userList, setUserList] = useState<Users.otherUserDTO[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
 
   //사람찾기 실행
@@ -70,7 +70,11 @@ export default function FindUser() {
           placeholder="아이디 또는 닉네임을 입력해주세요"
         />
         {activeDropdown ? (
-          <UserlistDropdown userList={userList} closeDropdown={closeDropdown} />
+          <UserlistDropdown
+            userList={userList}
+            closeDropdown={closeDropdown}
+            findUserId={findUserId}
+          />
         ) : (
           ""
         )}

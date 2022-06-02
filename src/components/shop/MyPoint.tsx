@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { colorSet, fadeAction } from "../../style/global";
 
-export default function MyPoint({ myData }: any) {
+interface Props {
+  myData: Users.myinfoDTO;
+}
+
+export default function MyPoint({ myData }: Props) {
   return (
     <PointWrapper>
       💡{myData.nickname}님의 포인트 : {myData.point} Point

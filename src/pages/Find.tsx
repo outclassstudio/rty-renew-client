@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { findRandomUser, findUser } from "../apis/userApi";
@@ -7,6 +7,10 @@ import Layout from "./Layout";
 import UserBox from "../components/find/UserBox";
 import Loading from "../components/Loading";
 import NumberCarousel from "../components/GiftList/NumberCarousel";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/reducers";
+import { useDispatch } from "react-redux";
+import { FindUserIdUpdate } from "../redux/reducers/findUserReducer";
 
 export default function Find() {
   const [findUserId, setFindUserId] = useState<string>("");
@@ -18,6 +22,17 @@ export default function Find() {
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(16);
+
+  const storedId = useSelector((state: RootState) => state.findUserReducer);
+  const dispatch = useDispatch();
+
+  //스토어에 아이디가 있을 경우 자동 검색
+  useEffect(() => {
+    if (storedId.userId) {
+      handleFindStoredUser(storedId.userId);
+      dispatch(FindUserIdUpdate(""));
+    }
+  }, []);
 
   //번호선택 및 범위지정
   const handleSetPage = (page: number) => {
@@ -42,7 +57,6 @@ export default function Find() {
 
         if (res.data.length !== 0) {
           setUserList(res.data);
-          // setFindUserId("");
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           setUserList([]);
@@ -59,6 +73,20 @@ export default function Find() {
       setResultMsg(false);
       setRandomResult(false);
     }
+  };
+
+  //스토어에 아이디가 있을 경우 사람찾기 실행
+  const handleFindStoredUser = (id: string): void => {
+    setIsLoading(true);
+
+    findUser(id).then((res) => {
+      handleSetPage(1);
+      setIsLoading(false);
+      setRandomResult(false);
+      setResultMsg(true);
+      setSearchWord(id);
+      setUserList(res.data);
+    });
   };
 
   //랜덤으로 유저 찾아주기

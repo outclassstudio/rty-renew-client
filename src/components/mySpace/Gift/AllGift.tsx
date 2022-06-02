@@ -154,6 +154,7 @@ export default function AllGift(props: any) {
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(12);
+  const [currentGiftStatus, setCurrentGiftStatus] = useState<string>("all");
 
   //번호선택 및 범위지정
   const handleSetPage = (page: number) => {

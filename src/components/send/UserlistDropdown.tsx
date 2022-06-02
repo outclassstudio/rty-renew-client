@@ -1,11 +1,24 @@
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { FindUserIdUpdate } from "../../redux/reducers/findUserReducer";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
 
-export default function UserlistDropdown({ userList, closeDropdown }: any) {
+interface Props {
+  userList: Users.otherUserDTO[];
+  closeDropdown: () => void;
+  findUserId: string;
+}
+
+export default function UserlistDropdown({
+  userList,
+  closeDropdown,
+  findUserId,
+}: Props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //선택한 아이디로 상태업데이트
   const handleSetToUser = (id: string, nickname: string): void => {
@@ -22,22 +35,37 @@ export default function UserlistDropdown({ userList, closeDropdown }: any) {
     }
   };
 
+  //친구찾기페이지로 전환
+  const handleSeemore = () => {
+    dispatch(FindUserIdUpdate(findUserId));
+    navigate("/find");
+  };
+
   return (
     <>
       <MainWrapper>
-        {userList.length !== 0
-          ? userList.map((el: any, idx: number) => {
-              return (
-                <SingleUser
-                  key={idx}
-                  onClick={() => handleSetToUser(el.id, el.nickname)}
-                >
-                  <span>{el.nickname}</span>
-                  <span>( {el.id} )</span>
-                </SingleUser>
-              );
-            })
-          : ""}
+        <BoxWrapper>
+          {userList.length !== 0
+            ? userList.slice(0, 10).map((el: any, idx: number) => {
+                return (
+                  <SingleUser
+                    key={idx}
+                    onClick={() => handleSetToUser(el.id, el.nickname)}
+                  >
+                    <span>{el.nickname}</span>
+                    <span>( {el.id} )</span>
+                  </SingleUser>
+                );
+              })
+            : ""}
+        </BoxWrapper>
+        {userList.length > 10 ? (
+          <SingleUser className="seeMore" onClick={handleSeemore}>
+            {userList.length}개의 검색결과 전체보기
+          </SingleUser>
+        ) : (
+          ""
+        )}
       </MainWrapper>
       <DropdonwBg onClick={closeDropdown}></DropdonwBg>
     </>
@@ -66,6 +94,11 @@ const MainWrapper = styled.div`
   z-index: 1;
 `;
 
+const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const SingleUser = styled.div`
   display: flex;
   gap: 5px;
@@ -81,6 +114,14 @@ const SingleUser = styled.div`
   span:nth-child(2) {
     font-size: 12px;
     color: #393939;
+  }
+
+  &.seeMore {
+    color: #8a8a8a;
+  }
+
+  &.seeMore:hover {
+    color: black;
   }
 
   :hover {

@@ -1,26 +1,7 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
 export default function GiftModal({ data }: any) {
-  const [date, setDate] = useState<string>("");
-
-  //날짜세팅
-  useEffect(() => {
-    const year = data.date?.split(" ")[0];
-    const hour = data.date?.split(" ")[1].split(":")[0];
-    const min = data.date?.split(" ")[1].split(":")[1];
-    let dateStr = "";
-
-    if (hour > 12) {
-      dateStr = `${year} 오후${hour - 12}:${min}`;
-    } else {
-      dateStr = `${year} 오전${hour}:${min}`;
-    }
-
-    setDate(dateStr);
-  }, []);
-
   return (
     <>
       <MainWrapper>
@@ -32,7 +13,6 @@ export default function GiftModal({ data }: any) {
               <div>{data.content}</div>
             </ContentImg>
             <div>from . {data.userFrom}</div>
-            {/* <div>{date}에 보낸 선물입니다.</div> */}
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>
