@@ -250,12 +250,8 @@ export function Avatar(props: any) {
                 <Circle>
                   <P>{userGiftList.length}</P>
                 </Circle>
-                <Circle>
-                  <Letter
-                    width="24"
-                    fill="white"
-                    onClick={openAllGiftHandler}
-                  />
+                <Circle onClick={openAllGiftHandler}>
+                  <Letter width="24" fill="white" />
                 </Circle>
               </CircleBox>
             ) : (

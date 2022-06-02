@@ -31,7 +31,7 @@ const SelectBox = styled.select`
   border: 1px sole;
   border: 1px solid #fff;
   border-radius: 0.6em;
-  color: #fff;
+  color: #f9f9f;
   height: 40px;
   font-weight: 500;
 `;
@@ -56,7 +56,8 @@ export const ModalView = styled.div`
 export const GiftItemBox = styled.div`
   display: grid;
   margin-top: 50px;
-  max-width: 700px;
+  min-height: 410px;
+  min-width: 550px;
   margin: 30px 0 0 0;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
