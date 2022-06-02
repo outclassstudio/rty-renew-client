@@ -3,11 +3,15 @@ import Calendar from "react-calendar";
 import "../style/myPicker.css";
 import styled from "styled-components";
 
-const CalendarContainer = styled.div`
-  z-index: 1;
-`;
+interface Props {
+  handleAcitvePicker: () => void;
+  handleDateValue: (date: string) => void;
+}
 
-export default function MyPicker({ handleAcitvePicker, handleDateValue }: any) {
+export default function MyPicker({
+  handleAcitvePicker,
+  handleDateValue,
+}: Props) {
   const [date, setDate] = useState<Date>(new Date());
 
   const handleOnChange = (value: Date) => {
@@ -28,3 +32,7 @@ export default function MyPicker({ handleAcitvePicker, handleDateValue }: any) {
     </CalendarContainer>
   );
 }
+
+const CalendarContainer = styled.div`
+  z-index: 1;
+`;

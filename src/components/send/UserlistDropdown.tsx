@@ -6,11 +6,17 @@ import { FindUserIdUpdate } from "../../redux/reducers/findUserReducer";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
 
+interface Props {
+  userList: Users.otherUserDTO[];
+  closeDropdown: () => void;
+  findUserId: string;
+}
+
 export default function UserlistDropdown({
   userList,
   closeDropdown,
   findUserId,
-}: any) {
+}: Props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -31,7 +37,6 @@ export default function UserlistDropdown({
 
   //친구찾기페이지로 전환
   const handleSeemore = () => {
-    console.log("찾아지나", findUserId);
     dispatch(FindUserIdUpdate(findUserId));
     navigate("/find");
   };
@@ -41,7 +46,7 @@ export default function UserlistDropdown({
       <MainWrapper>
         <BoxWrapper>
           {userList.length !== 0
-            ? userList.map((el: any, idx: number) => {
+            ? userList.slice(0, 10).map((el: any, idx: number) => {
                 return (
                   <SingleUser
                     key={idx}
@@ -54,7 +59,13 @@ export default function UserlistDropdown({
               })
             : ""}
         </BoxWrapper>
-        <SingleUser onClick={handleSeemore}>더보기...</SingleUser>
+        {userList.length > 10 ? (
+          <SingleUser className="seeMore" onClick={handleSeemore}>
+            {userList.length}개의 검색결과 전체보기
+          </SingleUser>
+        ) : (
+          ""
+        )}
       </MainWrapper>
       <DropdonwBg onClick={closeDropdown}></DropdonwBg>
     </>
@@ -86,8 +97,6 @@ const MainWrapper = styled.div`
 const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 390px;
-  overflow: hidden;
 `;
 
 const SingleUser = styled.div`
@@ -105,6 +114,14 @@ const SingleUser = styled.div`
   span:nth-child(2) {
     font-size: 12px;
     color: #393939;
+  }
+
+  &.seeMore {
+    color: #8a8a8a;
+  }
+
+  &.seeMore:hover {
+    color: black;
   }
 
   :hover {

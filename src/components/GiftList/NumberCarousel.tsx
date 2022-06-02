@@ -4,13 +4,21 @@ import "../shop/slick.css";
 import "../shop/slick-theme.css";
 import { colorSet } from "../../style/global";
 
+interface Props {
+  giftListData: any[];
+  page: number;
+  color: string;
+  handleSetPage: (page: number) => void;
+  pageLimit: number;
+}
+
 export default function NumberCarousel({
   giftListData,
   page,
   handleSetPage,
   color,
   pageLimit,
-}: any) {
+}: Props) {
   //carousel 세팅
   const settings = {
     focusOnSelect: false,

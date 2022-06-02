@@ -9,6 +9,11 @@ import { colorSet } from "../../style/global";
 import SendItemListCarousel from "./SendItemListCarousel";
 import ViewAllItemsModal from "./ViewAllItemsModal";
 
+interface Prvitem {
+  id: null | number;
+  url: string;
+}
+
 export default function MsgInput() {
   const dispatch = useDispatch();
 
@@ -17,7 +22,7 @@ export default function MsgInput() {
   const itemState = useSelector((state: RootState) => state.getItemReducer);
 
   //각종상태
-  const [prvItem, setPrvItem] = useState<any>({ id: null, url: "" });
+  const [prvItem, setPrvItem] = useState<Prvitem>({ id: null, url: "" });
   const [letterNum, setLetterNum] = useState<number>(0);
   const [viewAll, setViewAll] = useState<boolean>(false);
 

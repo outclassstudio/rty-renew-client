@@ -8,7 +8,7 @@ import UserlistDropdown from "./UserlistDropdown";
 
 export default function FindUser() {
   const [findUserId, setFindUserId] = useState<string>("");
-  const [userList, setUserList] = useState<any[]>([]);
+  const [userList, setUserList] = useState<Users.otherUserDTO[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
 
   //사람찾기 실행
