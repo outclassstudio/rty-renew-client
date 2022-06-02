@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { getUserInfo } from "../apis/userApi";
-import { userInfo } from "../redux/actions";
 import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
 import { colorSet } from "../style/global";
@@ -38,14 +37,6 @@ export default function LoginForm() {
         window.localStorage.setItem("token", res.data);
         window.localStorage.setItem("id", loginInfo.id);
         dispatch(loginChange());
-
-        //로그인 성공하면 유저 정보 store 저장
-        if (res.status === 200) {
-          getUserInfo().then((res) => {
-            console.log("userinfologin", res);
-            dispatch(userInfo(res.data));
-          });
-        }
         window.location.replace("/");
       })
       .catch(() => {
