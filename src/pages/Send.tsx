@@ -100,7 +100,7 @@ export default function Send() {
         .catch((err) => {
           Swal.fire({
             title: "에러가 있어요",
-            text: `${err}`,
+            text: `${err.response.data}`,
             icon: "error",
             confirmButtonText: "닫기",
           });
