@@ -15,8 +15,7 @@ export const AvatarBox = styled.div`
   flex-direction: column;
   align-items: center;
   position: fixed;
-  margin-top: 170px;
-  margin-right: -23px;
+  /* margin-top: 170px; */
   width: 170px;
   height: 365px;
   user-select: none;
@@ -107,7 +106,7 @@ const ArrowBox = styled.div`
   color: #fff;
   :after,
   :before {
-    top: 101%;
+    top: 100%;
     left: 50%;
     border: solid transparent;
     content: "";

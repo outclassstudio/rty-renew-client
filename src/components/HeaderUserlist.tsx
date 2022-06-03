@@ -100,8 +100,8 @@ const BoxWrapper = styled.div`
 
 const SingleUser = styled.div`
   display: flex;
-  gap: 5px;
-  font-size: 13px;
+  gap: 2px;
+  font-size: 12px;
   padding: 10px;
   cursor: pointer;
   z-index: 1;
@@ -111,7 +111,7 @@ const SingleUser = styled.div`
   }
 
   span:nth-child(2) {
-    font-size: 12px;
+    /* font-size: 11px; */
     color: #393939;
   }
 
