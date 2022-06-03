@@ -63,6 +63,13 @@ export const InfoBox = styled.div`
 export const Nickname = styled.h2`
   margin-right: 20px;
 `;
+
+const AvatarWrapper = styled.div`
+  position: fixed;
+  margin-top: 250px;
+  margin-right: 170px;
+`;
+
 export default function Space() {
   const dispatch = useDispatch();
 
@@ -142,11 +149,13 @@ export default function Space() {
     <Layout title={"내 공간"}>
       <MainContainer>
         <SpaceContainer>
-          <Avatar
-            editAvatar={editAvatar}
-            setEditAvatar={setEditAvatar}
-            myInfo={myInfo}
-          />
+          <AvatarWrapper>
+            <Avatar
+              editAvatar={editAvatar}
+              setEditAvatar={setEditAvatar}
+              myInfo={myInfo}
+            />
+          </AvatarWrapper>
           {isEachGift ? (
             <>
               <Canvas

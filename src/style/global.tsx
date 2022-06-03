@@ -12,8 +12,6 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     font-family: 'Noto Sans KR', sans-serif;
-    /* background: #f6f6f6 */
-    // font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 `;
 

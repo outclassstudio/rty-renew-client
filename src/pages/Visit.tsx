@@ -52,8 +52,6 @@ export default function Visit() {
             setSpaceGiftList(list);
           });
 
-          like();
-
           getOthersInfo(params.id).then((res) => {
             setUserInfo(res.data);
           });
@@ -79,7 +77,6 @@ export default function Visit() {
       const svgAttr = JSON.parse(gift.svgAttr);
       Paper.project.importSVG(gift.svg, {
         onLoad: function (item: any) {
-          // let obj = { id: item.id, gift: gift };
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);
           if (item.firstChild.size._width < 200) {
             item.scale(1.5);
@@ -87,17 +84,15 @@ export default function Visit() {
             item.scale(0.15);
           }
 
-          const pos = new paper.Point(
-            item.position.x + 5,
-            item.position.y - 45
-          );
-          //  pos could really be anything here
+          const pos = new paper.Point(item.position.x, item.position.y - 45);
           const text = new paper.PointText(pos);
           text.justification = "center";
           text.fontWeight = "bold";
-          text.fontSize = 17;
+          text.fontSize = 15;
+          text.fillColor = new paper.Color(1, 1, 1);
+          text.shadowOffset = new paper.Point(1, 1);
+          text.shadowColor = new paper.Color(0, 0, 0);
           text.content = gift.userFrom;
-          //  now use the adjusted drop point to set the center position of text.
           text.position = pos;
           text.data.type = "name";
           text.data.id = gift.idx;
@@ -105,18 +100,6 @@ export default function Visit() {
       });
     });
   }
-
-  const like = () => {
-    Paper.view.onDoubleClick = (e: any) => {
-      const hitItem = Paper.project.activeLayer.children.find((el) =>
-        el.contains(e.point)
-      );
-      if (hitItem) {
-        // setClickedId(hitItem.id);
-        // setIsOpenGift(true);
-      }
-    };
-  };
 
   return (
     <Layout title={`${params.id}님의 공간`}>
@@ -152,6 +135,7 @@ const CanvasBox = styled.div`
   justify-content: center;
   align-items: center;
   gap: 15px;
+  background: none;
 `;
 
 interface Theme {
