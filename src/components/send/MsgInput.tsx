@@ -40,19 +40,20 @@ export default function MsgInput() {
   //글자수 세는 함수 및 제한수 초과시 경고
   const calcLetterNum = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setLetterNum(e.target.value.length);
-    dispatch(setContent(e.target.value));
 
-    if (e.target.value.length >= 150) {
+    if (e.target.value.length > 150) {
       Swal.fire({
         title: "150자 이상 입력할 수 없어요",
         icon: "warning",
         confirmButtonText: "닫기",
       });
 
-      let str = e.target.value.slice(0, 150);
+      let str = e.target.value.slice(0, 149);
       e.target.value = str;
       setLetterNum(str.length);
     }
+
+    dispatch(setContent(e.target.value));
   };
 
   //프리뷰 제거 함수
