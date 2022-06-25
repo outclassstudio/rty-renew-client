@@ -3,43 +3,6 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { colorSet, fadeAction, fadeExpand } from "../../../style/global";
 
-export const ModalBackground = styled.div`
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
-  width: 100vw;
-  height: 100vh;
-  left: 0;
-  top: 0;
-`;
-
-export const ModalView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  width: 400px;
-  padding: 2rem 1rem 2rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 6px;
-  background-color: #efefef;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  @media screen and (max-width: 480px) {
-    width: 70%;
-  }
-`;
-
-export const ImgBox = styled.div`
-  width: 300px;
-  height: 200px;
-`;
-
-export const Img = styled.img`
-  width: 100%;
-  height: 100%;
-`;
-
 export function Gift(props: any) {
   //Gift Modal
 
@@ -81,6 +44,43 @@ export function Gift(props: any) {
     </>
   );
 }
+
+export const ModalBackground = styled.div`
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+`;
+
+export const ModalView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  width: 400px;
+  padding: 2rem 1rem 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 6px;
+  background-color: #efefef;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  @media screen and (max-width: 480px) {
+    width: 70%;
+  }
+`;
+
+export const ImgBox = styled.div`
+  width: 300px;
+  height: 200px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 100%;
+`;
 
 const ModalBg = styled.div`
   position: fixed;

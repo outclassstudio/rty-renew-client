@@ -13,81 +13,6 @@ import {
 import openBox from "../../../assets/images/openBox.png";
 import closeBox from "../../../assets/images/closeBox.png";
 
-const ToolTipText = styled("span")({
-  width: "240px",
-  height: "80px",
-  backgroundColor: "#92B4EC",
-  color: "#fff",
-  textAlign: "center",
-  borderRadius: "6px",
-  padding: "10px",
-  position: "absolute",
-  zIndex: 1,
-  bottom: "90%",
-  left: "-46%",
-  marginLeft: "-60px",
-  border: "5px solid #194470",
-  ":after": {
-    content: '""',
-    position: "absolute",
-    top: "100%",
-    left: "45%",
-    marginLeft: "-5px",
-    borderWidth: "15px",
-    borderStyle: "solid",
-    borderColor: "#194470 transparent transparent transparent",
-  },
-});
-
-const ToolTipText1 = styled("span")({
-  width: "180px",
-  backgroundColor: "#92B4EC",
-  color: "#fff",
-  textAlign: "center",
-  borderRadius: "6px",
-  padding: "10px",
-  position: "absolute",
-  zIndex: 1,
-  bottom: "120%",
-  left: "-2%",
-  marginLeft: "-60px",
-  border: "5px solid #194470",
-
-  ":after": {
-    content: '""',
-    position: "absolute",
-    top: "102%",
-    left: "32%",
-    marginLeft: "-5px",
-    borderWidth: "15px",
-    borderStyle: "solid",
-    borderColor: "#194470 transparent transparent transparent",
-  },
-});
-
-export const StorageContainer = styled.div`
-  position: fixed;
-  margin-top: 115px;
-  margin-left: 1165px;
-  cursor: pointer;
-  user-select: none;
-  z-index: 1;
-`;
-
-export const ShowBox = styled.div``;
-
-export const HoverBox = styled.div``;
-
-export const ImgBox = styled.div`
-  width: 75px;
-  height: 75px;
-  margin-top: 20px;
-`;
-
-export const Img = styled.img`
-  width: 100%;
-`;
-
 export function Storage(props: any) {
   const dispatch = useDispatch();
   const isEditSpace = props.isEditSpace;
@@ -202,4 +127,79 @@ const Minus = styled.img`
 
 const Plus = styled.img`
   width: 20px;
+`;
+
+const ToolTipText = styled("span")({
+  width: "240px",
+  height: "80px",
+  backgroundColor: "#92B4EC",
+  color: "#fff",
+  textAlign: "center",
+  borderRadius: "6px",
+  padding: "10px",
+  position: "absolute",
+  zIndex: 1,
+  bottom: "90%",
+  left: "-46%",
+  marginLeft: "-60px",
+  border: "5px solid #194470",
+  ":after": {
+    content: '""',
+    position: "absolute",
+    top: "100%",
+    left: "45%",
+    marginLeft: "-5px",
+    borderWidth: "15px",
+    borderStyle: "solid",
+    borderColor: "#194470 transparent transparent transparent",
+  },
+});
+
+const ToolTipText1 = styled("span")({
+  width: "180px",
+  backgroundColor: "#92B4EC",
+  color: "#fff",
+  textAlign: "center",
+  borderRadius: "6px",
+  padding: "10px",
+  position: "absolute",
+  zIndex: 1,
+  bottom: "120%",
+  left: "-2%",
+  marginLeft: "-60px",
+  border: "5px solid #194470",
+
+  ":after": {
+    content: '""',
+    position: "absolute",
+    top: "102%",
+    left: "32%",
+    marginLeft: "-5px",
+    borderWidth: "15px",
+    borderStyle: "solid",
+    borderColor: "#194470 transparent transparent transparent",
+  },
+});
+
+export const StorageContainer = styled.div`
+  position: fixed;
+  margin-top: 115px;
+  margin-left: 1165px;
+  cursor: pointer;
+  user-select: none;
+  z-index: 1;
+`;
+
+export const ShowBox = styled.div``;
+
+export const HoverBox = styled.div``;
+
+export const ImgBox = styled.div`
+  width: 75px;
+  height: 75px;
+  margin-top: 20px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
 `;

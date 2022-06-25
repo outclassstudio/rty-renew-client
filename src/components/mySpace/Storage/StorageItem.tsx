@@ -1,17 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-
-export const ItemBox = styled.div`
-  width: 100px;
-  margin: 15px;
-  background: transparent;
-  cursor: grab;
-`;
-
-export const ItemP = styled.p`
-  width: 100px;
-  margin: 15px;
-`;
 
 const StorageItem = (props: any) => {
   const data = props.item;
@@ -39,3 +26,15 @@ const StorageItem = (props: any) => {
 };
 
 export default StorageItem;
+
+export const ItemBox = styled.div`
+  width: 100px;
+  margin: 15px;
+  background: transparent;
+  cursor: grab;
+`;
+
+export const ItemP = styled.p`
+  width: 100px;
+  margin: 15px;
+`;

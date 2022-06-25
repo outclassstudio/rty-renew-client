@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getUserInfo } from "../apis/userApi";
 import Canvas from "../components/mySpace/Canvas";
-import { NewGiftBox } from "../components/mySpace/NewGift/NewGiftBox";
+import { NewGiftBox } from "../components/mySpace/newGift/NewGiftBox";
 import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
@@ -18,63 +18,9 @@ import {
 import { useSelector } from "react-redux";
 import { fadeAction } from "../style/global";
 
-export const SpaceContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
-export const ThemeBtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  user-select: none;
-  margin-top: 20px;
-`;
-
-export const Button = styled.button`
-  width: 290px;
-  height: 60px;
-  cursor: pointer;
-  background: #194470;
-  border-radius: 5px;
-  border: transparent;
-  font-size: medium;
-  font-weight: 500;
-  font-size: 17px;
-  color: white;
-  border: 4px solid #194470;
-  margin-right: 20px;
-
-  &:hover {
-    box-shadow: 0 0 40px 40px #fff inset;
-    color: #194470;
-  }
-  &.cliked {
-    background: #7c8eff;
-  }
-`;
-
-export const InfoBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Nickname = styled.h2`
-  margin-right: 20px;
-`;
-
-const AvatarWrapper = styled.div`
-  position: fixed;
-  margin-top: 250px;
-  margin-right: 170px;
-`;
-
 export default function Space() {
   const dispatch = useDispatch();
-
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
-
   const [isEachGift, setIsEachGift] = useState(false);
   const [myInfo, setMyInfo] = useState<any>();
   const [newGiftList, setNewGiftList] = useState<any>();
@@ -200,4 +146,56 @@ const MainContainer = styled.div`
   flex-direction: column;
   animation: ${fadeAction} 0.6s ease-in-out;
   height: calc(100vh - 50px);
+`;
+
+export const SpaceContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+export const ThemeBtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  margin-top: 20px;
+`;
+
+export const Button = styled.button`
+  width: 290px;
+  height: 60px;
+  cursor: pointer;
+  background: #194470;
+  border-radius: 5px;
+  border: transparent;
+  font-size: medium;
+  font-weight: 500;
+  font-size: 17px;
+  color: white;
+  border: 4px solid #194470;
+  margin-right: 20px;
+
+  &:hover {
+    box-shadow: 0 0 40px 40px #fff inset;
+    color: #194470;
+  }
+  &.cliked {
+    background: #7c8eff;
+  }
+`;
+
+export const InfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Nickname = styled.h2`
+  margin-right: 20px;
+`;
+
+const AvatarWrapper = styled.div`
+  position: fixed;
+  margin-top: 250px;
+  margin-right: 170px;
 `;

@@ -1,30 +1,6 @@
 import styled from "styled-components";
 import { colorSet } from "../../../style/global";
 
-export const ItemBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: grab;
-  width: 100%;
-  margin-bottom: 20px;
-  img {
-    width: 100px;
-  }
-`;
-
-export const ItemP = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${colorSet.darkPink};
-  color: white;
-  border-radius: 10px;
-  padding: 0px 10px;
-  margin: 12px 0px 5px 0px;
-  font-size: 14px;
-`;
-
 const NewGiftItem = (item: any) => {
   const itemId = item.idx;
 
@@ -48,3 +24,27 @@ const NewGiftItem = (item: any) => {
 };
 
 export default NewGiftItem;
+
+export const ItemBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  width: 100%;
+  margin-bottom: 20px;
+  img {
+    width: 100px;
+  }
+`;
+
+export const ItemP = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${colorSet.darkPink};
+  color: white;
+  border-radius: 10px;
+  padding: 0px 10px;
+  margin: 12px 0px 5px 0px;
+  font-size: 14px;
+`;

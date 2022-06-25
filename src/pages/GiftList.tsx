@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getSentGift } from "../apis/giftApi";
 import Layout from "./Layout";
-import GiftListBox from "../components/GiftList/GiftListBox";
+import GiftListBox from "../components/giftList/GiftListBox";
 import styled from "styled-components";
 import { colorSet, fadeAction } from "../style/global";
 import Loading from "../components/Loading";
-import NumberCarousel from "../components/GiftList/NumberCarousel";
+import NumberCarousel from "../components/giftList/NumberCarousel";
 
 export default function GistList() {
   const [giftListData, setGiftListData] = useState<Gift.singleGiftDTO[]>([]);

@@ -6,7 +6,7 @@ import { colorSet, fadeAction } from "../style/global";
 import Layout from "./Layout";
 import UserBox from "../components/find/UserBox";
 import Loading from "../components/Loading";
-import NumberCarousel from "../components/GiftList/NumberCarousel";
+import NumberCarousel from "../components/giftList/NumberCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
 import { useDispatch } from "react-redux";
