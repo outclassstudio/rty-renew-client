@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Gift } from "./Gift/Gift";
+import { Gift } from "./gift/Gift";
 import Background from "./Background";
 import Swal from "sweetalert2";
 import {
@@ -16,26 +16,10 @@ import {
   setStorageGift,
 } from "../../redux/reducers/spaceReducer";
 import { changeGift, changeGiftPosition } from "../../apis/giftApi";
-import { WastebasketIcon } from "./Wastebasket/WastebasketIcon";
-import { Storage } from "./Storage/Storage";
-import NewGiftIcon from "./NewGift/NewGiftIcon";
+import { WastebasketIcon } from "./wastebasket/WastebasketIcon";
+import { Storage } from "./storage/Storage";
+import NewGiftIcon from "./newGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
-
-export const CanvasBox = styled.div`
-  margin-top: 50px;
-  width: 1280px;
-  height: 720px;
-`;
-
-export const CanvasArea = styled.canvas`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background-image: url(${(props) => props.color});
-  background-size: 100%;
-  background-repeat: no-repeat;
-  box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
-`;
 
 export default function Canvas(props: any) {
   const dispatch = useDispatch();
@@ -83,7 +67,6 @@ export default function Canvas(props: any) {
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
 
     const DropNewList =
       userGiftList && userGiftList.filter((item: any) => item.status === "new");
@@ -142,24 +125,6 @@ export default function Canvas(props: any) {
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
-
-        // if (hit.type === "bounds") {
-        //   hit.item.onMouseDrag = (e: any) => {
-        //     console.log(e, "hit");
-        //     let path = editClickedItem;
-
-        //     var center: any = path.bounds.center;
-        //     var baseVec: any = center - e.lastPoint;
-        //     var nowVec: any = center - e.point;
-        //     const angle = nowVec.angle - baseVec.angle;
-        //     if (angle < 0) {
-        //       path.rotate(-45);
-        //     } else {
-        //       path.rotate(45);
-        //     }
-        //     console.log(editClickedItem, "roation");
-        //   };
-        // }
         const nameTag = Paper.project.activeLayer.children.find(
           (el) => el.data.id === test?.data.idx
         );
@@ -179,20 +144,6 @@ export default function Canvas(props: any) {
             test.bounds.selected = true;
             setSelected(test);
             setClickedId(test.id);
-
-            // // const myCircle = new Paper.Path.Circle(
-            // //   new Paper.Point(test.position.x, test.position.y),
-            // //   100
-            // // );
-            // let b = test.bounds.clone().expand(20, 20);
-            // myRectangle = new Paper.Path.Rectangle(b);
-            // myRectangle.position = new Paper.Point(test.bounds.center);
-            // myRectangle.data.type = "edit";
-            // //   myCircle.data.id = test.id;
-            // myRectangle.strokeColor = new Color(0b1111);
-            // myRectangle.strokeWidth = 10;
-
-            // setIsBox(!isBox);
           } else {
             editClickedItem.bounds.selected = false;
             setEditClickedItem(test);
@@ -225,18 +176,15 @@ export default function Canvas(props: any) {
 
       let count = editClickedItem?.data.rotation || 0;
       tool.onKeyDown = (e: any) => {
-        //let path = editClickedItem;
         if (e.key === "right") {
           var center: any = editClickedItem.bounds.center;
           var baseVec: any = center - e.lastPoint;
           var nowVec: any = center - e.point;
           const angle = nowVec.angle - baseVec.angle;
           if (angle < 0) {
-            // editClickedItem.rotate(-45);
             editClickedItem.rotation = -90;
           } else {
             editClickedItem.rotation = 90;
-            //editClickedItem.rotate(45);
           }
           count += 1;
           editClickedItem.data.rotation = count;
@@ -286,7 +234,6 @@ export default function Canvas(props: any) {
         editClickedItem &&
         !editClickedItem.bounds.selected
       ) {
-        //  editClickedItem.bounds.selected = false;
         setEditClickedItem(null);
       }
     }
@@ -371,12 +318,6 @@ export default function Canvas(props: any) {
 
   const canvasRef = useRef(null);
 
-  //! 변수
-  //let segment: any;
-  // let path: any;
-  //let selectionRectangle: any;
-  //let movePath = false;
-
   //! dropHandler
   const dropHandler = (e: any) => {
     e.preventDefault();
@@ -395,18 +336,6 @@ export default function Canvas(props: any) {
     }
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
-
-    //dropGift는 상태가  new, storage이다.
-    // new or storage list에서  targetId와 같은건 삭제한다.
-    // const filteredNew = dropNewGift.filter((el: any) => {
-    //   return el.idx !== Number(targetId);
-    // });
-
-    // const filteredStorage = dropStorage.filter((el: any) => {
-    //   return el.idx !== Number(targetId);
-    // });
-
-    //dropStorage;
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
     const targetItem = userGiftList.filter((el: any) => {
@@ -435,15 +364,7 @@ export default function Canvas(props: any) {
       expandShapes: true,
 
       onLoad: function (item: any) {
-        /* const hitOptions = {
-          segments: true,
-          stroke: true,
-          fill: true,
-          tolerance: 5,
-        };*/
         let obj = { id: item.id, gift: targetItem[0] };
-        // setMatch([...match, obj]);
-
         match.push(obj);
         item.position = new Paper.Point(x, y);
         item.data.idx = targetItem[0].idx;
@@ -467,9 +388,6 @@ export default function Canvas(props: any) {
         text.data.type = "name";
         text.data.id = targetItem[0].idx;
 
-        //  dispatch(setStorageGift(filteredStorage));
-        // dispatch(setNewGift(filteredNew));
-
         changeGift(chageData).then(async (res) => {
           if (res.status === 200) {
             const filteredList = await res.data.filter(
@@ -487,173 +405,8 @@ export default function Canvas(props: any) {
             dispatch(setSpaceGift(filteredSpace));
           }
         });
-
-        //! 회전 및 사이즈 조절을 위한 코드,,,연구,,,
-        /*
-        //! make selectionRectangle
-        function makeSelectionRectangle(path: any) {
-          if (selected) {
-            selectionRectangle = selected;
-            console.log(
-              "selected################################################",
-              selectionRectangle,
-              selected
-            );
-            selectionRectangle.clear();
-            console.log("지워지냐", selectionRectangle);
-          }
-
-          const reset =
-            path.rotation === 0 && path.scaling.x === 1 && path.scaling.y === 1;
-          let bounds;
-          if (reset) {
-            console.log("reset");
-            bounds = path.bounds;
-            path.pInitialBounds = path.bounds;
-          } else {
-            bounds = path.pInitialBounds;
-          }
-          let b = bounds.clone().expand(10, 10);
-          selectionRectangle = new Paper.Path.Rectangle(b);
-          selectionRectangle.pivot = selectionRectangle.position;
-          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top));
-          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top - 25));
-          selectionRectangle.insert(2, new Paper.Point(b.center.x, b.top));
-          if (!reset) {
-            selectionRectangle.position = path.bounds.center;
-            selectionRectangle.rotation = path.rotation;
-            selectionRectangle.scaling = path.scaling;
-          }
-          selectionRectangle.strokeWidth = 2;
-          selectionRectangle.strokeColor = "blue";
-          selectionRectangle.name = "selection rectangle";
-          selectionRectangle.selected = true;
-
-          console.log("maked", selectionRectangle);
-          if (selectionRectangle) {
-            console.log("정보 존재");
-            setSelected(selectionRectangle);
-          } else {
-            console.log("여기 올사람");
-            selectionRectangle.remove();
-          }
-        }
-        console.log("왜사라져ㅑ???", selectionRectangle);
-        //! onMouseDown
-        item.onMouseDown = function (e: any) {
-          console.log(
-            "_______________________________________________________________________________________",
-            selected,
-            selectionRectangle
-          );
-          if (selectionRectangle) {
-            console.log("remove ?????", selectionRectangle);
-            selectionRectangle.remove();
-            console.log("remove !!!!", selectionRectangle);
-          }
-          const itemP = new Paper.Path(item);
-
-          console.log("item segment", itemP, item);
-          segment = path = null;
-          const hitResult = Paper.project.hitTest(e.point, hitOptions);
-
-          console.log(
-            hitResult,
-            "hit------------",
-
-            //  hitResult.item,
-            "----",
-            hitResult
-          );
-          if (!hitResult) {
-            return;
-          }
-          if (e.modifiers.shift) {
-            if (hitResult.type === "segment") {
-              hitResult.segment.remove();
-            }
-            return;
-          }
-          console.log("tooldown type", hitResult.type);
-          if (hitResult) {
-            path = hitResult.item;
-            if (item.contains(e.point)) {
-              //  item.bounds.selected = true;
-              //  Paper.project.activeLayer.addChild(hitResult.item);
-              path.data.state = "moving";
-              console.log("path--", path, Paper.project.selectedItems);
-            }
-            if (hitResult && hitResult.type === "segment") {
-              path = Paper.project.selectedItems[0];
-              segment = hitResult.segment;
-              console.log("path--", path, Paper.project.selectedItems);
-              if (e.modifiers.control) {
-                path.data.state = "rotating";
-              } else {
-                path.data.state = "resizing";
-                path.data.bounds = path.bounds.clone();
-                path.data.scaleBase = e.point - path.bounds.center;
-              }
-              console.log(path.data);
-            }
-            //! selectionRectangle
-            if (!selected) {
-              console.log("만들기");
-              makeSelectionRectangle(item);
-            } else {
-              console.log("지우기", selectionRectangle);
-              selectionRectangle = selected;
-              selectionRectangle.remove();
-              setSelected(null);
-              makeSelectionRectangle(item);
-            }
-          }
-          movePath = hitResult.type === "fill";
-          if (movePath) {
-            // Paper.project.activeLayer.addChild(item);
-          }
-        };
-
-        item.onDoubleClick = function (e: any) {
-          console.log("hihihi", e);
-          setIsOpenGift(true);
-        };
-
-        //! onMouseDrag
-        item.onMouseDrag = function (e: any) {
-          console.log("tool dragS");
-          if (segment && path.data.state === "rotating") {
-            var center = path.bounds.center;
-            var baseVec: any = center - e.lastPoint;
-            var nowVec: any = center - e.point;
-            const angle = nowVec.angle - baseVec.angle;
-            if (angle < 0) {
-              path.rotate(-45);
-            } else {
-              path.rotate(45);
-            }
-            adjustBounds(path);
-          } else if (path && path.data.state === "moving") {
-            //  path.position += e.delta;
-            item.position.x += e.delta.x;
-            item.position.y += e.delta.y;
-            console.log(selectionRectangle, "positioonjkfdnsklfnklsdnfl");
-            selectionRectangle.position.x += e.delta.x;
-            selectionRectangle.position.y += e.delta.y;
-            //      item.bounds.selected = true;
-            //  adjustBounds(item);
-          }
-        };
-        //error*/
       },
     });
-    // function adjustBounds(o: any) {
-    //  if (o.data.state === "moving") {
-    //   o.data.highlight.position = o.position;
-    // } else {
-    //   o.data.highlight.children[0].bounds = o.bounds;
-    //  }
-    //}
   };
 
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
@@ -778,3 +531,19 @@ export default function Canvas(props: any) {
     </>
   );
 }
+
+export const CanvasBox = styled.div`
+  margin-top: 50px;
+  width: 1280px;
+  height: 720px;
+`;
+
+export const CanvasArea = styled.canvas`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-image: url(${(props) => props.color});
+  background-size: 100%;
+  background-repeat: no-repeat;
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
+`;

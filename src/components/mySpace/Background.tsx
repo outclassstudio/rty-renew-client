@@ -4,7 +4,95 @@ import { useDispatch } from "react-redux";
 import { changeTheme, getThemeList } from "../../apis/userApi";
 import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
-import NumberCarousel from "../GiftList/NumberCarousel";
+import NumberCarousel from "../giftList/NumberCarousel";
+
+export default function Background() {
+  const dispatch = useDispatch();
+  const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
+  const [themeList, setThemeList] = useState<Array<any>>([]);
+  const [page, setPage] = useState<number>(1);
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(12);
+
+  useEffect(() => {
+    getThemeList().then((res) => {
+      if (res.status === 200) {
+        setThemeList(res.data);
+      }
+    });
+  }, []);
+
+  const checkedItemHandler = (isCheckd: boolean, item: string) => {
+    if (isCheckd) {
+      setCheckedItem([Number(item)]);
+    } else {
+      setCheckedItem(checkedItem.filter((el) => el !== item));
+    }
+  };
+
+  const changeThemeHandler = async () => {
+    if (checkedItem.length !== 0) {
+      changeTheme(checkedItem[0]).then((res) => {
+        let info = res.data;
+        dispatch(setUserInfo(info));
+      });
+      dispatch(setModalOpen(false));
+    }
+  };
+
+  const closeThemeHandler = () => {
+    dispatch(setModalOpen(false));
+  };
+
+  //번호선택 및 범위지정
+  const handleSetPage = (page: number) => {
+    setStart((page - 1) * 12);
+    setEnd(page * 12);
+    setPage(page);
+  };
+
+  return (
+    <ModalBackground>
+      <ModalView>
+        <ModalTitle>🎨테마를 선택해주세요</ModalTitle>
+        {themeList.length > 4 ? (
+          <NumberCarousel
+            giftListData={themeList}
+            page={page}
+            handleSetPage={handleSetPage}
+            color={"white"}
+            pageLimit={12}
+          />
+        ) : null}
+
+        <ImgContainer>
+          {themeList.slice(start, end).map((theme, idx) => {
+            return (
+              <SelectImg key={idx}>
+                <ImgBox>
+                  <Img src={theme.data} alt="theme" />
+                </ImgBox>
+                <ImgName>{theme.name}</ImgName>
+                <SelectInput
+                  type="checkbox"
+                  value={theme.idx}
+                  onChange={(e) =>
+                    checkedItemHandler(e.target.checked, e.target.value)
+                  }
+                  checked={checkedItem.includes(theme.idx) ? true : false}
+                ></SelectInput>
+              </SelectImg>
+            );
+          })}
+        </ImgContainer>
+        <BtnBox>
+          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
+          <CloseBtn onClick={closeThemeHandler}>닫기</CloseBtn>
+        </BtnBox>
+      </ModalView>
+    </ModalBackground>
+  );
+}
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -127,91 +215,3 @@ export const CloseBtn = styled.button`
     outline: 0;
   }
 `;
-
-export default function Background() {
-  const dispatch = useDispatch();
-  const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-  const [themeList, setThemeList] = useState<Array<any>>([]);
-  const [page, setPage] = useState<number>(1);
-  const [start, setStart] = useState<number>(0);
-  const [end, setEnd] = useState<number>(12);
-
-  useEffect(() => {
-    getThemeList().then((res) => {
-      if (res.status === 200) {
-        setThemeList(res.data);
-      }
-    });
-  }, []);
-
-  const checkedItemHandler = (isCheckd: boolean, item: string) => {
-    if (isCheckd) {
-      setCheckedItem([Number(item)]);
-    } else {
-      setCheckedItem(checkedItem.filter((el) => el !== item));
-    }
-  };
-
-  const changeThemeHandler = async () => {
-    if (checkedItem.length !== 0) {
-      changeTheme(checkedItem[0]).then((res) => {
-        let info = res.data;
-        dispatch(setUserInfo(info));
-      });
-      dispatch(setModalOpen(false));
-    }
-  };
-
-  const closeThemeHandler = () => {
-    dispatch(setModalOpen(false));
-  };
-
-  //번호선택 및 범위지정
-  const handleSetPage = (page: number) => {
-    setStart((page - 1) * 12);
-    setEnd(page * 12);
-    setPage(page);
-  };
-
-  return (
-    <ModalBackground>
-      <ModalView>
-        <ModalTitle>🎨테마를 선택해주세요</ModalTitle>
-        {themeList.length > 4 ? (
-          <NumberCarousel
-            giftListData={themeList}
-            page={page}
-            handleSetPage={handleSetPage}
-            color={"white"}
-            pageLimit={12}
-          />
-        ) : null}
-
-        <ImgContainer>
-          {themeList.slice(start, end).map((theme, idx) => {
-            return (
-              <SelectImg key={idx}>
-                <ImgBox>
-                  <Img src={theme.data} alt="theme" />
-                </ImgBox>
-                <ImgName>{theme.name}</ImgName>
-                <SelectInput
-                  type="checkbox"
-                  value={theme.idx}
-                  onChange={(e) =>
-                    checkedItemHandler(e.target.checked, e.target.value)
-                  }
-                  checked={checkedItem.includes(theme.idx) ? true : false}
-                ></SelectInput>
-              </SelectImg>
-            );
-          })}
-        </ImgContainer>
-        <BtnBox>
-          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
-          <CloseBtn onClick={closeThemeHandler}>닫기</CloseBtn>
-        </BtnBox>
-      </ModalView>
-    </ModalBackground>
-  );
-}

@@ -12,61 +12,6 @@ import {
 } from "../redux/reducers/spaceReducer";
 import { fadeAction, fadeExpand } from "../style/global";
 
-export const ModalBackground = styled.div`
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
-  width: 100vw;
-  height: 100vh;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: ${fadeAction} 0.2s ease-out;
-`;
-
-export const ModalView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  width: 450px;
-  padding: 2rem 1rem 2rem;
-  border-radius: 6px;
-  background-color: #efefef;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  animation: ${fadeExpand} 0.2s ease-out;
-
-  @media screen and (max-width: 480px) {
-    width: 70%;
-  }
-  user-select: none;
-`;
-
-export const ContentBox = styled.div`
-  width: 500px;
-  display: flex;
-  justify-content: center;
-`;
-
-const BtnWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-`;
-
-export const Button = styled.button`
-  width: 90px;
-  height: 40px;
-  margin: 5px;
-`;
-
-const Icon = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export function ConfirmModal(props: any) {
   const dispatch = useDispatch();
   const isOpenTrash = useSelector(
@@ -149,3 +94,58 @@ export function ConfirmModal(props: any) {
     </ModalBackground>
   );
 }
+
+export const ModalBackground = styled.div`
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${fadeAction} 0.2s ease-out;
+`;
+
+export const ModalView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  width: 450px;
+  padding: 2rem 1rem 2rem;
+  border-radius: 6px;
+  background-color: #efefef;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  animation: ${fadeExpand} 0.2s ease-out;
+
+  @media screen and (max-width: 480px) {
+    width: 70%;
+  }
+  user-select: none;
+`;
+
+export const ContentBox = styled.div`
+  width: 500px;
+  display: flex;
+  justify-content: center;
+`;
+
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+`;
+
+export const Button = styled.button`
+  width: 90px;
+  height: 40px;
+  margin: 5px;
+`;
+
+const Icon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,33 +1,6 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 
-export const ItemBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 140px;
-  height: 130px;
-
-  padding: 5px;
-`;
-
-export const ImgBox = styled.div`
-  width: 75px;
-  height: 90px;
-  margin-bottom: 5px;
-`;
-
-export const P = styled.p`
-  margin: 1px;
-  font-size: 14px;
-  font-weight: bold;
-  color: white;
-  &.visit {
-    cursor: pointer;
-  }
-`;
-
 export function GiftItem(props: any) {
   // const item = props.item;
   const navigate = useNavigate();
@@ -55,3 +28,30 @@ export function GiftItem(props: any) {
     </>
   );
 }
+
+export const ItemBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 140px;
+  height: 130px;
+
+  padding: 5px;
+`;
+
+export const ImgBox = styled.div`
+  width: 75px;
+  height: 90px;
+  margin-bottom: 5px;
+`;
+
+export const P = styled.p`
+  margin: 1px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  &.visit {
+    cursor: pointer;
+  }
+`;

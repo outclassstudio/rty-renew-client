@@ -7,158 +7,8 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
-import AllGift from "./Gift/AllGift";
+import AllGift from "./gift/AllGift";
 import Swal from "sweetalert2";
-
-export const AvatarBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  /* margin-top: 170px; */
-  width: 170px;
-  height: 365px;
-  user-select: none;
-`;
-
-export const MsgBox = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  height: 50px;
-  background-color: #3a0ca3;
-  border-radius: 15px;
-  margin: 10px;
-  padding: 0px 10px;
-  color: white;
-
-  input {
-    background: none;
-    border: none;
-    color: white;
-  }
-  input:focus {
-    outline: none;
-  }
-`;
-
-export const MsgEditBtn = styled.button`
-  border: 1px solid white;
-  background-color: transparent;
-  width: 36px;
-  cursor: pointer;
-  /* margin: 5px; */
-  border-radius: 40%;
-`;
-
-export const H3 = styled.div`
-  margin-top: 10px;
-  color: white;
-  font-family: "Hanna", sans-serif;
-  text-shadow: 1px 1px 0px black;
-  font-size: 17px;
-  word-break: break-all;
-`;
-
-export const Input = styled.input`
-  border-radius: 4px;
-  width: 147px;
-  font-size: 13px;
-  margin-right: 20px;
-  background: transparent;
-  height: 30px;
-`;
-
-export const Circle = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 55px;
-  margin: 3px;
-  border-radius: 50%;
-  background: #00d3d3;
-  align-items: center;
-  cursor: pointer;
-  padding-left: 1px;
-  &:hover {
-    outline: 0;
-    box-shadow: 0 0 40px 40px #f13838 inset;
-    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
-  }
-`;
-
-const MyMsg = styled.div`
-  align-items: center;
-  font-size: 22px;
-  display: flex;
-  font-weight: 900;
-`;
-
-const ArrowBox = styled.div`
-  display: flex;
-  position: relative;
-  background: #a4b0ff;
-  border: 4px solid #194470;
-  width: 240px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
-  height: 70px;
-  color: #fff;
-  :after,
-  :before {
-    top: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: "";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-  }
-
-  :after {
-    border-color: rgba(136, 183, 213, 0);
-    border-top-color: #a4b0ff;
-    border-width: 10px;
-    margin-left: -10px;
-  }
-  :before {
-    border-color: rgba(194, 225, 245, 0);
-    border-top-color: #194470;
-    border-width: 16px;
-    margin-left: -16px;
-  }
-`;
-
-export const P = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-  margin-bottom: 2px;
-`;
-
-export const EditBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-`;
-
-export const CircleBox = styled.div`
-  display: flex;
-  height: 60px;
-  margin: 10px;
-`;
-export const ContentBox = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 250px;
-  height: 100px;
-  align-items: center;
-`;
 
 export function Avatar(props: any) {
   const dispatch = useDispatch();
@@ -314,3 +164,153 @@ export function Avatar(props: any) {
     </>
   );
 }
+
+export const AvatarBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  /* margin-top: 170px; */
+  width: 170px;
+  height: 365px;
+  user-select: none;
+`;
+
+export const MsgBox = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 50px;
+  background-color: #3a0ca3;
+  border-radius: 15px;
+  margin: 10px;
+  padding: 0px 10px;
+  color: white;
+
+  input {
+    background: none;
+    border: none;
+    color: white;
+  }
+  input:focus {
+    outline: none;
+  }
+`;
+
+export const MsgEditBtn = styled.button`
+  border: 1px solid white;
+  background-color: transparent;
+  width: 36px;
+  cursor: pointer;
+  /* margin: 5px; */
+  border-radius: 40%;
+`;
+
+export const H3 = styled.div`
+  margin-top: 10px;
+  color: white;
+  font-family: "Hanna", sans-serif;
+  text-shadow: 1px 1px 0px black;
+  font-size: 17px;
+  word-break: break-all;
+`;
+
+export const Input = styled.input`
+  border-radius: 4px;
+  width: 147px;
+  font-size: 13px;
+  margin-right: 20px;
+  background: transparent;
+  height: 30px;
+`;
+
+export const Circle = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 55px;
+  margin: 3px;
+  border-radius: 50%;
+  background: #00d3d3;
+  align-items: center;
+  cursor: pointer;
+  padding-left: 1px;
+  &:hover {
+    outline: 0;
+    box-shadow: 0 0 40px 40px #f13838 inset;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  }
+`;
+
+const MyMsg = styled.div`
+  align-items: center;
+  font-size: 22px;
+  display: flex;
+  font-weight: 900;
+`;
+
+const ArrowBox = styled.div`
+  display: flex;
+  position: relative;
+  background: #a4b0ff;
+  border: 4px solid #194470;
+  width: 240px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  height: 70px;
+  color: #fff;
+  :after,
+  :before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  :after {
+    border-color: rgba(136, 183, 213, 0);
+    border-top-color: #a4b0ff;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  :before {
+    border-color: rgba(194, 225, 245, 0);
+    border-top-color: #194470;
+    border-width: 16px;
+    margin-left: -16px;
+  }
+`;
+
+export const P = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  margin-bottom: 2px;
+`;
+
+export const EditBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+`;
+
+export const CircleBox = styled.div`
+  display: flex;
+  height: 60px;
+  margin: 10px;
+`;
+export const ContentBox = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 250px;
+  height: 100px;
+  align-items: center;
+`;

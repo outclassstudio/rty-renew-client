@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { buyItem } from "../../apis/buyApi";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
-import NumberCarousel from "../GiftList/NumberCarousel";
+import NumberCarousel from "../giftList/NumberCarousel";
 
 interface Props {
   data: Buy.singleItemDTO[];

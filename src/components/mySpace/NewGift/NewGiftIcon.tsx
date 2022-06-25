@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-//import { isOpenNewGift } from "../../../redux/actions/index";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
 import { useEffect, useState } from "react";
 import {
@@ -10,40 +9,6 @@ import {
 } from "../../../redux/reducers/spaceReducer";
 import { colorSet } from "../../../style/global";
 import { getGift } from "../../../apis/giftApi";
-
-export const GiftIconBox = styled.div`
-  position: absolute;
-  margin-top: 20px;
-  margin-left: 1160px;
-  width: 90px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  user-select: none;
-`;
-
-export const GiftBox = styled.div`
-  width: 200px;
-  background-color: red;
-`;
-
-export const GiftCount = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  margin-top: 60px;
-  /* margin-left: 20px; */
-  font-weight: 900;
-  font-size: 20px;
-  color: white;
-  background: ${colorSet.darkPink};
-  width: 36px;
-  height: 36px;
-  border-radius: 18px;
-  /* padding-bottom: 2px; */
-`;
 
 export default function NewGift() {
   // new giftbox의 길이가 0이 아닐 때
@@ -93,3 +58,37 @@ export default function NewGift() {
     </div>
   );
 }
+
+export const GiftIconBox = styled.div`
+  position: absolute;
+  margin-top: 20px;
+  margin-left: 1160px;
+  width: 90px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  user-select: none;
+`;
+
+export const GiftBox = styled.div`
+  width: 200px;
+  background-color: red;
+`;
+
+export const GiftCount = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  margin-top: 60px;
+  /* margin-left: 20px; */
+  font-weight: 900;
+  font-size: 20px;
+  color: white;
+  background: ${colorSet.darkPink};
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  /* padding-bottom: 2px; */
+`;
