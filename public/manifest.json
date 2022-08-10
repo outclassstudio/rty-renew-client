@@ -1,0 +1,9 @@
+{
+  "short_name": "너닿",
+  "name": "너에게닿기를",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
