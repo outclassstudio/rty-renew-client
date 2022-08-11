@@ -33,9 +33,11 @@ export default function Space() {
 
   useEffect(() => {
     getMyInfo().then((res) => {
-      let user = res.data;
-      setMyInfo(user);
-      dispatch(setUserInfo(user));
+      let user = res.data.userInfo;
+      if (user) {
+        setMyInfo(user);
+        dispatch(setUserInfo(user));
+      }
     });
 
     if (userGiftList) {

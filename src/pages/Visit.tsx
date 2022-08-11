@@ -44,17 +44,20 @@ export default function Visit() {
           tool.activate();
 
           getOthersGift(params.id).then((res) => {
-            setAllGiftListCount(res.data.length);
-            let list = res.data.filter((el) => {
-              return el.status === "space";
+            if (res.data.gift) {
+              setAllGiftListCount(res.data.gift.length);
+              let list = res.data.gift.filter((el) => {
+                return el.status === "space";
+              });
+              setSpaceGiftList(list);
+            }
+          });
+
+          if (params.id) {
+            getOthersInfo(params.id).then((res) => {
+              setUserInfo(res.data.userInfo);
             });
-
-            setSpaceGiftList(list);
-          });
-
-          getOthersInfo(params.id).then((res) => {
-            setUserInfo(res.data);
-          });
+          }
         } else {
           navigate("/notfound");
         }

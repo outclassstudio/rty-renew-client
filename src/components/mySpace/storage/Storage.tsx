@@ -35,8 +35,10 @@ export function Storage(props: any) {
 
   const isOpenHandler = () => {
     getMyGift().then((res) => {
-      const storge = res.data.filter((el) => el.status === "storage");
-      dispatch(setStorageGift(storge));
+      if (res.data.gift) {
+        const storge = res.data.gift.filter((el) => el.status === "storage");
+        dispatch(setStorageGift(storge));
+      }
     });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("storage"));

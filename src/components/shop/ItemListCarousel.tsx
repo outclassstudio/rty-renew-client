@@ -58,14 +58,14 @@ export default function ItemListCarousel({
   //모달 띄우고 아이템 구입 요청
   const handleBuyItem = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    let data = {
-      userId: window.localStorage.getItem("id"),
-      itemIdx: current.idx,
-      point: current.point,
-      name: current.name,
-    };
+    // let data = {
+    //   userId: window.localStorage.getItem("id"),
+    //   itemIdx: current.idx,
+    //   point: current.point,
+    //   name: current.name,
+    // };
 
-    if (myData.point < data.point) {
+    if (myData.point < current.point) {
       Swal.fire({
         title: "포인트가 부족해요!",
         icon: "error",
@@ -81,7 +81,7 @@ export default function ItemListCarousel({
         cancelButtonText: "안할래요",
       }).then((result) => {
         if (result.isConfirmed) {
-          buyItem(data).then(() => {
+          buyItem(current.idx).then(() => {
             handleGetItem();
           });
         }
@@ -101,13 +101,6 @@ export default function ItemListCarousel({
           confirmButtonText: "네ㅠㅠ",
         });
       } else {
-        let data = {
-          userId: window.localStorage.getItem("id"),
-          itemIdx: item.idx,
-          point: item.point,
-          name: item.name,
-        };
-
         //*확인 클릭시 구매요청 진행
         Swal.fire({
           title: `${item.point}포인트가 차감됩니다. 그래도 하시겠습니까?`,
@@ -117,7 +110,7 @@ export default function ItemListCarousel({
           cancelButtonText: "안할래요",
         }).then((result) => {
           if (result.isConfirmed) {
-            buyItem(data).then(() => {
+            buyItem(item.idx).then(() => {
               handleGetItem();
             });
           }

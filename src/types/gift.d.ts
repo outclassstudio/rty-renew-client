@@ -5,7 +5,11 @@ declare namespace Gift {
     msg?: string;
   }
 
-  interface GetSentGiftRes extends CoreResponse {
+  interface GetGiftResponse extends CoreResponse {
+    gift?: singleGiftDTO[];
+  }
+
+  interface GetSentGiftResponse extends CoreResponse {
     gift?: singleGiftDTO[];
   }
 

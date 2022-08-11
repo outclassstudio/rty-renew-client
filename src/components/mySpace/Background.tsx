@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { changeTheme, getThemeList } from "../../apis/userApi";
+import { changeTheme } from "../../apis/userApi";
 import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 import NumberCarousel from "../common/NumberCarousel";
+import { getMyItems } from "../../apis/itemApi";
 
 export default function Background() {
   const dispatch = useDispatch();
@@ -15,10 +16,13 @@ export default function Background() {
   const [end, setEnd] = useState<number>(12);
 
   useEffect(() => {
-    getThemeList().then((res) => {
-      if (res.status === 200) {
-        setThemeList(res.data);
+    //!타입수정필요
+    let myTheme: any;
+    getMyItems().then((res) => {
+      if (res.data.myItems) {
+        myTheme = res.data.myItems.filter((el) => el.type === "theme");
       }
+      setThemeList(myTheme);
     });
   }, []);
 

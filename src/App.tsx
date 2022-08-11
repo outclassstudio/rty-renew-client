@@ -38,10 +38,8 @@ function App() {
   const getUserGift = () => {
     if (window.localStorage.getItem("token")) {
       getMyGift().then((res) => {
-        if (res.status === 200) {
-          dispatch(setMyGift(res.data));
-          setIsGift(true);
-        }
+        dispatch(setMyGift(res.data.gift));
+        setIsGift(true);
       });
     }
   };

@@ -31,9 +31,11 @@ export function Avatar(props: any) {
 
   useEffect(() => {
     getMyInfo().then((res) => {
-      let user = res.data;
-      setMyInfo(user);
-      setStateMsg(user.msg);
+      let user = res.data.userInfo;
+      if (user) {
+        setMyInfo(user);
+        setStateMsg(user.msg);
+      }
     });
   }, [dispatch, userGiftList]);
 

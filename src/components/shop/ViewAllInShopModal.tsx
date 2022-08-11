@@ -56,12 +56,12 @@ export default function ViewAllInShopModal({
           confirmButtonText: "네ㅠㅠ",
         });
       } else {
-        let data = {
-          userId: window.localStorage.getItem("id"),
-          itemIdx: item.idx,
-          point: item.point,
-          name: item.name,
-        };
+        // let data = {
+        //   userId: window.localStorage.getItem("id"),
+        //   itemIdx: item.idx,
+        //   point: item.point,
+        //   name: item.name,
+        // };
 
         //*확인 클릭시 구매요청 진행
         Swal.fire({
@@ -72,7 +72,7 @@ export default function ViewAllInShopModal({
           cancelButtonText: "안할래요",
         }).then((result) => {
           if (result.isConfirmed) {
-            buyItem(data).then(() => {
+            buyItem(item.idx).then(() => {
               handleGetItem();
             });
           }

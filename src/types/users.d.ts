@@ -6,7 +6,7 @@ declare namespace Users {
   }
 
   interface UserInfoResponse extends CoreResponse {
-    data?: myinfoDTO;
+    userInfo?: myinfoDTO;
   }
 
   interface myinfoDTO {
