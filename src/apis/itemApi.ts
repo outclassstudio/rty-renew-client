@@ -1,12 +1,9 @@
 import { AxiosResponse } from "axios";
 import apiClient from ".";
 
-//내아이디
-const myId = localStorage.getItem("id");
-
 //모든 아이템 불러오기
 export const getAllItems = async (): Promise<
-  AxiosResponse<Item.singleItemDTO[]>
+  AxiosResponse<Item.GetAllItemsResponse>
 > => {
   return apiClient()
     .get("/items")
@@ -28,10 +25,10 @@ export const getMyItems = async (): Promise<
 
 //선물사기 및 포인트 차감
 export const buyItem = async (
-  data: Item.buyItemReqDTO
+  itemId: number
 ): Promise<AxiosResponse<Item.buyItemResDTO>> => {
   return apiClient()
-    .post(`/items/${myId}`, data)
+    .post(`/items`, itemId)
     .then((res) => {
       return res;
     });

@@ -26,20 +26,22 @@ export default function Shop() {
     getAllItems().then((res) => {
       setIsLoading(false);
 
-      const img = res.data.filter((el) => {
-        return el.type === "img";
-      });
-      setImg(img);
+      if (res.data.items) {
+        const img = res.data.items.filter((el) => {
+          return el.type === "img";
+        });
+        setImg(img);
 
-      const svg = res.data.filter((el) => {
-        return el.type === "svg";
-      });
-      setSvg(svg);
+        const svg = res.data.items.filter((el) => {
+          return el.type === "svg";
+        });
+        setSvg(svg);
 
-      const theme = res.data.filter((el) => {
-        return el.type === "theme";
-      });
-      setTheme(theme);
+        const theme = res.data.items.filter((el) => {
+          return el.type === "theme";
+        });
+        setTheme(theme);
+      }
 
       getMyItems().then((res) => {
         let ids = res.data.myItems?.map((el: any) => {
@@ -52,7 +54,7 @@ export default function Shop() {
 
     //*유저정보세팅
     getMyInfo().then((res) => {
-      setMyData(res.data);
+      setMyData(res.data.userInfo);
     });
   };
 

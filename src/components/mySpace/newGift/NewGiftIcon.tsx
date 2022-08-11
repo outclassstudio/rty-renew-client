@@ -39,8 +39,10 @@ export default function NewGift() {
 
   const openGiftHandler = () => {
     getMyGift().then((res) => {
-      const storge = res.data.filter((el) => el.status === "new");
-      dispatch(setNewGift(storge));
+      if (res.data.gift) {
+        const storge = res.data.gift.filter((el) => el.status === "new");
+        dispatch(setNewGift(storge));
+      }
     });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));

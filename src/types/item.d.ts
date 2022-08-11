@@ -5,6 +5,10 @@ declare namespace Item {
     msg?: string;
   }
 
+  interface GetAllItemsResponse extends CoreResponse {
+    items?: singleItemDTO[];
+  }
+
   interface GetMyItemsResponse extends CoreResponse {
     myItems?: singleItemDTO[];
   }
@@ -15,13 +19,6 @@ declare namespace Item {
     data: string;
     point?: number;
     name?: string;
-  }
-
-  interface buyItemReqDTO {
-    userId: string | null;
-    itemIdx: number | null;
-    point: number;
-    name: string;
   }
 
   interface buyItemResDTO {

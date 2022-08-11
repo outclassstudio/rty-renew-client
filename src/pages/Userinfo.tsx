@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import {
-  changePassoword,
+  changePassword,
   checkPassowrd,
   deleteAccount,
   getMyInfo,
@@ -77,9 +77,9 @@ export default function Userinfo() {
   useEffect(() => {
     getMyInfo().then((res) => {
       setIsLoading(false);
-      if (res.data.data) {
-        setUserInfo(res.data.data);
-        setNewNickname(res.data.data.nickname);
+      if (res.data.userInfo) {
+        setUserInfo(res.data.userInfo);
+        setNewNickname(res.data.userInfo.nickname);
       }
     });
   }, []);
@@ -197,8 +197,16 @@ export default function Userinfo() {
       cancelButtonText: "취소!",
     }).then((result) => {
       if (result.isDenied) {
-        deleteAccount().then(() => {
-          handleLogout();
+        deleteAccount().then((res) => {
+          if (res.data.ok) {
+            handleLogout();
+          } else {
+            Swal.fire({
+              title: "계정을 삭제하지 못했어요",
+              text: res.data.error,
+              icon: "error",
+            });
+          }
         });
       }
     });
@@ -260,7 +268,8 @@ export default function Userinfo() {
 
     checkPassowrd(data)
       .then((res) => {
-        setCheckPw(res.data);
+        //! 응답에 따른 구현 확인
+        setCheckPw(res.data.ok);
         setErrors({ ...errors, pwCheck: false });
       })
       .catch(() => {
@@ -283,17 +292,19 @@ export default function Userinfo() {
       changePwdInfo.passwordCheck !== "" &&
       changePwdInfo.password === changePwdInfo.passwordCheck
     ) {
-      changePassoword(data)
-        .then(() => {
-          Swal.fire({
-            title: "비밀번호가 성공적으로 변경되었습니다",
-            icon: "success",
-            confirmButtonText: "닫기",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.replace("/userinfo");
-            }
-          });
+      changePassword(data)
+        .then((res) => {
+          if (res.data.ok) {
+            Swal.fire({
+              title: "비밀번호가 성공적으로 변경되었습니다",
+              icon: "success",
+              confirmButtonText: "닫기",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.replace("/userinfo");
+              }
+            });
+          }
         })
         .catch((err) => {
           Swal.fire({
