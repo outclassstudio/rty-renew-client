@@ -47,10 +47,10 @@ export const changeMsg = async (
 
 //!다른 사람 찾기
 export const findUser = async (
-  data: string
-): Promise<AxiosResponse<Users.otherUserDTO[]>> => {
+  userId: string
+): Promise<AxiosResponse<Users.FindUserResponse>> => {
   return apiClient()
-    .get(`/users/find/${data}`)
+    .get(`/users/find/${userId}`)
     .then((res) => {
       return res;
     });

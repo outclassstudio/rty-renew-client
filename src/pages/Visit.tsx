@@ -77,7 +77,7 @@ export default function Visit() {
   //캔버스에 svg임포트
   function importSvg() {
     spaceGiftList.forEach((gift: any) => {
-      const svgAttr = JSON.parse(gift.svgAttr);
+      const svgAttr = gift.svgAttr;
       Paper.project.importSVG(gift.svg, {
         onLoad: function (item: any) {
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);

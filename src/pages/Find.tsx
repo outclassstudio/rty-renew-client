@@ -55,8 +55,10 @@ export default function Find() {
         setResultMsg(true);
         setSearchWord(findUserId);
 
-        if (res.data.length !== 0) {
-          setUserList(res.data);
+        if (res.data.ok) {
+          if (res.data.userInfo) {
+            setUserList(res.data.userInfo);
+          }
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           setUserList([]);
@@ -85,7 +87,9 @@ export default function Find() {
       setRandomResult(false);
       setResultMsg(true);
       setSearchWord(id);
-      setUserList(res.data);
+      if (res.data.userInfo) {
+        setUserList(res.data.userInfo);
+      }
     });
   };
 

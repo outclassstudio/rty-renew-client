@@ -61,9 +61,8 @@ export default function Signup() {
       axios
         .get(`/users/checkid/${signUpInfo.userId}`)
         .then((res) => {
-          console.log(res.data, "응답은오니");
           setMessageRender(true);
-          setErrors({ ...errors, idOverlap: !res.data.ok });
+          setErrors({ ...errors, idOverlap: res.data.ok });
         })
         .catch(() => {
           setMessageRender(true);

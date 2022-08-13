@@ -55,9 +55,11 @@ export default function Header({ title }: Props) {
     //*아이디값이 truthy하고 공백이 아닌 경우
     if (findUserId && !findUserId.match(checkBlank)) {
       findUser(findUserId).then((res) => {
-        if (res.data.length !== 0) {
-          setUserList(res.data);
-          setActiveFindDropdown(true);
+        if (res.data.ok) {
+          if (res.data.userInfo) {
+            setUserList(res.data.userInfo);
+            setActiveFindDropdown(true);
+          }
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           Swal.fire({

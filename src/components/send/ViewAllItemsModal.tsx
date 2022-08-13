@@ -10,7 +10,7 @@ interface Props {
 }
 
 interface getSingleItem {
-  idx: number;
+  id: number;
   type: string;
   data: string;
   point?: number;
@@ -23,28 +23,29 @@ export default function ViewAllItemsModal({
   handleActiveViewAll,
 }: Props) {
   //아이템 선택과 동시에 preview업데이트, 모달창 종료
-  const handleSetItem = (idx: number, url: string) => {
-    handleSetPrv(idx, url);
+  const handleSetItem = (id: number, url: string) => {
+    handleSetPrv(id, url);
     handleActiveViewAll();
   };
 
   //아이템 컴포넌트
   const renderItems = () => {
-    return data.map((el: any, idx: number) => {
-      let url: string;
-      if (el.type === "svg") {
-        const svgStr = el.data;
-        const svg = new Blob([svgStr], { type: "image/svg+xml" });
-        url = URL.createObjectURL(svg);
-      } else {
-        url = el.data;
-      }
+    return data.map((el: any, id: number) => {
+      // let url: string;
+      // if (el.type === "svg") {
+      //   const svgStr = el.data;
+      //   const svg = new Blob([svgStr], { type: "image/svg+xml" });
+      //   url = URL.createObjectURL(svg);
+      // } else {
+      //   url = el.data;
+      // }
+      let url = el.data;
 
       return (
-        <ImageWrapper key={idx}>
+        <ImageWrapper key={id}>
           <SingleItem
-            onClick={() => handleSetItem(el.idx, url)}
-            className={el.idx === prvItem.id ? "active" : ""}
+            onClick={() => handleSetItem(el.id, url)}
+            className={el.id === prvItem.id ? "active" : ""}
             src={url}
           />
         </ImageWrapper>

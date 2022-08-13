@@ -6,7 +6,7 @@ interface giftState {
 }
 
 interface getSingleItem {
-  idx: number;
+  id: number;
   type: string;
   data: string;
   point?: number;

@@ -87,7 +87,7 @@ export default function SetGiftBox() {
 
 const MainContainer = styled.div`
   width: 410px;
-  height: 447px;
+  height: 457px;
   display: flex;
   flex-direction: column;
   background: ${colorSet.purple};
@@ -146,7 +146,7 @@ const SvgList = styled.div`
 const SvgPrv = styled.div`
   display: flex;
   background: white;
-  height: 298px;
+  height: 250px;
   padding: 20px;
   box-shadow: rgba(50, 50, 93, 1) 0px 0px 5px 0px;
 `;

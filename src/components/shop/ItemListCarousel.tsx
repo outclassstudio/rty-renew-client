@@ -41,7 +41,7 @@ export default function ItemListCarousel({
   const openModal = (item: any) => {
     setCurrent(item);
 
-    if (myIdList.includes(item.idx)) {
+    if (myIdList.includes(item.id)) {
       setMyItem(true);
     } else {
       setMyItem(false);
@@ -81,8 +81,10 @@ export default function ItemListCarousel({
         cancelButtonText: "안할래요",
       }).then((result) => {
         if (result.isConfirmed) {
-          buyItem(current.idx).then(() => {
-            handleGetItem();
+          buyItem(current.id).then((res) => {
+            if (res.data.ok) {
+              handleGetItem();
+            }
           });
         }
       });
@@ -91,7 +93,8 @@ export default function ItemListCarousel({
 
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
-    if (myIdList.includes(item.idx)) {
+    console.log("아이디에 문제가 있다", item);
+    if (myIdList.includes(item.id)) {
       return;
     } else {
       if (myData.point < item.point) {
@@ -110,7 +113,7 @@ export default function ItemListCarousel({
           cancelButtonText: "안할래요",
         }).then((result) => {
           if (result.isConfirmed) {
-            buyItem(item.idx).then(() => {
+            buyItem(item.id).then(() => {
               handleGetItem();
             });
           }
@@ -121,20 +124,21 @@ export default function ItemListCarousel({
 
   //슬라이더 요소 컴포넌트
   const sliders = () => {
-    return img.map((el: Item.singleItemDTO, idx: number) => {
-      const mine = myIdList.includes(el.idx);
+    return img.map((el: Item.singleItemDTO, id: number) => {
+      const mine = myIdList.includes(el.id);
 
-      let url;
-      if (el.type === "svg") {
-        const svgStr = el.data;
-        const svg = new Blob([svgStr], { type: "image/svg+xml" });
-        url = URL.createObjectURL(svg);
-      } else {
-        url = el.data;
-      }
+      let url = el.data;
+      // let url;
+      // if (el.type === "svg") {
+      //   const svgStr = el.data;
+      //   const svg = new Blob([svgStr], { type: "image/svg+xml" });
+      //   url = URL.createObjectURL(svg);
+      // } else {
+      //   url = el.data;
+      // }
 
       return (
-        <Wrapper key={idx}>
+        <Wrapper key={id}>
           <ImageWrapper>
             <SingleImage src={url} alt="" onClick={() => openModal(el)} />
             <Text>
@@ -182,11 +186,11 @@ const CarouselWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding: 3px 10px 3px 15px;
+  /* padding: 3px 10px 3px 10px; */
 `;
 
 const ImageWrapper = styled.div`
-  width: 146px;
+  width: 140px;
   display: flex;
   flex-direction: column;
   background: white;
@@ -201,8 +205,8 @@ const ImageWrapper = styled.div`
 `;
 
 const SingleImage = styled.img`
-  width: 146px;
-  height: 111px;
+  width: 140px;
+  height: 105px;
   border-radius: 10px 10px 0px 0px;
 `;
 
@@ -275,8 +279,8 @@ const OverwrapText = styled.div`
   position: fixed;
   color: #ffffff;
   background: #8383839e;
-  width: 146px;
-  height: 111px;
+  width: 140px;
+  height: 105px;
   font-size: 13px;
   border-radius: 10px 10px 0px 0px;
 

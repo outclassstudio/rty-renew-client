@@ -17,8 +17,8 @@ export default function GiftListBox({ data }: Props) {
 
   //svg url세팅
   const svgStr = data.svg;
-  const svg = new Blob([svgStr], { type: "image/svg+xml" });
-  const url = URL.createObjectURL(svg);
+  // const svg = new Blob([svgStr], { type: "image/svg+xml" });
+  // const url = URL.createObjectURL(svg);
 
   //날짜세팅
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function GiftListBox({ data }: Props) {
   return (
     <BoxWrapper onClick={handleOpenModal} className={nowAdd ? nowAni : ""}>
       {nowAdd ? <OverWrapText>방금전</OverWrapText> : ""}
-      <BoxSvg src={url} alt="" />
+      <BoxSvg src={svgStr} alt="" />
       <Text>
         <div>to. {data.userTo}</div>
         <div>{date}</div>

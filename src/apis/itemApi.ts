@@ -26,9 +26,10 @@ export const getMyItems = async (): Promise<
 //선물사기 및 포인트 차감
 export const buyItem = async (
   itemId: number
-): Promise<AxiosResponse<Item.buyItemResDTO>> => {
+): Promise<AxiosResponse<Item.BuyItemResponse>> => {
+  console.log(itemId, "제대로 넘어가니");
   return apiClient()
-    .post(`/items`, itemId)
+    .post(`/items`, { itemId })
     .then((res) => {
       return res;
     });

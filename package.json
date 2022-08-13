@@ -64,5 +64,5 @@
     "@types/react-calendar": "^3.5.0",
     "@types/styled-components": "^5.1.25"
   },
-  "proxy": "https://rty-renew-server.herokuapp.com/"
+  "proxy": "http://localhost:8080"
 }
