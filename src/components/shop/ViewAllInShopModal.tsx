@@ -46,7 +46,7 @@ export default function ViewAllInShopModal({
 
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
-    if (myIdList.includes(item.idx)) {
+    if (myIdList.includes(item.id)) {
       return;
     } else {
       if (myData.point < item.point) {
@@ -72,7 +72,7 @@ export default function ViewAllInShopModal({
           cancelButtonText: "안할래요",
         }).then((result) => {
           if (result.isConfirmed) {
-            buyItem(item.idx).then(() => {
+            buyItem(item.id).then(() => {
               handleGetItem();
             });
           }
@@ -94,20 +94,21 @@ export default function ViewAllInShopModal({
 
   //아이템 컴포넌트
   const renderItems = () => {
-    return data.slice(start, end).map((el: Item.singleItemDTO, idx: number) => {
-      const mine = myIdList.includes(el.idx);
+    return data.slice(start, end).map((el: Item.singleItemDTO, id: number) => {
+      const mine = myIdList.includes(el.id);
+      let url = el.data;
 
-      let url;
-      if (el.type === "svg") {
-        const svgStr = el.data;
-        const svg = new Blob([svgStr], { type: "image/svg+xml" });
-        url = URL.createObjectURL(svg);
-      } else {
-        url = el.data;
-      }
+      // let url;
+      // if (el.type === "svg") {
+      //   const svgStr = el.data;
+      //   const svg = new Blob([svgStr], { type: "image/svg+xml" });
+      //   url = URL.createObjectURL(svg);
+      // } else {
+      //   url = el.data;
+      // }
 
       return (
-        <ImageWrapper key={idx}>
+        <ImageWrapper key={id}>
           <SingleImage src={url} alt="" />
           <Text>
             <SubText className="a">{el.name}</SubText>
@@ -178,7 +179,7 @@ const MainWrapper = styled.div`
   align-items: center;
   padding: 0px;
   cursor: default;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const PrvBoxWrapper = styled.div`
@@ -190,9 +191,9 @@ const PrvBoxWrapper = styled.div`
   height: 750px;
   color: white;
   box-shadow: rgba(50, 50, 93, 0.7) 0px 0px 15px 0px;
-  padding: 22px 37px;
+  padding: 15px 35px;
   border-radius: 11px;
-  gap: 10px;
+  gap: 8px;
   font-weight: bold;
   font-size: 20px;
   z-index: 2;
@@ -219,7 +220,7 @@ const PointWrapper = styled.div`
 
 const GridWrapper = styled.div`
   height: 582px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 `;
 
 const GridBox = styled.div`
@@ -227,7 +228,7 @@ const GridBox = styled.div`
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
 `;
 
 const ImageWrapper = styled.div`

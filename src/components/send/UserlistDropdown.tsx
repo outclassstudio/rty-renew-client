@@ -53,7 +53,7 @@ export default function UserlistDropdown({
                     onClick={() => handleSetToUser(el.id, el.nickname)}
                   >
                     <span>{el.nickname}</span>
-                    <span>( {el.id} )</span>
+                    <span>( {el.userId} )</span>
                   </SingleUser>
                 );
               })

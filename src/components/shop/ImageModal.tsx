@@ -20,14 +20,15 @@ export default function ImageModal({
 
   //이미지 분류하여 url 상태 세팅
   useEffect(() => {
-    if (image.type === "svg") {
-      const svgStr = image.data;
-      const svg = new Blob([svgStr], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(svg);
-      setImgUrl(url);
-    } else {
-      setImgUrl(image.data);
-    }
+    setImgUrl(image.data);
+    // if (image.type === "svg") {
+    //   const svgStr = image.data;
+    //   const svg = new Blob([svgStr], { type: "image/svg+xml" });
+    //   const url = URL.createObjectURL(svg);
+    //   setImgUrl(url);
+    // } else {
+    //   setImgUrl(image.data);
+    // }
   }, []);
 
   return (

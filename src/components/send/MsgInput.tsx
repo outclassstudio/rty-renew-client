@@ -96,7 +96,9 @@ export default function MsgInput() {
                 }
                 alt=""
               />
-              <ImagePrv src={prvItem.url} alt="" />
+              <ImagePrvWrapper>
+                <ImagePrv src={prvItem.url} alt="" />
+              </ImagePrvWrapper>
             </>
           ) : (
             <NoneImg>선택된 이미지가 없습니다</NoneImg>
@@ -127,7 +129,7 @@ const MainContainer = styled.div`
   width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
 `;
 
 const SubContainer = styled.div`
@@ -137,7 +139,7 @@ const SubContainer = styled.div`
   color: white;
   padding: 25px 35px 30px 35px;
   border-radius: 10px;
-  gap: 10px;
+  gap: 5px;
   box-shadow: rgba(50, 50, 93, 0.527) 0px 0px 15px 0px;
 
   &.b {
@@ -197,13 +199,18 @@ const NoneImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 350px;
-  height: 262px;
+  width: 320px;
+  height: 240px;
+`;
+
+const ImagePrvWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const ImagePrv = styled.img`
-  width: 350px;
-  height: 262px;
+  width: 320px;
+  height: 240px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 1) 0px 30px 30px -35px;
 `;
@@ -230,7 +237,7 @@ const BoxWrapper = styled.div`
 `;
 
 const MsgInputBox = styled.textarea`
-  height: 65px;
+  height: 30px;
   border: 1px solid #dbdbdb;
   padding: 15px;
 

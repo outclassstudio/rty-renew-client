@@ -179,7 +179,7 @@ const LeftWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 25px;
+  gap: 15px;
   animation: 0.6s ease-in-out ${fadeMoveAction};
 `;
 

@@ -9,7 +9,7 @@ interface Props {
 }
 
 interface getSingleItem {
-  idx: number;
+  id: number;
   type: string;
   data: string;
   point?: number;
@@ -34,21 +34,21 @@ export default function SendItemListCarousel({
 
   //carousel에 렌더링할 컴포넌트
   const sliders = () => {
-    return data.map((el: any, idx: number) => {
-      let url: string;
-      if (el.type === "svg") {
-        const svgStr = el.data;
-        const svg = new Blob([svgStr], { type: "image/svg+xml" });
-        url = URL.createObjectURL(svg);
-      } else {
-        url = el.data;
-      }
+    return data.map((el: any, id: number) => {
+      let url: string = el.data;
+      // if (el.type === "svg") {
+      //   const svgStr = el.data;
+      //   const svg = new Blob([svgStr], { type: "image/svg+xml" });
+      //   url = URL.createObjectURL(svg);
+      // } else {
+      //   url = el.data;
+      // }
 
       return (
-        <ImageWrapper key={idx}>
+        <ImageWrapper key={id}>
           <SingleSvg
-            onClick={() => handleSetPrv(el.idx, url)}
-            className={el.idx === prvItem.id ? "active" : ""}
+            onClick={() => handleSetPrv(el.id, url)}
+            className={el.id === prvItem.id ? "active" : ""}
             src={url}
           />
         </ImageWrapper>

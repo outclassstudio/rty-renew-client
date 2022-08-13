@@ -9,6 +9,10 @@ declare namespace Users {
     userInfo?: myinfoDTO;
   }
 
+  interface FindUserResponse extends CoreResponse {
+    userInfo?: otherUserDTO[];
+  }
+
   interface myinfoDTO {
     // id: undefined | string;
     userId: string;
@@ -31,6 +35,7 @@ declare namespace Users {
 
   interface otherUserDTO {
     id: string;
+    userId: string;
     nickname: string;
     birth: string;
     theme: string;

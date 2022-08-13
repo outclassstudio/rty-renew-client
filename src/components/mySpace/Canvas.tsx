@@ -252,7 +252,7 @@ export default function Canvas(props: any) {
   function importSvg() {
     if (match.length <= spaceGiftLists.length) {
       spaceGiftLists.forEach((gift: any) => {
-        const svgAttr = JSON.parse(gift.svgAttr);
+        const svgAttr = gift.svgAttr;
         Paper.project.importSVG(gift.svg, {
           onLoad: function (item: any) {
             let obj = { id: item.id, gift: gift };
@@ -347,7 +347,7 @@ export default function Canvas(props: any) {
     const targetSvg = targetItem[0].svg;
 
     //! svg 속성 값 바꾸기
-    let svgAttr = JSON.parse(targetItem[0].svgAttr);
+    let svgAttr = targetItem[0].svgAttr;
     svgAttr.x = x;
     svgAttr.y = y;
     svgAttr.rotation = 0;
@@ -444,7 +444,7 @@ export default function Canvas(props: any) {
     match.forEach((el: any) => {
       activeLayer.forEach((layer) => {
         if (el.id === layer.id) {
-          const svgAttr = JSON.parse(el.gift.svgAttr);
+          const svgAttr = el.gift.svgAttr;
 
           if (
             svgAttr.x !== layer.position.x ||
@@ -467,7 +467,7 @@ export default function Canvas(props: any) {
         if (layer.data.type === "name") {
           MoveArr.forEach((el: any) => {
             if (el.idx === layer.data.id) {
-              const position = JSON.parse(el.svgAttr);
+              const position = el.svgAttr;
               layer.position.x = position.x + 5;
               layer.position.y = position.y - 45;
             }

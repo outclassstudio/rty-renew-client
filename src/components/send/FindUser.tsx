@@ -18,9 +18,11 @@ export default function FindUser() {
     //*아이디값이 truthy하고 공백이 아닌 경우
     if (findUserId && !findUserId.match(checkBlank)) {
       findUser(findUserId).then((res) => {
-        if (res.data.length !== 0) {
-          setUserList(res.data);
-          setActiveDropdown(true);
+        if (res.data.ok) {
+          if (res.data.userInfo) {
+            setUserList(res.data.userInfo);
+            setActiveDropdown(true);
+          }
         } else {
           //?DB상에 검색되는 아이디/닉네임이 없는 경우
           Swal.fire({

@@ -14,15 +14,15 @@ declare namespace Item {
   }
 
   interface singleItemDTO {
-    idx: number;
+    id: number;
     type: string;
     data: string;
     point?: number;
     name?: string;
   }
 
-  interface buyItemResDTO {
-    user_point: number;
-    user_item: singleItemDTO[];
+  interface BuyItemResponse extends CoreResponse {
+    // user_point: number;
+    // user_item: singleItemDTO[];
   }
 }

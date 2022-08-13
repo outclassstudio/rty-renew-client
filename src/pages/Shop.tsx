@@ -44,11 +44,11 @@ export default function Shop() {
       }
 
       getMyItems().then((res) => {
-        let ids = res.data.myItems?.map((el: any) => {
-          return el.idx;
+        let idArray = res.data.myItems?.map((el: any) => {
+          return el.id;
         });
-
-        setmyIdList(ids);
+        console.log("왜안되", res.data);
+        setmyIdList(idArray);
       });
     });
 
@@ -80,7 +80,7 @@ export default function Shop() {
         <Loading />
       ) : (
         <MainContainer>
-          <MyPoint myData={myData} />
+          {/* <MyPoint myData={myData} /> */}
           <SubContainer className="a">
             <Text>
               🎁선물 포장 구입하기
@@ -181,7 +181,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 18px;
+  gap: 10px;
 `;
 
 const SubContainer = styled.div`
