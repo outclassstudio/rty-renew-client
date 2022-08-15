@@ -1,44 +1,46 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { changeTheme } from "../../apis/userApi";
+import { changeTheme, getMyInfo } from "../../apis/userApi";
 import { setModalOpen, setUserInfo } from "../../redux/reducers/spaceReducer";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 import NumberCarousel from "../common/NumberCarousel";
 import { getMyItems } from "../../apis/itemApi";
+import { NormalBtn } from "../../style/btnStyle.style";
+import { useSelector } from "react-redux";
 
 export default function Background() {
   const dispatch = useDispatch();
-  const [checkedItem, setCheckedItem] = useState<Array<any>>([]);
-  const [themeList, setThemeList] = useState<Array<any>>([]);
+  const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const [checkedItem, setCheckedItem] = useState<number>(0);
+  const [themeList, setThemeList] = useState<Item.singleItemDTO[]>([]);
   const [page, setPage] = useState<number>(1);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(12);
 
   useEffect(() => {
-    //!타입수정필요
-    let myTheme: any;
+    let myTheme: Item.singleItemDTO[];
     getMyItems().then((res) => {
       if (res.data.myItems) {
         myTheme = res.data.myItems.filter((el) => el.type === "theme");
       }
       setThemeList(myTheme);
     });
+    setCheckedItem(userInfo.theme.id);
   }, []);
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
     if (isCheckd) {
-      setCheckedItem([Number(item)]);
-    } else {
-      setCheckedItem(checkedItem.filter((el) => el !== item));
+      setCheckedItem(+item);
     }
   };
 
   const changeThemeHandler = async () => {
-    if (checkedItem.length !== 0) {
-      changeTheme(checkedItem[0]).then((res) => {
-        let info = res.data;
-        dispatch(setUserInfo(info));
+    if (checkedItem) {
+      changeTheme(checkedItem).then((res) => {
+        if (res.data.ok) {
+          getMyInfo().then((res) => dispatch(setUserInfo(res.data.userInfo)));
+        }
       });
       dispatch(setModalOpen(false));
     }
@@ -79,19 +81,33 @@ export default function Background() {
                 <ImgName>{theme.name}</ImgName>
                 <SelectInput
                   type="checkbox"
-                  value={theme.idx}
+                  value={theme.id}
                   onChange={(e) =>
                     checkedItemHandler(e.target.checked, e.target.value)
                   }
-                  checked={checkedItem.includes(theme.idx) ? true : false}
+                  checked={checkedItem === theme.id ? true : false}
                 ></SelectInput>
               </SelectImg>
             );
           })}
         </ImgContainer>
         <BtnBox>
-          <SaveBtn onClick={changeThemeHandler}>저장</SaveBtn>
-          <CloseBtn onClick={closeThemeHandler}>닫기</CloseBtn>
+          <NormalBtn
+            className="a"
+            width="90px"
+            height="35px"
+            onClick={changeThemeHandler}
+          >
+            저장
+          </NormalBtn>
+          <NormalBtn
+            className="b"
+            width="90px"
+            height="35px"
+            onClick={closeThemeHandler}
+          >
+            닫기
+          </NormalBtn>
         </BtnBox>
       </ModalView>
     </ModalBackground>
@@ -118,7 +134,7 @@ export const ModalView = styled.div`
   position: absolute;
   padding: 25px;
   border-radius: 10px;
-  background-color: #194470;
+  background-color: ${colorSet.purple};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   animation: ${fadeExpand} 0.3s ease-in-out;
   gap: 15px;
@@ -133,7 +149,7 @@ const ModalTitle = styled.div`
   font-size: 20px;
 `;
 
-export const ImgContainer = styled.div`
+const ImgContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-content: center;
@@ -143,79 +159,37 @@ export const ImgContainer = styled.div`
   border-radius: 10px;
 `;
 
-export const ImgBox = styled.div`
-  width: 160px;
+const ImgBox = styled.div`
+  width: 200px;
   height: 150px;
   margin: 0 5px 5px 5px;
   border-radius: 5px;
 `;
 
-export const Img = styled.img`
+const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 12px 0px;
 `;
 
-export const ImgName = styled.div`
+const ImgName = styled.div`
   color: ${colorSet.base};
   font-weight: bold;
 `;
 
-export const SelectImg = styled.div`
+const SelectImg = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   /* padding: 20px 10px; */
 `;
 
-export const SelectInput = styled.input``;
+const SelectInput = styled.input``;
 
 export const BtnBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-top: 10px;
-`;
-
-export const SaveBtn = styled.button`
-  width: 80px;
-  padding: 10px;
-  margin: 2px;
-  border-radius: 5px;
-  background: transparent;
-  border: 1px solid #fff;
-  font-weight: 700;
-  color: #fff;
-  &:hover {
-    color: #fff;
-    outline: 0;
-    box-shadow: 0 0 40px 40px #7c8eff inset;
-    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
-  }
-  &:focus {
-    color: #fff;
-    outline: 0;
-  }
-`;
-
-export const CloseBtn = styled.button`
-  width: 80px;
-  padding: 10px;
-  margin: 2px;
-  border-radius: 5px;
-  background: transparent;
-  border: 1px solid #fff;
-  font-weight: 700;
-  color: #fff;
-  &:hover {
-    color: #fff;
-    outline: 0;
-    box-shadow: 0 0 40px 40px #7c8eff inset;
-    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
-  }
-  &:focus {
-    color: #fff;
-    outline: 0;
-  }
 `;

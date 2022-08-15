@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { colorSet } from "../../../style/global";
 import { BtnBox } from "../Background";
 import { GiftItem } from "./GiftItem";
 
@@ -161,7 +162,7 @@ export default function AllGift(props: any) {
   );
 }
 
-export const ModalContainer = styled.div`
+const ModalContainer = styled.div`
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -188,12 +189,12 @@ const SelectBox = styled.select`
   border: 1px sole;
   border: 1px solid #fff;
   border-radius: 0.6em;
-  color: #f99f9f;
+  color: white;
   height: 40px;
   font-weight: 500;
 `;
 
-export const ModalView = styled.div`
+const ModalView = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -203,14 +204,14 @@ export const ModalView = styled.div`
   height: 580px;
   padding: 2rem 1rem 2rem;
   border-radius: 26px;
-  background-color: #194470;
+  background-color: ${colorSet.purple};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   color: white;
   font-size: 20px;
   z-index: 4;
 `;
 
-export const GiftItemBox = styled.div`
+const GiftItemBox = styled.div`
   display: grid;
   margin-top: 50px;
   min-height: 410px;
@@ -220,7 +221,6 @@ export const GiftItemBox = styled.div`
   align-items: center;
   gap: 35px;
   padding: 15px;
-  background: #04315e;
   border-radius: 5px;
   overflow: hidden;
   overflow: scroll;
@@ -230,7 +230,7 @@ export const GiftItemBox = styled.div`
   }
 `;
 
-export const GiftAllBtn = styled.button`
+const GiftAllBtn = styled.button`
   width: 100px;
   height: 40px;
   box-sizing: border-box;
@@ -258,7 +258,7 @@ export const GiftAllBtn = styled.button`
   }
 `;
 
-export const GiftBtn = styled.button`
+const GiftBtn = styled.button`
   width: 100px;
   height: 40px;
   box-sizing: border-box;

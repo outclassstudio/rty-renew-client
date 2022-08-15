@@ -5,8 +5,8 @@ interface giftState {
     userFrom: string | null;
     userTo: string;
     content: string;
-    svg: number | null;
-    img: number | null;
+    svgId: number | null;
+    imgId: number | null;
     nickname: string;
   };
 }
@@ -16,8 +16,8 @@ const initialState = {
     userFrom: window.localStorage.getItem("id"),
     userTo: "",
     content: "",
-    svg: null,
-    img: null,
+    svgId: null,
+    imgId: null,
     nickname: "",
   },
 } as giftState;
@@ -37,10 +37,10 @@ const sendGiftSlice = createSlice({
       state.gift.content = action.payload;
     },
     setSvg(state, action: PayloadAction<number | null>) {
-      state.gift.svg = action.payload;
+      state.gift.svgId = action.payload;
     },
     setImg(state, action: PayloadAction<number | null>) {
-      state.gift.img = action.payload;
+      state.gift.imgId = action.payload;
     },
     setNickname(state, action: PayloadAction<string>) {
       state.gift.nickname = action.payload;
@@ -50,8 +50,8 @@ const sendGiftSlice = createSlice({
         userFrom: window.localStorage.getItem("id"),
         userTo: "",
         content: "",
-        svg: null,
-        img: null,
+        svgId: null,
+        imgId: null,
         nickname: "",
       };
 

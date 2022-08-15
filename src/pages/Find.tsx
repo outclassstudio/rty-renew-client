@@ -78,15 +78,15 @@ export default function Find() {
   };
 
   //스토어에 아이디가 있을 경우 사람찾기 실행
-  const handleFindStoredUser = (id: string): void => {
+  const handleFindStoredUser = (userId: string): void => {
     setIsLoading(true);
 
-    findUser(id).then((res) => {
+    findUser(userId).then((res) => {
       handleSetPage(1);
       setIsLoading(false);
       setRandomResult(false);
       setResultMsg(true);
-      setSearchWord(id);
+      setSearchWord(userId);
       if (res.data.userInfo) {
         setUserList(res.data.userInfo);
       }

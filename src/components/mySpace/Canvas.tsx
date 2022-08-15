@@ -498,47 +498,42 @@ export default function Canvas(props: any) {
   }
 
   return (
-    <>
-      <CanvasBox>
-        <NewGiftIcon />
-        {isEditSpace && !editClickedItem ? <WastebasketIcon /> : null}
-        {isEditSpace && !editClickedItem ? (
-          <Storage isEditSpace={isEditSpace} />
-        ) : (
-          <Storage />
-        )}
-
-        <CanvasArea
-          ref={canvasRef}
-          id="canvas"
-          color={userInfo.theme}
-          draggable
-          onDrop={(e: any) => dropHandler(e)}
-          onDragOver={(e) => dragOverHandler(e)}
-        ></CanvasArea>
-
-        {themeModal ? <Background /> : null}
-        {isOpenGift ? (
-          <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
-        ) : null}
-        {isConfirmModal && isOpenTrash && editClickedItem ? (
-          <ConfirmModal msg={msg} changeData={changeData} />
-        ) : null}
-        {isConfirmModal && isOpenSave && editClickedItem ? (
-          <ConfirmModal msg={msg} changeData={changeData} />
-        ) : null}
-      </CanvasBox>
-    </>
+    <CanvasBox>
+      <NewGiftIcon />
+      {isEditSpace && !editClickedItem ? <WastebasketIcon /> : null}
+      {isEditSpace && !editClickedItem ? (
+        <Storage isEditSpace={isEditSpace} />
+      ) : (
+        <Storage />
+      )}
+      <CanvasArea
+        ref={canvasRef}
+        id="canvas"
+        color={userInfo.theme.data}
+        draggable
+        onDrop={(e: any) => dropHandler(e)}
+        onDragOver={(e) => dragOverHandler(e)}
+      ></CanvasArea>
+      {themeModal ? <Background /> : null}
+      {isOpenGift ? (
+        <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
+      ) : null}
+      {isConfirmModal && isOpenTrash && editClickedItem ? (
+        <ConfirmModal msg={msg} changeData={changeData} />
+      ) : null}
+      {isConfirmModal && isOpenSave && editClickedItem ? (
+        <ConfirmModal msg={msg} changeData={changeData} />
+      ) : null}
+    </CanvasBox>
   );
 }
 
-export const CanvasBox = styled.div`
-  margin-top: 50px;
-  width: 1280px;
-  height: 720px;
+const CanvasBox = styled.div`
+  width: 70%;
+  height: 80%;
 `;
 
-export const CanvasArea = styled.canvas`
+const CanvasArea = styled.canvas`
   width: 100%;
   height: 100%;
   border-radius: 10px;

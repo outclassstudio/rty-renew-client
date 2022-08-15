@@ -36,7 +36,7 @@ export default function UserBox({ data }: Props) {
         <Left>
           <ItemWrapper className="id">
             <ItemName>아이디</ItemName>
-            <ItemContent>{data.id}</ItemContent>
+            <ItemContent>{data.userId}</ItemContent>
           </ItemWrapper>
           <ItemWrapper>
             <ItemName>생일</ItemName>
@@ -51,7 +51,7 @@ export default function UserBox({ data }: Props) {
               }
               alt=""
               onClick={() => {
-                handleVisitOthers(data.id);
+                handleVisitOthers(data.userId);
               }}
             />
           </Icon>
@@ -61,7 +61,7 @@ export default function UserBox({ data }: Props) {
               fill="white"
               onClick={() => {
                 navigate(`/send`);
-                dispatch(setTo(data.id));
+                dispatch(setTo(data.userId));
                 dispatch(setNickname(data.nickname));
               }}
             />

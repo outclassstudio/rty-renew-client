@@ -17,6 +17,7 @@ export default function GistList() {
   //내가 보낸 선물 리스트 요청
   useEffect(() => {
     getSentGift().then((res) => {
+      // console.log(res.data.gift);
       setIsLoading(false);
       if (res.data.gift) {
         setGiftListData(res.data.gift);

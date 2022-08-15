@@ -16,7 +16,7 @@ export default function PreviewModal({ data, handleCloseModal }: Props) {
   //프리뷰할 이미지 세팅
   useEffect(() => {
     const url = itemState.img.filter((el) => {
-      return el.id === data.img;
+      return el.id === data.imgId;
     });
     if (url[0]) {
       setPrvUrl(url[0].data);

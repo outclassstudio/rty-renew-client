@@ -51,7 +51,7 @@ export default function HeaderUserlist({
                     onClick={() => handleVisitOthers(el.id, el.nickname)}
                   >
                     <span>{el.nickname}</span>
-                    <span>( {el.id} )</span>
+                    <span>( {el.userId} )</span>
                   </SingleUser>
                 );
               })

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import AllGift from "./gift/AllGift";
 import Swal from "sweetalert2";
+import { colorSet } from "../../style/global";
 
 export function Avatar(props: any) {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export function Avatar(props: any) {
   const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
   const [stateMsg, setStateMsg] = useState<any>("");
-  const [isEditBtn, setIsEditBtn] = useState<boolean>(false);
+  // const [isEditBtn, setIsEditBtn] = useState<boolean>(false);
   const [isClickedAvatar, setIsClikedAvatar] = useState<boolean>(false);
   const [isAllGift, setIsAllGift] = useState<boolean>(false);
 
@@ -51,7 +52,7 @@ export function Avatar(props: any) {
       changeMsg(stateMsg).then((res) => {
         let info = res.data;
         setMyInfo(info);
-        setIsEditBtn(false);
+        // setIsEditBtn(false);
       });
 
       setEdit(!setEdit);
@@ -60,7 +61,6 @@ export function Avatar(props: any) {
 
   const inputChangeHandler = (e: any) => {
     //msg변경
-
     if (e.target.value === " " || e.target.value === null) {
       Swal.fire({
         title: "공백은 안 돼요",
@@ -70,8 +70,6 @@ export function Avatar(props: any) {
     } else {
       setStateMsg(e.target.value);
     }
-
-    //서버에게 user 상태 메세지 변경 post 요청 보내기
   };
 
   const clickAvatarHandler = () => {
@@ -80,7 +78,6 @@ export function Avatar(props: any) {
 
   const sendGiftHandler = () => {
     // 클릭한 유저에게 선물 보내기 페이지 라우팅
-
     navigate("/send", { state: otherUser.id });
     dispatch(setTo(otherUser.id));
     dispatch(setNickname(otherUser.nickname));
@@ -120,7 +117,7 @@ export function Avatar(props: any) {
                         <svg
                           width="24"
                           height="24"
-                          fill="white"
+                          fill="black"
                           xmlns="http://www.w3.org/2000/svg"
                           fillRule="evenodd"
                           clipRule="evenodd"
@@ -167,23 +164,22 @@ export function Avatar(props: any) {
   );
 }
 
-export const AvatarBox = styled.div`
+const AvatarBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: fixed;
-  /* margin-top: 170px; */
   width: 170px;
   height: 365px;
   user-select: none;
 `;
 
-export const MsgBox = styled.div`
+const MsgBox = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
   height: 50px;
-  background-color: #3a0ca3;
+  background-color: white;
   border-radius: 15px;
   margin: 10px;
   padding: 0px 10px;
@@ -204,7 +200,6 @@ export const MsgEditBtn = styled.button`
   background-color: transparent;
   width: 36px;
   cursor: pointer;
-  /* margin: 5px; */
   border-radius: 40%;
 `;
 
@@ -217,7 +212,7 @@ export const H3 = styled.div`
   word-break: break-all;
 `;
 
-export const Input = styled.input`
+const Input = styled.input`
   border-radius: 4px;
   width: 147px;
   font-size: 13px;
@@ -226,7 +221,7 @@ export const Input = styled.input`
   height: 30px;
 `;
 
-export const Circle = styled.div`
+const Circle = styled.div`
   display: flex;
   justify-content: center;
   width: 55px;
@@ -253,14 +248,16 @@ const MyMsg = styled.div`
 const ArrowBox = styled.div`
   display: flex;
   position: relative;
-  background: #a4b0ff;
-  border: 4px solid #194470;
+  background: #d6d6fe;
+  border: 4px solid ${colorSet.base};
   width: 240px;
   border-radius: 10px;
   margin-bottom: 20px;
   justify-content: center;
   height: 70px;
   color: #fff;
+  box-shadow: 1px 1px black;
+
   :after,
   :before {
     top: 100%;
@@ -275,19 +272,19 @@ const ArrowBox = styled.div`
 
   :after {
     border-color: rgba(136, 183, 213, 0);
-    border-top-color: #a4b0ff;
+    border-top-color: #d6d6fe;
     border-width: 10px;
     margin-left: -10px;
   }
   :before {
     border-color: rgba(194, 225, 245, 0);
-    border-top-color: #194470;
+    border-top-color: ${colorSet.base};
     border-width: 16px;
     margin-left: -16px;
   }
 `;
 
-export const P = styled.div`
+const P = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -297,19 +294,19 @@ export const P = styled.div`
   margin-bottom: 2px;
 `;
 
-export const EditBox = styled.div`
+const EditBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 5px;
 `;
 
-export const CircleBox = styled.div`
+const CircleBox = styled.div`
   display: flex;
   height: 60px;
   margin: 10px;
 `;
-export const ContentBox = styled.div`
+const ContentBox = styled.div`
   display: flex;
   justify-content: center;
   width: 250px;
