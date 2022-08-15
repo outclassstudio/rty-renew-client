@@ -25,9 +25,11 @@ export const getOthersInfo = async (
 
 //테마 및 상태메시지 변경
 //!patchUserInfo와 같은 api
-export const changeTheme = async (img: string): Promise<AxiosResponse<any>> => {
+export const changeTheme = async (
+  themeId: number
+): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .patch(`/users`, { theme: img })
+    .patch(`/users/theme/${themeId}`)
     .then((res) => {
       return res;
     });

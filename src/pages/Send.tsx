@@ -61,7 +61,7 @@ export default function Send() {
     if (!giftState.userTo) {
       viewErrMsg("유저를 선택해주세요");
       return false;
-    } else if (!giftState.svg) {
+    } else if (!giftState.svgId) {
       viewErrMsg("포장을 선택해주세요");
       return false;
     } else if (!giftState.content) {

@@ -37,8 +37,8 @@ declare namespace Gift {
     userFrom: string | null;
     userTo: string;
     content: string;
-    svg: number | null;
-    img: number | null;
+    svgId: number | null;
+    imgId: number | null;
     nickname?: string;
   }
 }

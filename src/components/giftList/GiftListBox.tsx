@@ -5,7 +5,7 @@ import GiftModal from "./GiftModal";
 import useDate from "../../hooks/useDate";
 
 interface Props {
-  data: Gift.singleGiftDTO;
+  data: any;
 }
 
 export default function GiftListBox({ data }: Props) {
@@ -16,40 +16,44 @@ export default function GiftListBox({ data }: Props) {
   const currentDate = useDate();
 
   //svg url세팅
-  const svgStr = data.svg;
+  const svgStr = data.svg.data;
   // const svg = new Blob([svgStr], { type: "image/svg+xml" });
   // const url = URL.createObjectURL(svg);
 
   //날짜세팅
   useEffect(() => {
-    const year = data.date?.split(" ")[0];
-    const hour = data.date?.split(" ")[1].split(":")[0];
-    const min = data.date?.split(" ")[1].split(":")[1];
-    let dateStr = "";
+    if (data.createdAt) {
+      // const year = data.createdAt.split(" ")[0];
+      // const hour = data.createdAt.split(" ")[1].split(":")[0];
+      // const min = data.createdAt.split(" ")[1].split(":")[1];
+      // let dateStr = "";
 
-    //*보낸 날짜 포매팅
-    if (Number(hour) > 12) {
-      dateStr = `${year} 오후${Number(hour) - 12}:${min}`;
-    } else {
-      dateStr = `${year} 오전${hour}:${min}`;
+      // //*보낸 날짜 포매팅
+      // if (Number(hour) > 12) {
+      //   dateStr = `${year} 오후${Number(hour) - 12}:${min}`;
+      // } else {
+      //   dateStr = `${year} 오전${hour}:${min}`;
+      // }
+      // setDate(dateStr);
+      let dateStr = data.createdAt.split("T")[0];
+      setDate(dateStr);
+
+      // //*현재시각과 비교하여 CSS변경
+      // if (
+      //   currentDate.now === year &&
+      //   Math.abs(
+      //     Number(`${currentDate.hour}${currentDate.min}`) -
+      //       Number(`${hour}${min}`)
+      //   ) < 3
+      // ) {
+      //   setNowAdd(true);
+      // }
+
+      // setTimeout(() => {
+      //   setNowAdd(false);
+      //   // setNowAni("close");
+      // }, 5000);
     }
-    setDate(dateStr);
-
-    //*현재시각과 비교하여 CSS변경
-    if (
-      currentDate.now === year &&
-      Math.abs(
-        Number(`${currentDate.hour}${currentDate.min}`) -
-          Number(`${hour}${min}`)
-      ) < 3
-    ) {
-      setNowAdd(true);
-    }
-
-    setTimeout(() => {
-      setNowAdd(false);
-      // setNowAni("close");
-    }, 5000);
   }, []);
 
   //모달 on/off함수
@@ -62,7 +66,7 @@ export default function GiftListBox({ data }: Props) {
       {nowAdd ? <OverWrapText>방금전</OverWrapText> : ""}
       <BoxSvg src={svgStr} alt="" />
       <Text>
-        <div>to. {data.userTo}</div>
+        <div>to. {data.userTo.nickname}</div>
         <div>{date}</div>
       </Text>
       {openModal ? <GiftModal data={data} /> : ""}
@@ -94,7 +98,7 @@ const BoxSvg = styled.img`
 `;
 
 const Text = styled.div`
-  width: 136px;
+  width: 137px;
   height: 43px;
   display: flex;
   flex-direction: column;

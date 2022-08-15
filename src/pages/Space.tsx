@@ -17,6 +17,7 @@ import {
 } from "../redux/reducers/spaceReducer";
 import { useSelector } from "react-redux";
 import { fadeAction } from "../style/global";
+import { NormalBtn } from "../style/btnStyle.style";
 
 export default function Space() {
   const dispatch = useDispatch();
@@ -63,7 +64,6 @@ export default function Space() {
     if (userGiftList) {
       setIsEachGift(true);
     }
-    // dispatch(setMyGift(gift));
   }, [dispatch, userGiftList]);
 
   //change Theme
@@ -76,8 +76,6 @@ export default function Space() {
   };
 
   const editSpaceHandler = () => {
-    //editSpace 가  true일 때만
-    //canvas에 붙은 svg 값을 보낸다.
     setEditSpace(!editSpace);
     setSaveSpace(false);
     dispatch(setClickBtn("editSpace"));
@@ -86,11 +84,6 @@ export default function Space() {
   const saveSpaceHandler = () => {
     setSaveSpace(true);
     setEditSpace(false);
-  };
-
-  const randomHandler = () => {
-    //canvas icon random
-    dispatch(setIsRandom(true));
   };
 
   return (
@@ -105,7 +98,7 @@ export default function Space() {
             />
           </AvatarWrapper>
           {isEachGift ? (
-            <>
+            <CanvasContainer>
               <Canvas
                 giftList={spaceGiftList}
                 editSpace={editSpace}
@@ -116,28 +109,26 @@ export default function Space() {
                 newGiftList={newGiftList}
                 storageGiftList={storageGiftList}
               />
-            </>
+              <ThemeBtnBox>
+                <SpaceBtn className="c" onClick={changeThemeHandler}>
+                  테마 변경
+                </SpaceBtn>
+                <SpaceBtn className="c" onClick={editAvatarHandler}>
+                  {editAvatar ? "수정 중" : "나의 메시지 수정"}
+                </SpaceBtn>
+                {editSpace ? (
+                  <SpaceBtn className="b" onClick={saveSpaceHandler}>
+                    완료
+                  </SpaceBtn>
+                ) : (
+                  <SpaceBtn className="c" onClick={editSpaceHandler}>
+                    나의 공간 수정
+                  </SpaceBtn>
+                )}
+              </ThemeBtnBox>
+            </CanvasContainer>
           ) : null}
         </SpaceContainer>
-        <ThemeBtnBox>
-          <Button onClick={changeThemeHandler}>테마 변경</Button>
-          <Button onClick={editAvatarHandler}>
-            {editAvatar ? "수정 중" : "나의 메시지 수정"}
-          </Button>
-          {editSpace ? (
-            <Button onClick={randomHandler}>랜덤 배치</Button>
-          ) : null}
-          {editSpace ? (
-            <Button
-              className={editSpace ? "cliked" : ""}
-              onClick={saveSpaceHandler}
-            >
-              완료
-            </Button>
-          ) : (
-            <Button onClick={editSpaceHandler}>나의 공간 수정</Button>
-          )}
-        </ThemeBtnBox>
       </MainContainer>
     </Layout>
   );
@@ -150,54 +141,37 @@ const MainContainer = styled.div`
   height: calc(100vh - 50px);
 `;
 
-export const SpaceContainer = styled.div`
+const SpaceContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
 `;
-export const ThemeBtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  user-select: none;
-  margin-top: 20px;
-`;
 
-export const Button = styled.button`
-  width: 290px;
-  height: 60px;
-  cursor: pointer;
-  background: #194470;
-  border-radius: 5px;
-  border: transparent;
-  font-size: medium;
-  font-weight: 500;
-  font-size: 17px;
-  color: white;
-  border: 4px solid #194470;
-  margin-right: 20px;
-
-  &:hover {
-    box-shadow: 0 0 40px 40px #fff inset;
-    color: #194470;
-  }
-  &.cliked {
-    background: #7c8eff;
-  }
-`;
-
-export const InfoBox = styled.div`
+const CanvasContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: calc(100vh - 50px);
+  width: 100vw;
 `;
 
-export const Nickname = styled.h2`
-  margin-right: 20px;
+const ThemeBtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  margin-top: 20px;
+  gap: 15px;
+`;
+
+const SpaceBtn = styled(NormalBtn)`
+  width: 290px;
+  height: 60px;
+  font-size: 17px;
 `;
 
 const AvatarWrapper = styled.div`
   position: fixed;
-  margin-top: 250px;
+  margin-top: 200px;
   margin-right: 170px;
 `;

@@ -6,13 +6,13 @@ export default function GiftModal({ data }: any) {
     <>
       <MainWrapper>
         <PrvBoxWrapper>
-          <Text>to. {data.userTo}</Text>
-          <img src={data.img} alt="" />
+          <Text>to. {data.userTo.nickname}</Text>
+          <img src={data.img.data} alt="" />
           <Content>
             <ContentImg>
               <div>{data.content}</div>
             </ContentImg>
-            <div>from . {data.userFrom}</div>
+            <div>from . {data.userFrom.data}</div>
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>
