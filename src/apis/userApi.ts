@@ -1,12 +1,14 @@
 import { AxiosResponse } from "axios";
 import apiClient from ".";
 
+const myId = localStorage.getItem("id");
+
 //나의 정보 조회(ok)
 export const getMyInfo = async (): Promise<
   AxiosResponse<Users.UserInfoResponse>
 > => {
   return apiClient()
-    .get(`/users`)
+    .get(`/users/${myId}`)
     .then((res) => {
       return res;
     });

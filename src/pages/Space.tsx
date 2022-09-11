@@ -42,6 +42,7 @@ export default function Space() {
     });
 
     if (userGiftList) {
+      console.log(userGiftList, "이거먼저 확인");
       const newGift = userGiftList.filter(
         (item: { status: string }) => item.status === "new"
       );
@@ -113,7 +114,10 @@ export default function Space() {
                 <SpaceBtn className="c" onClick={changeThemeHandler}>
                   테마 변경
                 </SpaceBtn>
-                <SpaceBtn className="c" onClick={editAvatarHandler}>
+                <SpaceBtn
+                  className={editAvatar ? "b" : "c"}
+                  onClick={editAvatarHandler}
+                >
                   {editAvatar ? "수정 중" : "나의 메시지 수정"}
                 </SpaceBtn>
                 {editSpace ? (
@@ -167,7 +171,7 @@ const ThemeBtnBox = styled.div`
 const SpaceBtn = styled(NormalBtn)`
   width: 290px;
   height: 60px;
-  font-size: 17px;
+  font-size: 16px;
 `;
 
 const AvatarWrapper = styled.div`

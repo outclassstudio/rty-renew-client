@@ -30,6 +30,7 @@ export default function NewGift() {
   const [newList, setNewList] = useState<any>([]);
 
   useEffect(() => {
+    console.log(newGiftLists);
     setNewList(newGiftLists);
   }, []);
 
@@ -38,12 +39,12 @@ export default function NewGift() {
   }, [newGiftList, isOpenGiftBox]);
 
   const openGiftHandler = () => {
-    getMyGift().then((res) => {
-      if (res.data.gift) {
-        const storge = res.data.gift.filter((el) => el.status === "new");
-        dispatch(setNewGift(storge));
-      }
-    });
+    // getMyGift().then((res) => {
+    //   if (res.data.gift) {
+    //     const storge = res.data.gift.filter((el) => el.status === "new");
+    //     dispatch(setNewGift(storge));
+    //   }
+    // });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));
   };
@@ -62,9 +63,9 @@ export default function NewGift() {
 }
 
 export const GiftIconBox = styled.div`
-  position: absolute;
+  position: fixed;
   margin-top: 20px;
-  margin-left: 1160px;
+  margin-left: 470px;
   width: 90px;
   cursor: pointer;
   display: flex;

@@ -12,7 +12,7 @@ export default function GiftModal({ data }: any) {
             <ContentImg>
               <div>{data.content}</div>
             </ContentImg>
-            <div>from . {data.userFrom.data}</div>
+            <div>from . {data.userFrom.nickname}</div>
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>

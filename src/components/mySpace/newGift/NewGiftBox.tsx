@@ -37,33 +37,29 @@ export function NewGiftBox(props: any) {
       {isOpenGiftBox ? (
         <>
           {clickGiftBox === "new" && newList.length !== 0 ? (
-            <>
-              <NewGiftContainer>
-                <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
-                <ItemContainer>
-                  {newList &&
-                    newList.map((item: any, idx: number) => {
-                      return <NewGiftItem {...item} key={idx.toString()} />;
-                    })}
-                </ItemContainer>
-              </NewGiftContainer>
-            </>
+            <NewGiftContainer>
+              <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
+              <ItemContainer>
+                {newList &&
+                  newList.map((item: any, idx: number) => {
+                    return <NewGiftItem {...item} key={idx} />;
+                  })}
+              </ItemContainer>
+            </NewGiftContainer>
           ) : null}
           {storageGiftLists &&
           storageList &&
           clickGiftBox === "storage" &&
           storageList.length !== 0 ? (
-            <>
-              <NewGiftContainer>
-                <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>
-                <ItemContainer>
-                  {storageList &&
-                    storageList.map((item: any, idx: number) => {
-                      return <NewGiftItem {...item} key={idx.toString()} />;
-                    })}
-                </ItemContainer>
-              </NewGiftContainer>
-            </>
+            <NewGiftContainer>
+              <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>
+              <ItemContainer>
+                {storageList &&
+                  storageList.map((item: any, idx: number) => {
+                    return <NewGiftItem {...item} key={idx.toString()} />;
+                  })}
+              </ItemContainer>
+            </NewGiftContainer>
           ) : null}
         </>
       ) : null}
@@ -73,17 +69,16 @@ export function NewGiftBox(props: any) {
 
 const MainContainer = styled.div`
   position: fixed;
-  margin-left: 1530px;
+  margin-left: 1250px;
+  margin-bottom: 83px;
 `;
 
-export const NewGiftContainer = styled.div`
-  margin: 50px 10px 0;
+const NewGiftContainer = styled.div`
   width: 170px;
-  height: 700px;
+  height: 547px;
   background-color: ${colorSet.purple};
   overflow: auto;
   border-radius: 10px;
-
   scrollbar-width: none;
   padding: 10px 20px;
   animation: ${fadeSlide} 0.3s ease-out;
@@ -96,7 +91,7 @@ export const NewGiftContainer = styled.div`
   }
 `;
 
-export const ItemContainer = styled.div`
+const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,7 +105,7 @@ export const ItemContainer = styled.div`
   }
 `;
 
-export const GiftBoxTitle = styled.div`
+const GiftBoxTitle = styled.div`
   color: #ffffff;
   font-size: 20px;
   margin-bottom: 5px;

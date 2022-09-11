@@ -30,7 +30,8 @@ export function Avatar(props: any) {
   const editType = props.editAvatar;
   const setEdit = props.setEditAvatar;
 
-  useEffect(() => {
+  //내정보 업데이트
+  const handleMyInfo = () => {
     getMyInfo().then((res) => {
       let user = res.data.userInfo;
       if (user) {
@@ -38,6 +39,10 @@ export function Avatar(props: any) {
         setStateMsg(user.msg);
       }
     });
+  };
+
+  useEffect(() => {
+    handleMyInfo();
   }, [dispatch, userGiftList]);
 
   const editBtnHandler = () => {
@@ -49,10 +54,8 @@ export function Avatar(props: any) {
         confirmButtonText: "닫기",
       });
     } else {
-      changeMsg(stateMsg).then((res) => {
-        let info = res.data;
-        setMyInfo(info);
-        // setIsEditBtn(false);
+      changeMsg(stateMsg).then(() => {
+        handleMyInfo();
       });
 
       setEdit(!setEdit);
@@ -134,7 +137,7 @@ export function Avatar(props: any) {
             )}
           </ContentBox>
           <MyAvatar onClick={clickAvatarHandler} />
-          <H3>내 이름은 {myInfo.nickname}!!</H3>
+          <IntroduceMsg>{myInfo.nickname}의 공간입니다</IntroduceMsg>
         </AvatarBox>
       ) : null}
       {otherUser ? (
@@ -156,7 +159,7 @@ export function Avatar(props: any) {
             )}
           </ContentBox>
           <MyAvatar onClick={clickAvatarHandler} />
-          <H3>내 이름은 {otherUser.nickname}!!</H3>
+          <IntroduceMsg>{otherUser.nickname}의 공간입니다</IntroduceMsg>
         </AvatarBox>
       ) : null}
       {isAllGift ? <AllGift setIsAllGift={setIsAllGift} /> : null}
@@ -174,28 +177,7 @@ const AvatarBox = styled.div`
   user-select: none;
 `;
 
-const MsgBox = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  height: 50px;
-  background-color: white;
-  border-radius: 15px;
-  margin: 10px;
-  padding: 0px 10px;
-  color: white;
-
-  input {
-    background: none;
-    border: none;
-    color: white;
-  }
-  input:focus {
-    outline: none;
-  }
-`;
-
-export const MsgEditBtn = styled.button`
+const MsgEditBtn = styled.button`
   border: 1px solid white;
   background-color: transparent;
   width: 36px;
@@ -203,7 +185,7 @@ export const MsgEditBtn = styled.button`
   border-radius: 40%;
 `;
 
-export const H3 = styled.div`
+const IntroduceMsg = styled.div`
   margin-top: 10px;
   color: white;
   font-family: "Hanna", sans-serif;
@@ -213,12 +195,16 @@ export const H3 = styled.div`
 `;
 
 const Input = styled.input`
-  border-radius: 4px;
-  width: 147px;
-  font-size: 13px;
-  margin-right: 20px;
-  background: transparent;
+  width: 140px;
   height: 30px;
+  margin-right: 5px;
+  background: transparent;
+  border-radius: 4px;
+  border: none;
+  font-size: 22px;
+  font-weight: 900;
+  color: ${colorSet.base};
+  padding-left: 5px;
 `;
 
 const Circle = styled.div`
@@ -240,9 +226,10 @@ const Circle = styled.div`
 
 const MyMsg = styled.div`
   align-items: center;
-  font-size: 22px;
   display: flex;
+  font-size: 22px;
   font-weight: 900;
+  color: ${colorSet.base};
 `;
 
 const ArrowBox = styled.div`
@@ -250,11 +237,10 @@ const ArrowBox = styled.div`
   position: relative;
   background: #d6d6fe;
   border: 4px solid ${colorSet.base};
-  width: 240px;
+  width: 210px;
   border-radius: 10px;
-  margin-bottom: 20px;
   justify-content: center;
-  height: 70px;
+  height: 60px;
   color: #fff;
   box-shadow: 1px 1px black;
 

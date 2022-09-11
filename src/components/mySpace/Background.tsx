@@ -128,6 +128,7 @@ export const ModalBackground = styled.div`
 `;
 
 export const ModalView = styled.div`
+  width: 975px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -182,7 +183,6 @@ const SelectImg = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 20px 10px; */
 `;
 
 const SelectInput = styled.input``;

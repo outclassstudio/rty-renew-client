@@ -49,13 +49,7 @@ export default function Userinfo() {
   const [activePicker, setActivePicker] = useState(false);
 
   //유저정보 저장
-  const [userInfo, setUserInfo] = useState<Users.myinfoDTO>({
-    userId: "",
-    nickname: "",
-    point: 0,
-    birth: "",
-    theme: undefined,
-  });
+  const [userInfo, setUserInfo] = useState<any>({});
 
   //비밀번호 변경 정보
   const [changePwdInfo, setChangePwdInfo] = useState<PwInfo>({
@@ -127,11 +121,10 @@ export default function Userinfo() {
     e.preventDefault();
 
     let data = {
-      id: userInfo.userId,
+      userId: userInfo.userId,
       point: userInfo.point,
       birth: newBirth,
       nickname: newNickname,
-      themeroute: userInfo.theme,
     };
 
     if (userInfo.nickname === newNickname && userInfo.birth === newBirth) {
@@ -143,16 +136,18 @@ export default function Userinfo() {
     } else {
       if (newNickname !== "" && !nickNameCheck(String(newNickname))) {
         patchUserInfo(data)
-          .then(() => {
-            Swal.fire({
-              title: "수정완료",
-              icon: "success",
-              confirmButtonText: "닫기",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.replace("/userinfo");
-              }
-            });
+          .then((res) => {
+            if (res.data.ok) {
+              Swal.fire({
+                title: "수정완료",
+                icon: "success",
+                confirmButtonText: "닫기",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.replace("/userinfo");
+                }
+              });
+            }
           })
           .catch((err) => {
             Swal.fire({

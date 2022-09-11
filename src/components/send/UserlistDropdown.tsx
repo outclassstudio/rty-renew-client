@@ -50,7 +50,7 @@ export default function UserlistDropdown({
                 return (
                   <SingleUser
                     key={idx}
-                    onClick={() => handleSetToUser(el.id, el.nickname)}
+                    onClick={() => handleSetToUser(el.userId, el.nickname)}
                   >
                     <span>{el.nickname}</span>
                     <span>( {el.userId} )</span>

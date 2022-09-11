@@ -27,9 +27,9 @@ export default function MsgInput() {
   const [viewAll, setViewAll] = useState<boolean>(false);
 
   //프리뷰이미지 변경 및 상태변경 함수
-  const changeImg = (idx: number, url: string): void => {
-    setPrvItem({ id: idx, url: url });
-    dispatch(setImg(idx));
+  const changeImg = (id: number, url: string): void => {
+    setPrvItem({ id, url });
+    dispatch(setImg(id));
   };
 
   //모든 아이템 보기 모달창 on/off

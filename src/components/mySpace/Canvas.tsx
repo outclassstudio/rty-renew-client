@@ -20,6 +20,7 @@ import { WastebasketIcon } from "./wastebasket/WastebasketIcon";
 import { Storage } from "./storage/Storage";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
+import { FlexDiv } from "../../style/utility.style";
 
 export default function Canvas(props: any) {
   const dispatch = useDispatch();
@@ -79,7 +80,7 @@ export default function Canvas(props: any) {
     //canvas에 import 하가
 
     like();
-    // tiger();
+
     if (spaceGiftList && spaceGiftList.length !== 0) {
       importSvg();
     }
@@ -339,25 +340,25 @@ export default function Canvas(props: any) {
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
     const targetItem = userGiftList.filter((el: any) => {
-      return el.idx === Number(targetId);
+      return el.id === Number(targetId);
     });
 
     const x = e.clientX - 420;
     const y = e.clientY - 100;
-    const targetSvg = targetItem[0].svg;
+    const targetSvg = targetItem[0].svg.data;
 
     //! svg 속성 값 바꾸기
-    let svgAttr = targetItem[0].svgAttr;
-    svgAttr.x = x;
-    svgAttr.y = y;
-    svgAttr.rotation = 0;
-    svgAttr = JSON.stringify(svgAttr);
-    const chageData = {
-      idx: targetItem[0].idx,
-      svgAttr,
-      status: "space",
-      userTo: window.localStorage.getItem("id"),
-    };
+    // let svgAttr = targetItem[0].svgAttr;
+    // svgAttr.x = x;
+    // svgAttr.y = y;
+    // svgAttr.rotation = 0;
+    // // svgAttr = JSON.stringify(svgAttr);
+    // const chageData = {
+    //   id: targetItem[0].id,
+    //   svgAttr,
+    //   status: "space",
+    //   userTo: window.localStorage.getItem("id"),
+    // };
 
     //찾은  item canvas에 붙이기
     Paper.project.importSVG(targetSvg, {
@@ -367,7 +368,7 @@ export default function Canvas(props: any) {
         let obj = { id: item.id, gift: targetItem[0] };
         match.push(obj);
         item.position = new Paper.Point(x, y);
-        item.data.idx = targetItem[0].idx;
+        item.data.id = targetItem[0].id;
         if (item.firstChild.size._width < 200) {
           item.scale(1.5);
         } else {
@@ -384,27 +385,27 @@ export default function Canvas(props: any) {
         text.fillColor = new paper.Color(1, 1, 1);
         text.shadowOffset = new paper.Point(1, 1);
         text.shadowColor = new paper.Color(0, 0, 0);
-        text.content = targetItem[0].userFrom;
+        text.content = targetItem[0].userFrom.nickname;
         text.data.type = "name";
-        text.data.id = targetItem[0].idx;
+        text.data.id = targetItem[0].id;
 
-        updateGift(chageData).then(async (res) => {
-          if (res.status === 200) {
-            const filteredList = await res.data.filter(
-              (el: any) => el.status === "storage"
-            );
-            const filteredNew = await res.data.filter(
-              (el: any) => el.status === "new"
-            );
-            const filteredSpace = await res.data.filter(
-              (el: any) => el.status === "space"
-            );
+        // updateGift(chageData).then(async (res) => {
+        //   if (res.status === 200) {
+        //     const filteredList = await res.data.filter(
+        //       (el: any) => el.status === "storage"
+        //     );
+        //     const filteredNew = await res.data.filter(
+        //       (el: any) => el.status === "new"
+        //     );
+        //     const filteredSpace = await res.data.filter(
+        //       (el: any) => el.status === "space"
+        //     );
 
-            dispatch(setStorageGift(filteredList));
-            dispatch(setNewGift(filteredNew));
-            dispatch(setSpaceGift(filteredSpace));
-          }
-        });
+        //     dispatch(setStorageGift(filteredList));
+        //     dispatch(setNewGift(filteredNew));
+        //     dispatch(setSpaceGift(filteredSpace));
+        //   }
+        // });
       },
     });
   };
@@ -498,7 +499,7 @@ export default function Canvas(props: any) {
   }
 
   return (
-    <CanvasBox>
+    <>
       <NewGiftIcon />
       {isEditSpace && !editClickedItem ? <WastebasketIcon /> : null}
       {isEditSpace && !editClickedItem ? (
@@ -512,7 +513,7 @@ export default function Canvas(props: any) {
         color={userInfo.theme.data}
         draggable
         onDrop={(e: any) => dropHandler(e)}
-        onDragOver={(e) => dragOverHandler(e)}
+        onDragOver={dragOverHandler}
       ></CanvasArea>
       {themeModal ? <Background /> : null}
       {isOpenGift ? (
@@ -524,21 +525,16 @@ export default function Canvas(props: any) {
       {isConfirmModal && isOpenSave && editClickedItem ? (
         <ConfirmModal msg={msg} changeData={changeData} />
       ) : null}
-    </CanvasBox>
+    </>
   );
 }
 
-const CanvasBox = styled.div`
-  width: 70%;
-  height: 80%;
-`;
-
 const CanvasArea = styled.canvas`
-  width: 100%;
-  height: 100%;
+  width: 1008px;
+  height: 567px;
   border-radius: 10px;
   background-image: url(${(props) => props.color});
-  background-size: 100%;
+  background-size: cover;
   background-repeat: no-repeat;
   box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
 `;

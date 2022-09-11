@@ -14,12 +14,12 @@ declare namespace Users {
   }
 
   interface myinfoDTO {
-    // id: undefined | string;
+    id: number;
     userId: string;
-    nickname: undefined | string;
+    nickname: string;
     point: number;
     birth?: undefined | string;
-    theme?: string | undefined;
+    theme?: Item.singleItemDTO;
     msg?: string | undefined;
   }
 
