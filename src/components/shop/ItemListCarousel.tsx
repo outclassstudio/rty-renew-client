@@ -125,6 +125,7 @@ export default function ItemListCarousel({
   //슬라이더 요소 컴포넌트
   const sliders = () => {
     return img.map((el: Item.singleItemDTO, id: number) => {
+      console.log("myIdList", myIdList);
       const mine = myIdList.includes(el.id);
 
       let url = el.data;
@@ -190,7 +191,7 @@ const Wrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 140px;
+  width: 139px;
   display: flex;
   flex-direction: column;
   background: white;
@@ -205,8 +206,8 @@ const ImageWrapper = styled.div`
 `;
 
 const SingleImage = styled.img`
-  width: 140px;
-  height: 105px;
+  width: 139px;
+  height: 104px;
   border-radius: 10px 10px 0px 0px;
 `;
 
@@ -252,7 +253,7 @@ const SubText = styled.div`
 
   &.c:hover:before {
     content: "구매하기";
-    font-size: 14px;
+    font-size: 13px;
   }
 
   &.d {
@@ -268,7 +269,7 @@ const SubText = styled.div`
 
   &.d:hover:before {
     content: "구입함";
-    font-size: 14px;
+    font-size: 13px;
   }
 `;
 
@@ -279,8 +280,8 @@ const OverwrapText = styled.div`
   position: fixed;
   color: #ffffff;
   background: #8383839e;
-  width: 140px;
-  height: 105px;
+  width: 139px;
+  height: 104px;
   font-size: 13px;
   border-radius: 10px 10px 0px 0px;
 

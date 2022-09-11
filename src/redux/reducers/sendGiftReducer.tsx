@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface giftState {
   gift: {
+    id: number | null;
     userFrom: string | null;
     userTo: string;
     content: string;
@@ -13,6 +14,7 @@ interface giftState {
 
 const initialState = {
   gift: {
+    id: null,
     userFrom: window.localStorage.getItem("id"),
     userTo: "",
     content: "",
@@ -47,6 +49,7 @@ const sendGiftSlice = createSlice({
     },
     clearSendGift(state) {
       let data = {
+        id: null,
         userFrom: window.localStorage.getItem("id"),
         userTo: "",
         content: "",

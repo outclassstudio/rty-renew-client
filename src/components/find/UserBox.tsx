@@ -5,14 +5,19 @@ import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 interface Props {
-  data: Users.otherUserDTO;
+  data: Users.myinfoDTO;
 }
 
 export default function UserBox({ data }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("왜그러지", data);
+  }, []);
 
   const handleVisitOthers = (id: string): void => {
     if (id === window.localStorage.getItem("id")) {
@@ -29,7 +34,7 @@ export default function UserBox({ data }: Props) {
   return (
     <BoxContainer>
       <ThumbnailWrapper>
-        <Thumbnail src={data.theme} />
+        <Thumbnail src={data.theme ? data.theme.data : ""} />
         <Title>{data.nickname}님</Title>
       </ThumbnailWrapper>
       <GroupWrapper>

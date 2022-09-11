@@ -1,6 +1,6 @@
 import Layout from "./Layout";
 import ItemListCarousel from "../components/shop/ItemListCarousel";
-import MyPoint from "../components/shop/MyPoint";
+// import MyPoint from "../components/shop/MyPoint";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getAllItems, getMyItems } from "../apis/itemApi";
@@ -10,10 +10,10 @@ import Loading from "../components/Loading";
 import ViewAllInShopModal from "../components/shop/ViewAllInShopModal";
 
 export default function Shop() {
-  const [img, setImg] = useState<any>([]);
-  const [svg, setSvg] = useState<any>([]);
-  const [theme, setTheme] = useState<any>([]);
-  const [myIdList, setmyIdList] = useState<any>([]);
+  const [img, setImg] = useState<Item.singleItemDTO[]>([]);
+  const [svg, setSvg] = useState<Item.singleItemDTO[]>([]);
+  const [theme, setTheme] = useState<Item.singleItemDTO[]>([]);
+  const [myIdList, setmyIdList] = useState<number[]>([]);
   const [myData, setMyData] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [svgModal, setSvgModal] = useState<boolean>(false);
@@ -44,17 +44,20 @@ export default function Shop() {
       }
 
       getMyItems().then((res) => {
-        let idArray = res.data.myItems?.map((el: any) => {
+        let idArray = res.data.myItems?.map((el: Item.singleItemDTO) => {
           return el.id;
         });
-        console.log("왜안되", res.data);
-        setmyIdList(idArray);
+        if (idArray) {
+          setmyIdList(idArray);
+        }
       });
     });
 
     //*유저정보세팅
     getMyInfo().then((res) => {
-      setMyData(res.data.userInfo);
+      if (res.data.userInfo) {
+        setMyData(res.data.userInfo);
+      }
     });
   };
 
@@ -75,7 +78,9 @@ export default function Shop() {
   };
 
   return (
-    <Layout title={"상점"}>
+    <Layout
+      title={myData.point ? `상점 < 나의 포인트 ${myData.point} >` : "상점"}
+    >
       {isLoading ? (
         <Loading />
       ) : (
