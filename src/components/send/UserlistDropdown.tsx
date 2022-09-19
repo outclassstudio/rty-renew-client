@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { LOCALSTORAGE_ID } from "../../constants";
 import { FindUserIdUpdate } from "../../redux/reducers/findUserReducer";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
@@ -22,7 +23,7 @@ export default function UserlistDropdown({
 
   //선택한 아이디로 상태업데이트
   const handleSetToUser = (id: string, nickname: string): void => {
-    if (id === window.localStorage.getItem("id")) {
+    if (id === localStorage.getItem(LOCALSTORAGE_ID)) {
       Swal.fire({
         title: "자신에게는 보낼 수 없어요",
         icon: "warning",

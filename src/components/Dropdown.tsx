@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 import { deleteStoreItems } from "../redux/reducers/getItemReducer";
 import { logoutChange } from "../redux/reducers/loginReducer";
 import { colorSet } from "../style/global";
@@ -18,13 +19,13 @@ export default function Dropdown({ handleActiveDropdown }: Props) {
     dispatch(logoutChange());
     dispatch(deleteStoreItems());
     navigate("/");
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("id");
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
+    localStorage.removeItem("id");
   };
 
   return (
     <MainDiv>
-      <Menu className="user">{window.localStorage.getItem("id")}님</Menu>
+      <Menu className="user">{localStorage.getItem("id")}님</Menu>
       <Menu onClick={() => navigate("/")}>내 공간</Menu>
       <Menu onClick={() => navigate("/send")}>선물 보내기</Menu>
       <Menu onClick={() => navigate("/giftlist")}>보낸 선물함</Menu>

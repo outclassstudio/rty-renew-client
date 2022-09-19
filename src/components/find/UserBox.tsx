@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import { LOCALSTORAGE_ID } from "../../constants";
 
 interface Props {
   data: Users.myinfoDTO;
@@ -20,7 +21,7 @@ export default function UserBox({ data }: Props) {
   }, []);
 
   const handleVisitOthers = (id: string): void => {
-    if (id === window.localStorage.getItem("id")) {
+    if (id === localStorage.getItem(LOCALSTORAGE_ID)) {
       Swal.fire({
         title: "자신의 페이지는 방문할 수 없어요",
         icon: "warning",

@@ -5,17 +5,15 @@ export function StorageBox(props: any) {
   const storageList = props.storageList;
 
   return (
-    <>
-      <NewGiftContainer>
-        <h4>Storage Component</h4>
-        <h3>Storage</h3>
-        <ItemContainer>
-          {storageList.map((item: any, idx: number) => {
-            return <StorageItem item={item} key={idx} />;
-          })}
-        </ItemContainer>
-      </NewGiftContainer>
-    </>
+    <NewGiftContainer>
+      <h4>Storage Component</h4>
+      <h3>Storage</h3>
+      <ItemContainer>
+        {storageList.map((item: any, idx: number) => {
+          return <StorageItem item={item} key={idx} />;
+        })}
+      </ItemContainer>
+    </NewGiftContainer>
   );
 }
 

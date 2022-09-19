@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { LOCALSTORAGE_ID, LOCALSTORAGE_TOKEN } from "../constants";
 import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
 import { colorSet } from "../style/global";
@@ -34,9 +35,8 @@ export default function LoginForm() {
       })
       .then((res) => {
         if (res.data.ok) {
-          console.log(res.data);
-          window.localStorage.setItem("token", res.data.token);
-          window.localStorage.setItem("id", loginInfo.id);
+          localStorage.setItem(LOCALSTORAGE_TOKEN, res.data.token);
+          localStorage.setItem(LOCALSTORAGE_ID, loginInfo.id);
           dispatch(loginChange());
           window.location.replace("/");
         } else {
