@@ -21,20 +21,20 @@ import { Storage } from "./storage/Storage";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
 import { FlexDiv } from "../../style/utility.style";
+import { LOCALSTORAGE_ID } from "../../constants";
 
 export default function Canvas(props: any) {
   const dispatch = useDispatch();
 
   const isEditSpace = props.editSpace;
   const spaceGiftList = props.giftList;
-
   const saveSpace = props.saveSpace;
+
   const [count, setCount] = useState<number>(1);
   const [msg, setMsg] = useState<string>("");
   const [changeData, setChageData] = useState<any>();
   const [dropNewGift, setNewDropGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
-
   const [curTag, setCurTag] = useState<any>();
   const [clickedId, setClickedId] = useState<number>();
   const [match, setMatch] = useState<any>([]);
@@ -45,9 +45,7 @@ export default function Canvas(props: any) {
     (state: any) => state.spaceReducer.isOpenTrash
   );
   const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
-
   const isRandom = useSelector((state: any) => state.spaceReducer.isRandom);
-
   const spaceGiftLists = useSelector(
     (state: any) => state.spaceReducer.spaceGiftList
   );
@@ -60,22 +58,31 @@ export default function Canvas(props: any) {
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
   );
-
   const [selected, setSelected] = useState<any>();
+  const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
 
+  const canvasRef = useRef(null);
   let tool: paper.Tool;
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
 
-    const DropNewList =
-      userGiftList && userGiftList.filter((item: any) => item.status === "new");
+    let rect = canvas.getBoundingClientRect();
+    setCurrentPosition({
+      x: rect.left,
+      y: rect.top,
+    });
+    console.log("현재포지션", currentPosition);
+
+    const DropNewList = userGiftList?.filter(
+      (item: any) => item.status === "new"
+    );
     setNewDropGift(DropNewList);
 
-    const DropStorageGfit =
-      userGiftList &&
-      userGiftList.filter((item: any) => item.status === "storage");
+    const DropStorageGfit = userGiftList?.filter(
+      (item: any) => item.status === "storage"
+    );
     setNewDropGift(DropStorageGfit);
     //canvas에 import 하가
 
@@ -92,11 +99,12 @@ export default function Canvas(props: any) {
     }
   }, [saveSpace, count, saveSpace12]);
 
-  useEffect(() => {
-    if (isRandom) {
-      giftRandomHandler();
-    }
-  }, [isRandom]);
+  //!삭제할것임
+  // useEffect(() => {
+  //   if (isRandom) {
+  //     giftRandomHandler();
+  //   }
+  // }, [isRandom]);
 
   useEffect(() => {
     tool = new paper.Tool();
@@ -219,7 +227,7 @@ export default function Canvas(props: any) {
         const changeData = {
           idx: editItem[0].gift.idx,
           status: "storage",
-          userTo: window.localStorage.getItem("id"),
+          userTo: localStorage.getItem(LOCALSTORAGE_ID),
         };
         setChageData(changeData);
         editClickedItem.bounds.selected = false;
@@ -317,9 +325,7 @@ export default function Canvas(props: any) {
     };
   };
 
-  const canvasRef = useRef(null);
-
-  //! dropHandler
+  //! 드래그앤드랍시 작동하는 함수
   const dropHandler = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -339,13 +345,16 @@ export default function Canvas(props: any) {
     const targetId = e.dataTransfer.getData("id");
 
     // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
-    const targetItem = userGiftList.filter((el: any) => {
-      return el.id === Number(targetId);
-    });
+    const targetItem = userGiftList.find(
+      (el: any) => el.id === Number(targetId)
+    );
 
-    const x = e.clientX - 420;
-    const y = e.clientY - 100;
-    const targetSvg = targetItem[0].svg.data;
+    console.log("변했는지 확인", currentPosition);
+
+    const x = e.clientX - currentPosition.x;
+    const y = e.clientY - currentPosition.y;
+    const targetSvg = targetItem.svg.data;
+    console.log(canvasRef.current, e, x, y, Paper.project);
 
     //! svg 속성 값 바꾸기
     // let svgAttr = targetItem[0].svgAttr;
@@ -365,14 +374,14 @@ export default function Canvas(props: any) {
       expandShapes: true,
 
       onLoad: function (item: any) {
-        let obj = { id: item.id, gift: targetItem[0] };
+        let obj = { id: item.id, gift: targetItem };
         match.push(obj);
         item.position = new Paper.Point(x, y);
-        item.data.id = targetItem[0].id;
+        item.data.id = targetItem.id;
         if (item.firstChild.size._width < 200) {
           item.scale(1.5);
         } else {
-          item.scale(0.15);
+          item.scale(0.5);
         }
 
         // //! text
@@ -385,9 +394,9 @@ export default function Canvas(props: any) {
         text.fillColor = new paper.Color(1, 1, 1);
         text.shadowOffset = new paper.Point(1, 1);
         text.shadowColor = new paper.Color(0, 0, 0);
-        text.content = targetItem[0].userFrom.nickname;
+        text.content = targetItem.userFrom.nickname;
         text.data.type = "name";
-        text.data.id = targetItem[0].id;
+        text.data.id = targetItem.id;
 
         // updateGift(chageData).then(async (res) => {
         //   if (res.status === 200) {
@@ -410,27 +419,29 @@ export default function Canvas(props: any) {
     });
   };
 
+  //!쓰임새가 없음
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
+  //!삭제할 것임
   //gift random handler
-  const giftRandomHandler = () => {
-    Paper.project.activeLayer.children.forEach((el) => {
-      const randomX = Math.floor(Math.random() * 1090) + 65;
+  // const giftRandomHandler = () => {
+  //   Paper.project.activeLayer.children.forEach((el) => {
+  //     const randomX = Math.floor(Math.random() * 1090) + 65;
+  //     const randomY = Math.floor(Math.random() * (700 - 65) + 65);
 
-      const randomY = Math.floor(Math.random() * (700 - 65) + 65);
-
-      if (el.data.type !== "name") {
-        el.position.x = randomX;
-        el.position.y = randomY;
-      }
-    });
-    dispatch(setIsRandom(false));
-  };
+  //     if (el.data.type !== "name") {
+  //       el.position.x = randomX;
+  //       el.position.y = randomY;
+  //     }
+  //   });
+  //   dispatch(setIsRandom(false));
+  // };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
+
   function saveSpace12() {
     dispatch(setIsOpenTrash(false));
     dispatch(setIsOpenSave(false));

@@ -21,37 +21,68 @@ export default function Shop() {
   const [themeModal, setThemeModal] = useState<boolean>(false);
 
   //아이템 및 유저정보 불러와서 세팅 함수
-  const handleGetItem = () => {
+  const handleGetItem = async () => {
     //*아이템세팅
-    getAllItems().then((res) => {
+    const allItems = await getAllItems();
+    try {
       setIsLoading(false);
-
-      if (res.data.items) {
-        const img = res.data.items.filter((el) => {
+      if (allItems.data.items) {
+        const img = allItems.data.items.filter((el) => {
           return el.type === "img";
         });
         setImg(img);
 
-        const svg = res.data.items.filter((el) => {
+        const svg = allItems.data.items.filter((el) => {
           return el.type === "svg";
         });
         setSvg(svg);
 
-        const theme = res.data.items.filter((el) => {
+        const theme = allItems.data.items.filter((el) => {
           return el.type === "theme";
         });
         setTheme(theme);
       }
 
-      getMyItems().then((res) => {
-        let idArray = res.data.myItems?.map((el: Item.singleItemDTO) => {
-          return el.id;
-        });
-        if (idArray) {
-          setmyIdList(idArray);
-        }
+      const myItems = await getMyItems();
+      let idArray = myItems.data.myItems?.map((el: Item.singleItemDTO) => {
+        return el.id;
       });
-    });
+      if (idArray) {
+        setmyIdList(idArray);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // getAllItems().then((res) => {
+    //   setIsLoading(false);
+
+    //   if (res.data.items) {
+    //     const img = res.data.items.filter((el) => {
+    //       return el.type === "img";
+    //     });
+    //     setImg(img);
+
+    //     const svg = res.data.items.filter((el) => {
+    //       return el.type === "svg";
+    //     });
+    //     setSvg(svg);
+
+    //     const theme = res.data.items.filter((el) => {
+    //       return el.type === "theme";
+    //     });
+    //     setTheme(theme);
+    //   }
+
+    //   getMyItems().then((res) => {
+    //     let idArray = res.data.myItems?.map((el: Item.singleItemDTO) => {
+    //       return el.id;
+    //     });
+    //     if (idArray) {
+    //       setmyIdList(idArray);
+    //     }
+    //   });
+    // });
 
     //*유저정보세팅
     getMyInfo().then((res) => {

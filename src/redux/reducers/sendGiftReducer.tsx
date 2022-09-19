@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { LOCALSTORAGE_ID } from "../../constants";
 
 interface giftState {
   gift: {
@@ -15,7 +16,7 @@ interface giftState {
 const initialState = {
   gift: {
     id: null,
-    userFrom: window.localStorage.getItem("id"),
+    userFrom: localStorage.getItem(LOCALSTORAGE_ID),
     userTo: "",
     content: "",
     svgId: null,
@@ -50,7 +51,7 @@ const sendGiftSlice = createSlice({
     clearSendGift(state) {
       let data = {
         id: null,
-        userFrom: window.localStorage.getItem("id"),
+        userFrom: localStorage.getItem(LOCALSTORAGE_ID),
         userTo: "",
         content: "",
         svgId: null,

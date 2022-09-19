@@ -20,6 +20,7 @@ import { nickNameCheck, strongPassword } from "../hooks/validation";
 import { ErrMsg } from "./Signup";
 import Loading from "../components/Loading";
 import useDate from "../hooks/useDate";
+import { LOCALSTORAGE_ID, LOCALSTORAGE_TOKEN } from "../constants";
 
 interface PwInfo {
   current: string;
@@ -83,8 +84,8 @@ export default function Userinfo() {
     dispatch(logoutChange());
     dispatch(deleteStoreItems());
     navigate("/");
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("id");
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
+    localStorage.removeItem(LOCALSTORAGE_ID);
   };
 
   //유저정보 수정모드 on/off
@@ -254,22 +255,30 @@ export default function Userinfo() {
   };
 
   //비밀번호 확인 요청
-  const handleCheckPw = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCheckPw = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const data = {
-      id: window.localStorage.getItem("id"),
+      id: localStorage.getItem(LOCALSTORAGE_ID),
       pwd: changePwdInfo.current,
     };
 
-    checkPassowrd(data)
-      .then((res) => {
-        //! 응답에 따른 구현 확인
-        setCheckPw(res.data.ok);
-        setErrors({ ...errors, pwCheck: false });
-      })
-      .catch(() => {
-        setErrors({ ...errors, pwCheck: true });
-      });
+    try {
+      const passwordChecked = await checkPassowrd(data);
+      setCheckPw(passwordChecked.data.ok);
+      setErrors({ ...errors, pwCheck: false });
+    } catch (error) {
+      setErrors({ ...errors, pwCheck: true });
+    }
+
+    // checkPassowrd(data)
+    //   .then((res) => {
+    //     //! 응답에 따른 구현 확인
+    //     setCheckPw(res.data.ok);
+    //     setErrors({ ...errors, pwCheck: false });
+    //   })
+    //   .catch(() => {
+    //     setErrors({ ...errors, pwCheck: true });
+    //   });
   };
 
   //비밀번호 변경 요청
@@ -277,7 +286,7 @@ export default function Userinfo() {
     e.preventDefault();
 
     const data = {
-      id: window.localStorage.getItem("id"),
+      id: localStorage.getItem(LOCALSTORAGE_ID),
       npwd: changePwdInfo.password,
     };
 

@@ -8,6 +8,7 @@ import { setMyGift } from "./redux/reducers/spaceReducer";
 import { getMyGift } from "./apis/giftApi";
 import LoggedIn from "./routes/LoggedIn";
 import LoggedOut from "./routes/LoggedOut";
+import { LOCALSTORAGE_TOKEN } from "./constants";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -16,13 +17,13 @@ function App() {
 
   //로그인 유지를 위한 함수
   const keepLogin = () => {
-    if (window.localStorage.getItem("token")) {
+    if (localStorage.getItem(LOCALSTORAGE_TOKEN)) {
       dispatch(loginChange());
     }
   };
 
   const getUserGift = () => {
-    if (window.localStorage.getItem("token")) {
+    if (localStorage.getItem(LOCALSTORAGE_TOKEN)) {
       getMyGift().then((res) => {
         dispatch(setMyGift(res.data.gift));
         setIsGift(true);
