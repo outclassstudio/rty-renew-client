@@ -1,42 +1,33 @@
 import styled from "styled-components";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { colorSet, fadeAction, fadeExpand } from "../../../style/global";
 
-export function Gift(props: any) {
-  //Gift Modal
-
-  //gift 불러오기
-  const newGiftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  useEffect(() => {}, [newGiftLists]);
-
-  const giftItem = props.giftItem;
-
-  const newGifts = props.item;
-  const id = props.id;
-
-  const openGiftArr =
-    !giftItem &&
-    newGifts.filter((item: any) => {
-      return item.id === id;
-    });
-  const openGift = openGiftArr && openGiftArr[0].gift;
+interface Props {
+  item: any;
+  id: number | undefined;
+  setIsOpenGift: (state: boolean) => void;
+}
+export default function Gift({ item, id, setIsOpenGift }: Props) {
+  const openGiftArr = item.find((el: any) => {
+    return el.id === id;
+  });
+  const openGift = openGiftArr?.gift;
+  console.log("이거 콘솔은 찍히니", item, openGift);
 
   const closeModalHandler = () => {
-    props.setIsOpenGift(false);
+    setIsOpenGift(false);
   };
 
   return (
     <>
       <MainWrapper onClick={closeModalHandler}>
         <PrvBoxWrapper>
-          <Text>to. {giftItem ? giftItem.userTo : openGift.userTo}</Text>
-          <Img src={giftItem ? giftItem.img : openGift.img} alt="" />
+          <Text>to. {openGift?.userTo}</Text>
+          <Img src={openGift?.img} alt="" />
           <Content>
             <ContentImg>
-              <div>{giftItem ? giftItem.content : openGift.content}</div>
+              <div>{openGift?.content}</div>
             </ContentImg>
-            <div>from . {giftItem ? giftItem.userFrom : openGift.userFrom}</div>
+            <div>from . {openGift?.userFrom}</div>
           </Content>
         </PrvBoxWrapper>
       </MainWrapper>
