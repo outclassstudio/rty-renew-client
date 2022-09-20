@@ -69,7 +69,7 @@ export default function GiftListBox({ data }: Props) {
         <div>to. {data.userTo.nickname}</div>
         <div>{date}</div>
       </Text>
-      {openModal ? <GiftModal data={data} /> : ""}
+      {openModal && <GiftModal data={data} />}
     </BoxWrapper>
   );
 }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Gift } from "./gift/Gift";
+import Gift from "./gift/Gift";
 import Background from "./Background";
 import Swal from "sweetalert2";
 import {
@@ -27,13 +27,11 @@ export default function Canvas(props: any) {
   const dispatch = useDispatch();
 
   const isEditSpace = props.editSpace;
-  const spaceGiftList = props.giftList;
   const saveSpace = props.saveSpace;
 
   const [count, setCount] = useState<number>(1);
   const [msg, setMsg] = useState<string>("");
   const [changeData, setChageData] = useState<any>();
-  const [dropNewGift, setNewDropGift] = useState<any>([]);
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [curTag, setCurTag] = useState<any>();
   const [clickedId, setClickedId] = useState<number>();
@@ -73,31 +71,30 @@ export default function Canvas(props: any) {
       x: rect.left,
       y: rect.top,
     });
-    console.log("현재포지션", currentPosition);
 
     const DropNewList = userGiftList?.filter(
       (item: any) => item.status === "new"
     );
-    setNewDropGift(DropNewList);
 
     const DropStorageGfit = userGiftList?.filter(
       (item: any) => item.status === "storage"
     );
-    setNewDropGift(DropStorageGfit);
-    //canvas에 import 하가
 
-    like();
+    openLetter();
 
-    if (spaceGiftList && spaceGiftList.length !== 0) {
-      importSvg();
+    if (match.length <= spaceGiftLists.length) {
+      spaceGiftLists.forEach((gift: any) => {
+        const svgAttr = gift.svgAttr;
+        loadSvg(gift, svgAttr.x, svgAttr.y);
+      });
     }
   }, []);
 
-  useEffect(() => {
-    if (saveSpace && count !== 1) {
-      saveSpace12();
-    }
-  }, [saveSpace, count, saveSpace12]);
+  // useEffect(() => {
+  //   if (saveSpace && count !== 1) {
+  //     saveSpace12();
+  //   }
+  // }, [saveSpace, count, saveSpace12]);
 
   //!삭제할것임
   // useEffect(() => {
@@ -257,57 +254,50 @@ export default function Canvas(props: any) {
     isConfirmRes,
   ]);
 
-  //! space에 저장된 선물 불러오기
-  function importSvg() {
-    if (match.length <= spaceGiftLists.length) {
-      spaceGiftLists.forEach((gift: any) => {
-        const svgAttr = gift.svgAttr;
-        Paper.project.importSVG(gift.svg, {
-          onLoad: function (item: any) {
-            let obj = { id: item.id, gift: gift };
-            match.push(obj);
-            item.data.idx = gift.idx;
-            item.position = new Paper.Point(svgAttr.x, svgAttr.y);
+  const loadSvg = (svgItem: any, x: number, y: number) => {
+    const svg = svgItem.svg.data;
+    console.log(svgItem);
 
-            if (item.firstChild.size._width < 200) {
-              item.scale(1.5);
-            } else {
-              item.scale(0.15);
-            }
-            // //! text
-            const pos = new paper.Point(item.position.x, item.position.y - 45);
-            const text = new paper.PointText(pos);
-            text.justification = "center";
-            text.fontWeight = "bold";
-            text.fontSize = 15;
-            text.fillColor = new paper.Color(1, 1, 1);
-            text.shadowOffset = new paper.Point(1, 1);
-            text.shadowColor = new paper.Color(0, 0, 0);
-            text.content = gift.userFrom;
-            text.data.type = "name";
-            text.data.id = gift.idx;
+    Paper.project.importSVG(svg, {
+      expandShapes: true,
 
-            if (!svgAttr.rotation) {
-              return;
-            }
+      onLoad: function (item: any) {
+        let obj = { id: item.id, gift: svgItem };
+        match.push(obj);
+        item.position = new Paper.Point(x, y);
+        item.data.id = svgItem.id;
+        if (item.firstChild.size._width < 200) {
+          item.scale(1.5);
+        } else {
+          item.scale(0.3);
+        }
 
-            const rotateNum = Number(svgAttr.rotation);
-            item.data.rotation = rotateNum;
-            //! rotate
-            // for (let i = 0; i < rotateNum; i++) {
-            //  item.rotation(90);
-            // }
-            item.rotation = 90 * rotateNum;
-          },
-        });
-      });
-    } else {
-      return;
-    }
-  }
+        //! text
+        const pos = new paper.Point(item.position.x, item.position.y - 45);
+        const text = new paper.PointText(pos);
+        text.justification = "center";
+        text.fontWeight = "bold";
+        text.fontSize = 15;
+        text.fillColor = new paper.Color(1, 1, 1);
+        text.shadowOffset = new paper.Point(1, 1);
+        text.shadowColor = new paper.Color(0, 0, 0);
+        text.content = svgItem.userFrom.nickname;
+        text.data.type = "name";
+        text.data.id = svgItem.id;
+
+        if (!svgItem.svgAttr.rotation) {
+          return;
+        }
+
+        const rotateNum = Number(svgItem.svgAttr.rotation);
+        item.data.rotation = rotateNum;
+        item.rotation = 90 * rotateNum;
+      },
+    });
+  };
 
   //! open letter
-  const like = () => {
+  const openLetter = () => {
     Paper.view.onDoubleClick = (e: any) => {
       const hitItem = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
@@ -349,77 +339,30 @@ export default function Canvas(props: any) {
       (el: any) => el.id === Number(targetId)
     );
 
-    console.log("변했는지 확인", currentPosition);
-
     const x = e.clientX - currentPosition.x;
     const y = e.clientY - currentPosition.y;
-    const targetSvg = targetItem.svg.data;
-    console.log(canvasRef.current, e, x, y, Paper.project);
 
-    //! svg 속성 값 바꾸기
-    // let svgAttr = targetItem[0].svgAttr;
-    // svgAttr.x = x;
-    // svgAttr.y = y;
-    // svgAttr.rotation = 0;
-    // // svgAttr = JSON.stringify(svgAttr);
-    // const chageData = {
-    //   id: targetItem[0].id,
-    //   svgAttr,
-    //   status: "space",
-    //   userTo: window.localStorage.getItem("id"),
-    // };
+    loadSvg(targetItem, x, y);
+    // updateGift(chageData).then(async (res) => {
+    //   if (res.status === 200) {
+    //     const filteredList = await res.data.filter(
+    //       (el: any) => el.status === "storage"
+    //     );
+    //     const filteredNew = await res.data.filter(
+    //       (el: any) => el.status === "new"
+    //     );
+    //     const filteredSpace = await res.data.filter(
+    //       (el: any) => el.status === "space"
+    //     );
 
-    //찾은  item canvas에 붙이기
-    Paper.project.importSVG(targetSvg, {
-      expandShapes: true,
-
-      onLoad: function (item: any) {
-        let obj = { id: item.id, gift: targetItem };
-        match.push(obj);
-        item.position = new Paper.Point(x, y);
-        item.data.id = targetItem.id;
-        if (item.firstChild.size._width < 200) {
-          item.scale(1.5);
-        } else {
-          item.scale(0.5);
-        }
-
-        // //! text
-        const pos = new paper.Point(item.position.x, item.position.y - 45);
-        //  pos could really be anything here
-        const text = new paper.PointText(pos);
-        text.justification = "center";
-        text.fontWeight = "bold";
-        text.fontSize = 15;
-        text.fillColor = new paper.Color(1, 1, 1);
-        text.shadowOffset = new paper.Point(1, 1);
-        text.shadowColor = new paper.Color(0, 0, 0);
-        text.content = targetItem.userFrom.nickname;
-        text.data.type = "name";
-        text.data.id = targetItem.id;
-
-        // updateGift(chageData).then(async (res) => {
-        //   if (res.status === 200) {
-        //     const filteredList = await res.data.filter(
-        //       (el: any) => el.status === "storage"
-        //     );
-        //     const filteredNew = await res.data.filter(
-        //       (el: any) => el.status === "new"
-        //     );
-        //     const filteredSpace = await res.data.filter(
-        //       (el: any) => el.status === "space"
-        //     );
-
-        //     dispatch(setStorageGift(filteredList));
-        //     dispatch(setNewGift(filteredNew));
-        //     dispatch(setSpaceGift(filteredSpace));
-        //   }
-        // });
-      },
-    });
+    //     dispatch(setStorageGift(filteredList));
+    //     dispatch(setNewGift(filteredNew));
+    //     dispatch(setSpaceGift(filteredSpace));
+    //   }
+    // });
   };
 
-  //!쓰임새가 없음
+  //!쓰임새가 있음
   const dragOverHandler = (e: DragEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -527,9 +470,9 @@ export default function Canvas(props: any) {
         onDragOver={dragOverHandler}
       ></CanvasArea>
       {themeModal ? <Background /> : null}
-      {isOpenGift ? (
+      {isOpenGift && (
         <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
-      ) : null}
+      )}
       {isConfirmModal && isOpenTrash && editClickedItem ? (
         <ConfirmModal msg={msg} changeData={changeData} />
       ) : null}
@@ -539,6 +482,14 @@ export default function Canvas(props: any) {
     </>
   );
 }
+
+const MainContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const CanvasArea = styled.canvas`
   width: 1008px;
