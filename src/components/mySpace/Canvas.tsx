@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Gift from "./gift/Gift";
 import Background from "./Background";
 import Swal from "sweetalert2";
 import {
@@ -10,7 +9,6 @@ import {
   setConfirmRes,
   setIsOpenSave,
   setIsOpenTrash,
-  setIsRandom,
   setNewGift,
   setSpaceGift,
   setStorageGift,
@@ -20,8 +18,8 @@ import { WastebasketIcon } from "./wastebasket/WastebasketIcon";
 import { Storage } from "./storage/Storage";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import { ConfirmModal } from "../ConfirmModal";
-import { FlexDiv } from "../../style/utility.style";
 import { LOCALSTORAGE_ID } from "../../constants";
+import GiftModal from "../giftList/GiftModal";
 
 export default function Canvas(props: any) {
   const dispatch = useDispatch();
@@ -43,7 +41,6 @@ export default function Canvas(props: any) {
     (state: any) => state.spaceReducer.isOpenTrash
   );
   const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
-  const isRandom = useSelector((state: any) => state.spaceReducer.isRandom);
   const spaceGiftLists = useSelector(
     (state: any) => state.spaceReducer.spaceGiftList
   );
@@ -61,6 +58,7 @@ export default function Canvas(props: any) {
 
   const canvasRef = useRef(null);
   let tool: paper.Tool;
+
   useEffect(() => {
     Paper.install(window);
     const canvas: any = canvasRef.current;
@@ -72,20 +70,13 @@ export default function Canvas(props: any) {
       y: rect.top,
     });
 
-    const DropNewList = userGiftList?.filter(
-      (item: any) => item.status === "new"
-    );
+    openGifthandler();
 
-    const DropStorageGfit = userGiftList?.filter(
-      (item: any) => item.status === "storage"
-    );
-
-    openLetter();
-
+    //DB의 SVG로드
     if (match.length <= spaceGiftLists.length) {
       spaceGiftLists.forEach((gift: any) => {
         const svgAttr = gift.svgAttr;
-        loadSvg(gift, svgAttr.x, svgAttr.y);
+        handleImportSVG(gift, svgAttr.x, svgAttr.y);
       });
     }
   }, []);
@@ -96,19 +87,11 @@ export default function Canvas(props: any) {
   //   }
   // }, [saveSpace, count, saveSpace12]);
 
-  //!삭제할것임
-  // useEffect(() => {
-  //   if (isRandom) {
-  //     giftRandomHandler();
-  //   }
-  // }, [isRandom]);
-
   useEffect(() => {
     tool = new paper.Tool();
     tool.activate();
 
     if (saveSpace && count >= 1) {
-      //  importSvg();
       Paper.project.activeLayer.children.forEach((el) => {
         if (el.data.type === "name") {
           el.visible = true;
@@ -131,6 +114,7 @@ export default function Canvas(props: any) {
         const test = Paper.project.activeLayer.children.find((el) =>
           el.contains(e.point)
         );
+        console.log("test확인", test);
         const nameTag = Paper.project.activeLayer.children.find(
           (el) => el.data.id === test?.data.idx
         );
@@ -254,7 +238,7 @@ export default function Canvas(props: any) {
     isConfirmRes,
   ]);
 
-  const loadSvg = (svgItem: any, x: number, y: number) => {
+  const handleImportSVG = (svgItem: any, x: number, y: number) => {
     const svg = svgItem.svg.data;
     console.log(svgItem);
 
@@ -263,6 +247,7 @@ export default function Canvas(props: any) {
 
       onLoad: function (item: any) {
         let obj = { id: item.id, gift: svgItem };
+        // setMatch([...match, obj]);
         match.push(obj);
         item.position = new Paper.Point(x, y);
         item.data.id = svgItem.id;
@@ -296,8 +281,8 @@ export default function Canvas(props: any) {
     });
   };
 
-  //! open letter
-  const openLetter = () => {
+  /** gift 클릭시 작동하는 함수 */
+  const openGifthandler = () => {
     Paper.view.onDoubleClick = (e: any) => {
       const hitItem = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
@@ -310,9 +295,35 @@ export default function Canvas(props: any) {
       }
       if (hitItem) {
         setClickedId(hitItem.id);
-        setIsOpenGift(true);
+        handleOpenLetter(hitItem.id);
       }
     };
+  };
+
+  const handleOpenLetter = (itemid: number) => {
+    const item = match.find((el: any) => el.id === itemid);
+    setSelected(item.gift);
+    setIsOpenGift(true);
+  };
+
+  const handleUpdateGift = (changeData: any) => {
+    updateGift(changeData).then(async (res) => {
+      if (res.data.ok) {
+        const storageGiftList = await res.data.filter(
+          (el: any) => el.status === "storage"
+        );
+        const newGiftList = await res.data.filter(
+          (el: any) => el.status === "new"
+        );
+        const spaceGiftList = await res.data.filter(
+          (el: any) => el.status === "space"
+        );
+
+        dispatch(setStorageGift(storageGiftList));
+        dispatch(setNewGift(newGiftList));
+        dispatch(setSpaceGift(spaceGiftList));
+      }
+    });
   };
 
   //! 드래그앤드랍시 작동하는 함수
@@ -342,24 +353,7 @@ export default function Canvas(props: any) {
     const x = e.clientX - currentPosition.x;
     const y = e.clientY - currentPosition.y;
 
-    loadSvg(targetItem, x, y);
-    // updateGift(chageData).then(async (res) => {
-    //   if (res.status === 200) {
-    //     const filteredList = await res.data.filter(
-    //       (el: any) => el.status === "storage"
-    //     );
-    //     const filteredNew = await res.data.filter(
-    //       (el: any) => el.status === "new"
-    //     );
-    //     const filteredSpace = await res.data.filter(
-    //       (el: any) => el.status === "space"
-    //     );
-
-    //     dispatch(setStorageGift(filteredList));
-    //     dispatch(setNewGift(filteredNew));
-    //     dispatch(setSpaceGift(filteredSpace));
-    //   }
-    // });
+    handleImportSVG(targetItem, x, y);
   };
 
   //!쓰임새가 있음
@@ -368,28 +362,11 @@ export default function Canvas(props: any) {
     e.stopPropagation();
   };
 
-  //!삭제할 것임
-  //gift random handler
-  // const giftRandomHandler = () => {
-  //   Paper.project.activeLayer.children.forEach((el) => {
-  //     const randomX = Math.floor(Math.random() * 1090) + 65;
-  //     const randomY = Math.floor(Math.random() * (700 - 65) + 65);
-
-  //     if (el.data.type !== "name") {
-  //       el.position.x = randomX;
-  //       el.position.y = randomY;
-  //     }
-  //   });
-  //   dispatch(setIsRandom(false));
-  // };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
   function saveSpace12() {
     dispatch(setIsOpenTrash(false));
     dispatch(setIsOpenSave(false));
-    //! 1. match 와 activeLayer의 children에서 동일한 id를 찾고 포지션을 비교한다.
 
+    //! 1. match 와 activeLayer의 children에서 동일한 id를 찾고 포지션을 비교한다.
     let activeLayer: paper.Item[] = [];
     Paper.project.activeLayer.children.forEach((el) => {
       activeLayer.push(el);
@@ -452,6 +429,10 @@ export default function Canvas(props: any) {
     });
   }
 
+  const openGiftModal = () => {
+    setIsOpenGift((prev) => !prev);
+  };
+
   return (
     <>
       <NewGiftIcon />
@@ -469,27 +450,22 @@ export default function Canvas(props: any) {
         onDrop={(e: any) => dropHandler(e)}
         onDragOver={dragOverHandler}
       ></CanvasArea>
-      {themeModal ? <Background /> : null}
+      {themeModal && <Background />}
       {isOpenGift && (
-        <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
+        <div onClick={openGiftModal}>
+          <GiftModal data={selected} />
+        </div>
+        // <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
       )}
-      {isConfirmModal && isOpenTrash && editClickedItem ? (
+      {/* {isConfirmModal && isOpenTrash && editClickedItem ? (
         <ConfirmModal msg={msg} changeData={changeData} />
       ) : null}
       {isConfirmModal && isOpenSave && editClickedItem ? (
         <ConfirmModal msg={msg} changeData={changeData} />
-      ) : null}
+      ) : null} */}
     </>
   );
 }
-
-const MainContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const CanvasArea = styled.canvas`
   width: 1008px;
