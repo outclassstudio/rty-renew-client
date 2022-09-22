@@ -13,7 +13,6 @@ import {
   setSpaceGift,
   setStorageGift,
   setUserInfo,
-  setIsRandom,
 } from "../redux/reducers/spaceReducer";
 import { useSelector } from "react-redux";
 import { fadeAction } from "../style/global";
@@ -30,7 +29,7 @@ export default function Space() {
   const [editAvatar, setEditAvatar] = useState(false);
   const [editSpace, setEditSpace] = useState(false);
   const [editMove, setEditMove] = useState(false);
-  const [saveSpace, setSaveSpace] = useState(true);
+  const [canSaveSpace, setCanSaveSpace] = useState(true);
 
   useEffect(() => {
     getMyInfo().then((res) => {
@@ -78,12 +77,12 @@ export default function Space() {
 
   const editSpaceHandler = () => {
     setEditSpace(!editSpace);
-    setSaveSpace(false);
+    setCanSaveSpace(true);
     dispatch(setClickBtn("editSpace"));
   };
 
   const saveSpaceHandler = () => {
-    setSaveSpace(true);
+    setCanSaveSpace(false);
     setEditSpace(false);
   };
 
@@ -104,7 +103,7 @@ export default function Space() {
                 giftList={spaceGiftList}
                 editSpace={editSpace}
                 editMove={editMove}
-                saveSpace={saveSpace}
+                canSaveSpace={canSaveSpace}
               />
               <NewGiftBox
                 newGiftList={newGiftList}
