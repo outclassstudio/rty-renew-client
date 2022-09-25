@@ -8,16 +8,13 @@ interface spaceState {
   spaceGiftList: any;
   userInfo: Myinfo;
   myGift: any;
-  isOpenStorage: boolean;
   isConfirmModal: boolean;
   isConfirmRes: boolean;
   isOpenGiftBox: boolean;
   clickGiftBox: string;
-  clickBtn: string;
-  isOpenTrash: boolean;
-  isOpenSave: boolean;
   isCliked: boolean;
   isRandom: boolean;
+  defaultItem: any;
 }
 
 interface Myinfo {
@@ -39,19 +36,18 @@ const initialState = {
     theme: "",
     msg: "",
   },
-  isOpenStorage: false,
+
   myGift: undefined,
   isConfirmModal: false,
   isConfirmRes: false,
   isOpenGiftBox: false,
   clickGiftBox: "",
-  clickBtn: "",
-  isOpenTrash: false,
-  isOpenSave: false,
+
   storageGiftList: "",
   spaceGiftList: "",
   isCliked: false,
   isRandom: false,
+  defaultItem: "",
 } as spaceState;
 
 //로그인 액션 및 리듀서 생성
@@ -80,9 +76,7 @@ const spaceSlice = createSlice({
     setNewGift(state, action: PayloadAction<any>) {
       state.newGiftList = action.payload;
     },
-    setOpenStorage(state, action: PayloadAction<any>) {
-      state.isOpenStorage = action.payload;
-    },
+
     setConfirmModal(state, action: PayloadAction<any>) {
       state.isConfirmModal = action.payload;
     },
@@ -95,20 +89,15 @@ const spaceSlice = createSlice({
     setClickGiftBox(state, action: PayloadAction<any>) {
       state.clickGiftBox = action.payload;
     },
-    setClickBtn(state, action: PayloadAction<any>) {
-      state.clickBtn = action.payload;
-    },
-    setIsOpenTrash(state, action: PayloadAction<any>) {
-      state.isOpenTrash = action.payload;
-    },
-    setIsOpenSave(state, action: PayloadAction<any>) {
-      state.isOpenSave = action.payload;
-    },
+
     setIsClicked(state, action: PayloadAction<any>) {
       state.isCliked = action.payload;
     },
     setIsRandom(state, action: PayloadAction<any>) {
       state.isRandom = action.payload;
+    },
+    setDefaultItem(state, action: PayloadAction<any>) {
+      state.defaultItem = action.payload;
     },
   },
 });
@@ -118,18 +107,15 @@ export const {
   setModalOpen,
   setOpenNewGift,
   setMyGift,
-  setOpenStorage,
   setConfirmModal,
   setConfirmRes,
   setOpenGiftBox,
   setClickGiftBox,
-  setClickBtn,
-  setIsOpenSave,
-  setIsOpenTrash,
   setStorageGift,
   setNewGift,
   setSpaceGift,
   setIsClicked,
   setIsRandom,
+  setDefaultItem,
 } = spaceSlice.actions;
 export default spaceSlice.reducer;

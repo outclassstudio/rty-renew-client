@@ -7,7 +7,6 @@ import Layout from "./Layout";
 import { Avatar } from "../components/mySpace/Avatar";
 import { useDispatch } from "react-redux";
 import {
-  setClickBtn,
   setModalOpen,
   setNewGift,
   setSpaceGift,
@@ -24,12 +23,9 @@ export default function Space() {
   const [isEachGift, setIsEachGift] = useState(false);
   const [myInfo, setMyInfo] = useState<any>();
   const [newGiftList, setNewGiftList] = useState<any>();
-  const [spaceGiftList, setSpaceGiftList] = useState<any>();
   const [storageGiftList, setStorageGiftList] = useState<any>();
   const [editAvatar, setEditAvatar] = useState(false);
-  const [editSpace, setEditSpace] = useState(false);
-  const [editMove, setEditMove] = useState(false);
-  const [canSaveSpace, setCanSaveSpace] = useState(true);
+  const [canEditSpace, setCanEditSpace] = useState(false);
 
   useEffect(() => {
     getMyInfo().then((res) => {
@@ -41,7 +37,8 @@ export default function Space() {
     });
 
     if (userGiftList) {
-      console.log(userGiftList, "이거먼저 확인");
+      setIsEachGift(true);
+
       const newGift = userGiftList.filter(
         (item: { status: string }) => item.status === "new"
       );
@@ -51,7 +48,6 @@ export default function Space() {
       const space = userGiftList.filter(
         (item: { status: string }) => item.status === "space"
       );
-      setSpaceGiftList(space);
       dispatch(setSpaceGift(space));
 
       const storage = userGiftList.filter(
@@ -60,13 +56,8 @@ export default function Space() {
       dispatch(setStorageGift(storage));
       setStorageGiftList(storage);
     }
-
-    if (userGiftList) {
-      setIsEachGift(true);
-    }
   }, [dispatch, userGiftList]);
 
-  //change Theme
   const changeThemeHandler = () => {
     dispatch(setModalOpen(true));
   };
@@ -75,15 +66,8 @@ export default function Space() {
     setEditAvatar(!editAvatar);
   };
 
-  const editSpaceHandler = () => {
-    setEditSpace(!editSpace);
-    setCanSaveSpace(true);
-    dispatch(setClickBtn("editSpace"));
-  };
-
   const saveSpaceHandler = () => {
-    setCanSaveSpace(false);
-    setEditSpace(false);
+    setCanEditSpace((prev) => !prev);
   };
 
   return (
@@ -97,14 +81,9 @@ export default function Space() {
               myInfo={myInfo}
             />
           </AvatarWrapper>
-          {isEachGift ? (
+          {isEachGift && (
             <CanvasContainer>
-              <Canvas
-                giftList={spaceGiftList}
-                editSpace={editSpace}
-                editMove={editMove}
-                canSaveSpace={canSaveSpace}
-              />
+              <Canvas canEditSpace={canEditSpace} />
               <NewGiftBox
                 newGiftList={newGiftList}
                 storageGiftList={storageGiftList}
@@ -119,18 +98,18 @@ export default function Space() {
                 >
                   {editAvatar ? "수정 중" : "나의 메시지 수정"}
                 </SpaceBtn>
-                {editSpace ? (
+                {canEditSpace ? (
                   <SpaceBtn className="b" onClick={saveSpaceHandler}>
                     완료
                   </SpaceBtn>
                 ) : (
-                  <SpaceBtn className="c" onClick={editSpaceHandler}>
+                  <SpaceBtn className="c" onClick={saveSpaceHandler}>
                     나의 공간 수정
                   </SpaceBtn>
                 )}
               </ThemeBtnBox>
             </CanvasContainer>
-          ) : null}
+          )}
         </SpaceContainer>
       </MainContainer>
     </Layout>

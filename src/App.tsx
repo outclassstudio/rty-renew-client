@@ -13,7 +13,6 @@ import { LOCALSTORAGE_TOKEN } from "./constants";
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
   const dispatch = useDispatch();
-  const [isGift, setIsGift] = useState(false);
 
   //로그인 유지를 위한 함수
   const keepLogin = () => {
@@ -26,7 +25,6 @@ function App() {
     if (localStorage.getItem(LOCALSTORAGE_TOKEN)) {
       getMyGift().then((res) => {
         dispatch(setMyGift(res.data.gift));
-        setIsGift(true);
       });
     }
   };

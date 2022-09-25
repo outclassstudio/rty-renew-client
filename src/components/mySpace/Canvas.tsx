@@ -5,27 +5,18 @@ import { useSelector, useDispatch } from "react-redux";
 import Background from "./Background";
 import Swal from "sweetalert2";
 import {
-  setConfirmModal,
-  setConfirmRes,
-  setIsOpenSave,
-  setIsOpenTrash,
   setNewGift,
   setSpaceGift,
   setStorageGift,
 } from "../../redux/reducers/spaceReducer";
 import { changeGiftPosition, updateGift } from "../../apis/giftApi";
-import { WastebasketIcon } from "./wastebasket/WastebasketIcon";
-import { Storage } from "./storage/Storage";
 import NewGiftIcon from "./newGift/NewGiftIcon";
-import { ConfirmModal } from "../ConfirmModal";
-import { LOCALSTORAGE_ID } from "../../constants";
 import GiftModal from "../giftList/GiftModal";
+import { getAllItems } from "../../apis/itemApi";
 
-export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
+export default function Canvas({ canEditSpace }: any) {
   const dispatch = useDispatch();
 
-  const [msg, setMsg] = useState<string>("");
-  const [changeData, setChageData] = useState<any>();
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [curTag, setCurTag] = useState<any>();
   const [match, setMatch] = useState<any>([]);
@@ -35,18 +26,8 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
 
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  const isOpenTrash = useSelector(
-    (state: any) => state.spaceReducer.isOpenTrash
-  );
-  const isOpenSave = useSelector((state: any) => state.spaceReducer.isOpenSave);
   const spaceGiftLists = useSelector(
     (state: any) => state.spaceReducer.spaceGiftList
-  );
-  const isConfirmModal = useSelector(
-    (state: any) => state.spaceReducer.isConfirmModal
-  );
-  const isConfirmRes = useSelector(
-    (state: any) => state.spaceReducer.isConfirmRes
   );
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
@@ -67,145 +48,149 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
     });
 
     openGiftHandler();
-
     //DB의 SVG로드
-    if (match.length <= spaceGiftLists.length) {
+
+    getAllItems().then((res) => {
+      if (res.data.items) {
+        const defaultItem = res.data.items.find((el: any) => {
+          return el.type === "default";
+        });
+        if (defaultItem) {
+          Paper.project.importSVG(defaultItem.data, {
+            expandShapes: true,
+
+            onLoad: function (item: any) {
+              item.position = new Paper.Point(921, 192);
+              // item.data.id = svgItem.id;
+              item.scale(0.2);
+              item.onMouseEnter = (e: any) => {
+                console.log("진입!");
+              };
+            },
+          });
+        }
+      }
+    });
+
+    if (spaceGiftLists.length) {
       spaceGiftLists.forEach((gift: any) => {
         const svgAttr = gift.svgAttr;
-        handleImportSVG(gift, svgAttr.x, svgAttr.y);
+        handleImportSVG(gift, svgAttr.x, svgAttr.y, "");
       });
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (saveSpace && count !== 1) {
-  //     saveSpace12();
-  //   }
-  // }, [saveSpace, count, saveSpace12]);
 
   useEffect(() => {
     tool = new paper.Tool();
     tool.activate();
 
-    //클릭 이벤트 핸들러
-    Paper.view.onClick = (e: any) => {
-      if (editClickedItem) {
-        editClickedItem.bounds.selected = false;
-      }
-
-      const test = Paper.project.activeLayer.children.find((el) =>
-        el.contains(e.point)
-      );
-
-      const nameTag = Paper.project.activeLayer.children.find(
-        (el) => el.data.id === test?.data.id
-      );
-
-      if (nameTag) {
-        setCurTag(nameTag);
-      }
-
-      if (test && nameTag) {
-        //click 한거 idx 랑 같은 text data.id 저장
-        if (test.data.type === "name") {
-          editClickedItem.onMouseDrag = function abc() {};
-          editClickedItem.onDoubleClick = function abc() {};
-        } else {
-          setEditClickedItem(test);
-          test.bounds.selected = true;
-
-          test.onMouseDrag = (e: any) => {
-            test.position.x += e.delta.x;
-            test.position.y += e.delta.y;
-            // nameTag.position.x += e.delta.x;
-            // nameTag.position.y += e.delta.y;
-          };
+    const clearBoundingBox = () => {
+      Paper.project.activeLayer.children.forEach((el) => {
+        if (el.bounds.selected) {
+          el.onMouseDrag = null;
+          el.bounds.selected = false;
         }
-      } else {
-        Paper.project.activeLayer.children.forEach((el) => {
-          if (el.bounds.selected) {
-            el.bounds.selected = false;
-          }
-        });
-
+      });
+      if (editClickedItem) {
         setEditClickedItem(null);
       }
     };
 
-    if (canSaveSpace) {
-      Paper.project.activeLayer.children.forEach((el) => {
-        if (el.data.type === "name") {
-          el.visible = true;
-        }
-      });
-      // if (editClickedItem) {
-      //   setEditClickedItem(null);
-      //   editClickedItem.bounds.selected = false;
-      //   editClickedItem.onMouseDrag = function abc() {};
-      // }
-    } else {
-      Paper.project.activeLayer.children.forEach((el) => {
-        if (el.data.type === "name") {
-          el.visible = false;
-          el.bounds.selected = false;
-        }
-      });
-
-      //! 쓰레기통 클릭 후  아이템 삭제하기
-      if (isOpenTrash && editClickedItem && !isConfirmModal) {
-        setMsg("정말 삭제");
-        dispatch(setConfirmModal(true));
-
-        const removeId = match.filter(
-          (el: any) => el.id === editClickedItem.id
-        );
-
-        setChageData(removeId[0].gift.idx);
-        editClickedItem.bounds.selected = false;
-
-        //! 저장 상장 클릭 후  아이템 삭제하기
-      } else if (isOpenSave && editClickedItem && !isConfirmModal) {
-        setMsg("저장");
-        dispatch(setConfirmModal(true));
-        const editItem = match.filter(
-          (el: any) => el.id === editClickedItem.id
-        );
-
-        //status 변경
-        const changeData = {
-          idx: editItem[0].gift.idx,
-          status: "storage",
-          userTo: localStorage.getItem(LOCALSTORAGE_ID),
-        };
-        setChageData(changeData);
-        editClickedItem.bounds.selected = false;
-      } else if (isConfirmRes && editClickedItem) {
-        curTag.remove();
-        editClickedItem.remove();
-        editClickedItem.bounds.selected = false;
-        setEditClickedItem(null);
-        setCurTag(null);
-        dispatch(setConfirmRes(false));
-      } else if (
-        !isConfirmRes &&
-        editClickedItem &&
-        !editClickedItem.bounds.selected
-      ) {
-        setEditClickedItem(null);
-      }
+    if (!canEditSpace) {
+      clearBoundingBox();
     }
-  }, [
-    canSaveSpace,
-    editClickedItem,
-    userGiftList,
-    isOpenTrash,
-    isOpenSave,
-    isConfirmRes,
-  ]);
 
-  const handleImportSVG = (svgItem: any, x: number, y: number) => {
+    //클릭 이벤트 핸들러
+    Paper.view.onClick = (e: any) => {
+      if (canEditSpace) {
+        const selectedItem = Paper.project.activeLayer.children.find((el) =>
+          el.contains(e.point)
+        );
+
+        const currentItem = match?.find(
+          (el: any) => el.id === selectedItem?.id
+        );
+
+        let nameTag: any;
+        if (currentItem) {
+          nameTag = Paper.project.activeLayer.children
+            .filter((el) => el.data.type === "name")
+            .find((el) => el.data.id === currentItem.gift.id);
+        }
+
+        if (nameTag) {
+          setCurTag(nameTag);
+        }
+
+        if (selectedItem && selectedItem.data.type !== "name" && nameTag) {
+          clearBoundingBox();
+          setEditClickedItem(selectedItem);
+          selectedItem.bounds.selected = true;
+          selectedItem.onMouseDrag = (e: any) => {
+            selectedItem.position.x += e.delta.x;
+            selectedItem.position.y += e.delta.y;
+            nameTag.position.x += e.delta.x;
+            nameTag.position.y += e.delta.y;
+          };
+
+          const changeData = {
+            id: currentItem.gift.id,
+            svgAttr: {
+              x: selectedItem.position.x,
+              y: selectedItem.position.y,
+              rotate: 0,
+            },
+          };
+          handleUpdateGift(changeData);
+        } else {
+          clearBoundingBox();
+        }
+      }
+    };
+
+    Paper.view.onMouseDown = (e: any) => {
+      if (canEditSpace) {
+        console.log("마우스 다운", e);
+        if (
+          e.point.x <= 940 &&
+          e.point.x >= 900 &&
+          e.point.y <= 232 &&
+          e.point.y >= 152
+        ) {
+          console.log("쓰레기통", editClickedItem);
+        }
+      }
+    };
+
+    Paper.view.onMouseMove = (e: any) => {
+      if (canEditSpace) {
+        // console.log("마우스 다운", e);
+        if (
+          e.point.x <= 940 &&
+          e.point.x >= 900 &&
+          e.point.y <= 232 &&
+          e.point.y >= 152
+        ) {
+          console.log("쓰레기통", editClickedItem);
+          // Swal.fire({
+          //   title: "정말 삭제하시겠습니까?",
+          // }).then((result) => {
+          //   if (result.isConfirmed) {
+          //     console.log("삭제");
+          //   }
+          // });
+        }
+      }
+    };
+  }, [canEditSpace]);
+
+  const handleImportSVG = (
+    svgItem: any,
+    x: number,
+    y: number,
+    type: string
+  ) => {
     const svg = svgItem.svg.data;
-    console.log(svgItem);
 
     Paper.project.importSVG(svg, {
       expandShapes: true,
@@ -231,19 +216,20 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
         text.fillColor = new paper.Color(1, 1, 1);
         text.shadowOffset = new paper.Point(1, 1);
         text.shadowColor = new paper.Color(0, 0, 0);
-        text.content = svgItem.userFrom.nickname;
+        text.content = `from. ${svgItem.userFrom.nickname}`;
         text.data.type = "name";
         text.data.id = svgItem.id;
-
-        if (!svgItem.svgAttr.rotation) {
-          return;
-        }
-
-        const rotateNum = Number(svgItem.svgAttr.rotation);
-        item.data.rotation = rotateNum;
-        item.rotation = 90 * rotateNum;
       },
     });
+
+    //todo 로직개선필요(조건부로 업데이트)
+    if (type === "toSpace") {
+      const changeData = {
+        id: svgItem.id,
+        status: "space",
+      };
+      handleUpdateGift(changeData);
+    }
   };
 
   /** gift 클릭시 작동하는 함수 */
@@ -270,24 +256,24 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
     setIsOpenGift(true);
   };
 
-  const handleUpdateGift = (changeData: any) => {
-    updateGift(changeData).then(async (res) => {
-      if (res.data.ok) {
-        const storageGiftList = await res.data.filter(
-          (el: any) => el.status === "storage"
-        );
-        const newGiftList = await res.data.filter(
-          (el: any) => el.status === "new"
-        );
-        const spaceGiftList = await res.data.filter(
-          (el: any) => el.status === "space"
-        );
+  const handleUpdateGift = async (changeData: any) => {
+    const {
+      data: { ok, updatedGift },
+    } = await updateGift(changeData);
 
-        dispatch(setStorageGift(storageGiftList));
-        dispatch(setNewGift(newGiftList));
-        dispatch(setSpaceGift(spaceGiftList));
-      }
-    });
+    if (ok) {
+      const storageGiftList = updatedGift.filter(
+        (el: any) => el.status === "storage"
+      );
+      const newGiftList = updatedGift.filter((el: any) => el.status === "new");
+      const spaceGiftList = updatedGift.filter(
+        (el: any) => el.status === "space"
+      );
+
+      dispatch(setStorageGift(storageGiftList));
+      dispatch(setNewGift(newGiftList));
+      dispatch(setSpaceGift(spaceGiftList));
+    }
   };
 
   //! 드래그앤드랍시 작동하는 함수
@@ -317,7 +303,7 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
     const x = e.clientX - currentPosition.x;
     const y = e.clientY - currentPosition.y;
 
-    handleImportSVG(targetItem, x, y);
+    handleImportSVG(targetItem, x, y, "toSpace");
   };
 
   //!쓰임새가 있음
@@ -327,9 +313,6 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
   };
 
   function handleSaveSpace() {
-    dispatch(setIsOpenTrash(false));
-    dispatch(setIsOpenSave(false));
-
     //! 1. match 와 activeLayer의 children에서 동일한 id를 찾고 포지션을 비교한다.
     let activeLayer: paper.Item[] = [];
     Paper.project.activeLayer.children.forEach((el) => {
@@ -398,12 +381,6 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
   return (
     <>
       <NewGiftIcon />
-      {isEditSpace && !editClickedItem ? <WastebasketIcon /> : null}
-      {isEditSpace && !editClickedItem ? (
-        <Storage isEditSpace={isEditSpace} />
-      ) : (
-        <Storage />
-      )}
       <CanvasArea
         ref={canvasRef}
         id="canvas"
@@ -417,14 +394,7 @@ export default function Canvas({ canSaveSpace, editSpace: isEditSpace }: any) {
         <div onClick={openGiftModal}>
           <GiftModal data={selected} />
         </div>
-        // <Gift setIsOpenGift={setIsOpenGift} item={match} id={clickedId} />
       )}
-      {/* {isConfirmModal && isOpenTrash && editClickedItem ? (
-        <ConfirmModal msg={msg} changeData={changeData} />
-      ) : null}
-      {isConfirmModal && isOpenSave && editClickedItem ? (
-        <ConfirmModal msg={msg} changeData={changeData} />
-      ) : null} */}
     </>
   );
 }
@@ -437,4 +407,11 @@ const CanvasArea = styled.canvas`
   background-size: cover;
   background-repeat: no-repeat;
   box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
+`;
+
+const WasteCanBox = styled.img`
+  margin-left: 420px;
+  top: 240px;
+  width: 100px;
+  position: fixed;
 `;
