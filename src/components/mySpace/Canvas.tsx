@@ -9,18 +9,20 @@ import {
   setSpaceGift,
   setStorageGift,
 } from "../../redux/reducers/spaceReducer";
-import { changeGiftPosition, updateGift } from "../../apis/giftApi";
+import { updateGift } from "../../apis/giftApi";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import GiftModal from "../giftList/GiftModal";
 import { getAllItems } from "../../apis/itemApi";
 
-export default function Canvas({ canEditSpace }: any) {
+interface ICanvasProps {
+  canEditSpace: boolean;
+}
+
+export default function Canvas({ canEditSpace }: ICanvasProps) {
   const dispatch = useDispatch();
 
   const [isOpenGift, setIsOpenGift] = useState(false);
-  const [curTag, setCurTag] = useState<any>();
   const [match, setMatch] = useState<any>([]);
-  const [editClickedItem, setEditClickedItem] = useState<any>();
   const [selected, setSelected] = useState<any>();
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
 
@@ -48,70 +50,77 @@ export default function Canvas({ canEditSpace }: any) {
     });
 
     openGiftHandler();
-    //DB의 SVG로드
 
     getAllItems().then((res) => {
       if (res.data.items) {
-        const defaultItem = res.data.items.find((el: any) => {
+        const defaultItem = res.data.items.find((el: Item.singleItemDTO) => {
           return el.type === "default";
         });
         if (defaultItem) {
           Paper.project.importSVG(defaultItem.data, {
             expandShapes: true,
 
-            onLoad: function (item: any) {
+            onLoad: function (item: paper.Item) {
               item.position = new Paper.Point(921, 192);
-              // item.data.id = svgItem.id;
+              item.data.id = defaultItem.id;
+              item.data.type = "default";
               item.scale(0.2);
-              item.onMouseEnter = (e: any) => {
-                console.log("진입!");
-              };
+              item.visible = false;
             },
           });
         }
       }
     });
 
+    //DB의 SVG로드
     if (spaceGiftLists.length) {
-      spaceGiftLists.forEach((gift: any) => {
+      spaceGiftLists.forEach((gift: Gift.singleGiftDTO) => {
         const svgAttr = gift.svgAttr;
-        handleImportSVG(gift, svgAttr.x, svgAttr.y, "");
+        if (svgAttr) {
+          handleImportSVG(gift, svgAttr.x, svgAttr.y, "");
+        }
       });
     }
   }, []);
+
+  let currentGift: paper.Item;
+  let currentNameTag: paper.Item;
 
   useEffect(() => {
     tool = new paper.Tool();
     tool.activate();
 
-    const clearBoundingBox = () => {
-      Paper.project.activeLayer.children.forEach((el) => {
-        if (el.bounds.selected) {
-          el.onMouseDrag = null;
-          el.bounds.selected = false;
-        }
-      });
-      if (editClickedItem) {
-        setEditClickedItem(null);
-      }
-    };
+    const trashCan = Paper.project.activeLayer.children.find(
+      (el) => el.data.type === "default"
+    );
 
     if (!canEditSpace) {
       clearBoundingBox();
-    }
+      if (trashCan) {
+        trashCan.visible = false;
+      }
+    } else {
+      if (trashCan) {
+        trashCan.visible = true;
+      }
 
-    //클릭 이벤트 핸들러
-    Paper.view.onClick = (e: any) => {
-      if (canEditSpace) {
-        const selectedItem = Paper.project.activeLayer.children.find((el) =>
-          el.contains(e.point)
-        );
+      const filtered = Paper.project.activeLayer.children.filter(
+        (el) => el.data.type !== "default"
+      );
+
+      //클릭 이벤트 핸들러
+      Paper.view.onClick = (e: paper.MouseEvent) => {
+        const selectedItem = filtered.find((el) => el.contains(e.point));
+
+        if (selectedItem) {
+          currentGift = selectedItem;
+        }
 
         const currentItem = match?.find(
           (el: any) => el.id === selectedItem?.id
         );
 
-        let nameTag: any;
+        let nameTag: paper.Item | undefined;
         if (currentItem) {
           nameTag = Paper.project.activeLayer.children
             .filter((el) => el.data.type === "name")
@@ -119,18 +128,17 @@ export default function Canvas({ canEditSpace }: any) {
         }
 
         if (nameTag) {
-          setCurTag(nameTag);
+          currentNameTag = nameTag;
         }
 
         if (selectedItem && selectedItem.data.type !== "name" && nameTag) {
           clearBoundingBox();
-          setEditClickedItem(selectedItem);
           selectedItem.bounds.selected = true;
-          selectedItem.onMouseDrag = (e: any) => {
+          selectedItem.onMouseDrag = (e: paper.MouseEvent) => {
             selectedItem.position.x += e.delta.x;
             selectedItem.position.y += e.delta.y;
-            nameTag.position.x += e.delta.x;
-            nameTag.position.y += e.delta.y;
+            nameTag && (nameTag.position.x += e.delta.x);
+            nameTag && (nameTag.position.y += e.delta.y);
           };
 
           const changeData = {
@@ -141,49 +149,61 @@ export default function Canvas({ canEditSpace }: any) {
               rotate: 0,
             },
           };
+          //todo lodash 적용
           handleUpdateGift(changeData);
         } else {
           clearBoundingBox();
         }
-      }
-    };
+      };
 
-    Paper.view.onMouseDown = (e: any) => {
-      if (canEditSpace) {
-        console.log("마우스 다운", e);
+      Paper.view.onMouseEnter = (e: paper.MouseEvent) => {
         if (
-          e.point.x <= 940 &&
-          e.point.x >= 900 &&
-          e.point.y <= 232 &&
-          e.point.y >= 152
+          currentGift &&
+          e.point.x <= 970 &&
+          e.point.x >= 870 &&
+          e.point.y <= 242 &&
+          e.point.y >= 142
         ) {
-          console.log("쓰레기통", editClickedItem);
-        }
-      }
-    };
+          Swal.fire({
+            title: "정말 삭제하시겠습니까?",
+            text: "삭제한 선물은 복구할 수 없어요",
+            confirmButtonText: "네ㅠㅠ",
+            showDenyButton: true,
+            denyButtonText: "아니요!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              currentGift.remove();
+              currentNameTag.remove();
+            } else {
+              currentGift.position.x -= 100;
+              currentNameTag.position.x -= 100;
 
-    Paper.view.onMouseMove = (e: any) => {
-      if (canEditSpace) {
-        // console.log("마우스 다운", e);
-        if (
-          e.point.x <= 940 &&
-          e.point.x >= 900 &&
-          e.point.y <= 232 &&
-          e.point.y >= 152
-        ) {
-          console.log("쓰레기통", editClickedItem);
-          // Swal.fire({
-          //   title: "정말 삭제하시겠습니까?",
-          // }).then((result) => {
-          //   if (result.isConfirmed) {
-          //     console.log("삭제");
-          //   }
-          // });
+              const changeData = {
+                id: currentGift.data.id,
+                svgAttr: {
+                  x: currentGift.position.x,
+                  y: currentGift.position.y,
+                  rotate: 0,
+                },
+              };
+              handleUpdateGift(changeData);
+            }
+          });
         }
-      }
-    };
+      };
+    }
   }, [canEditSpace]);
 
+  const clearBoundingBox = () => {
+    Paper.project.activeLayer.children.forEach((el) => {
+      if (el.bounds.selected) {
+        el.onMouseDrag = null;
+        el.bounds.selected = false;
+      }
+    });
+  };
+
+  //!gift 타입 재정의해야함
   const handleImportSVG = (
     svgItem: any,
     x: number,
@@ -195,19 +215,21 @@ export default function Canvas({ canEditSpace }: any) {
     Paper.project.importSVG(svg, {
       expandShapes: true,
 
+      //!왜 타입에서 size를 못찾는지
       onLoad: function (item: any) {
         let obj = { id: item.id, gift: svgItem };
         // setMatch([...match, obj]);
         match.push(obj);
         item.position = new Paper.Point(x, y);
+        item.data.type = "gift";
         item.data.id = svgItem.id;
-        if (item.firstChild.size._width < 200) {
+        if (item.firstChild.size.width < 200) {
           item.scale(1.5);
         } else {
           item.scale(0.3);
         }
 
-        //! text
+        // text
         const pos = new paper.Point(item.position.x, item.position.y - 45);
         const text = new paper.PointText(pos);
         text.justification = "center";
@@ -224,60 +246,18 @@ export default function Canvas({ canEditSpace }: any) {
 
     //todo 로직개선필요(조건부로 업데이트)
     if (type === "toSpace") {
+      console.log("tospace?");
       const changeData = {
         id: svgItem.id,
+        svgAttr: { x, y, rotate: 0 },
         status: "space",
       };
       handleUpdateGift(changeData);
     }
   };
 
-  /** gift 클릭시 작동하는 함수 */
-  const openGiftHandler = () => {
-    Paper.view.onDoubleClick = (e: any) => {
-      const hitItem = Paper.project.activeLayer.children.find((el) =>
-        el.contains(e.point)
-      );
-
-      if (hitItem?.data.type === "name") {
-        hitItem.onMouseDrag = function abc() {};
-        hitItem.onDoubleClick = function abc() {};
-        return;
-      }
-      if (hitItem) {
-        handleOpenLetter(hitItem.id);
-      }
-    };
-  };
-
-  const handleOpenLetter = (itemid: number) => {
-    const item = match.find((el: any) => el.id === itemid);
-    setSelected(item.gift);
-    setIsOpenGift(true);
-  };
-
-  const handleUpdateGift = async (changeData: any) => {
-    const {
-      data: { ok, updatedGift },
-    } = await updateGift(changeData);
-
-    if (ok) {
-      const storageGiftList = updatedGift.filter(
-        (el: any) => el.status === "storage"
-      );
-      const newGiftList = updatedGift.filter((el: any) => el.status === "new");
-      const spaceGiftList = updatedGift.filter(
-        (el: any) => el.status === "space"
-      );
-
-      dispatch(setStorageGift(storageGiftList));
-      dispatch(setNewGift(newGiftList));
-      dispatch(setSpaceGift(spaceGiftList));
-    }
-  };
-
   //! 드래그앤드랍시 작동하는 함수
-  const dropHandler = (e: any) => {
+  const dropHandler = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -312,67 +292,49 @@ export default function Canvas({ canEditSpace }: any) {
     e.stopPropagation();
   };
 
-  function handleSaveSpace() {
-    //! 1. match 와 activeLayer의 children에서 동일한 id를 찾고 포지션을 비교한다.
-    let activeLayer: paper.Item[] = [];
-    Paper.project.activeLayer.children.forEach((el) => {
-      activeLayer.push(el);
-    });
-    const MoveArr: any = [];
+  /** gift 클릭시 작동하는 함수 */
+  const openGiftHandler = () => {
+    Paper.view.onDoubleClick = (e: paper.MouseEvent) => {
+      const hitItem = Paper.project.activeLayer.children.find((el) =>
+        el.contains(e.point)
+      );
 
-    match.forEach((el: any) => {
-      activeLayer.forEach((layer) => {
-        if (el.id === layer.id) {
-          const svgAttr = el.gift.svgAttr;
-
-          if (
-            svgAttr.x !== layer.position.x ||
-            svgAttr.y !== layer.position.y ||
-            svgAttr.rotation !== layer.data.rotation
-          ) {
-            const newPosition = {
-              x: layer.position.x,
-              y: layer.position.y,
-              rotation: layer.data.rotation,
-            };
-            let data = {
-              idx: layer.data.idx,
-              svgAttr: JSON.stringify(newPosition),
-              userTo: localStorage.getItem("id"),
-            };
-            MoveArr.push(data);
-          }
-        }
-        if (layer.data.type === "name") {
-          MoveArr.forEach((el: any) => {
-            if (el.idx === layer.data.id) {
-              const position = el.svgAttr;
-              layer.position.x = position.x + 5;
-              layer.position.y = position.y - 45;
-            }
-          });
-        }
-      });
-    });
-    if (!MoveArr.length) {
-      return;
-    } else {
-      changeGiftPosition(MoveArr).then((res) => {
-        if (res.status === 200) {
-          //바뀐 위치 이름 포지션도 바꿔주자
-        }
-      });
-    }
-    if (editClickedItem) {
-      editClickedItem.bounds.selected = false;
-      setEditClickedItem(null);
-    }
-    Paper.project.activeLayer.children.forEach((el) => {
-      if (el.data.type === "name") {
-        el.visible = true;
+      if (hitItem?.data.type === "name") {
+        hitItem.onMouseDrag = function abc() {};
+        hitItem.onDoubleClick = function abc() {};
+        return;
       }
-    });
-  }
+      if (hitItem) {
+        handleOpenLetter(hitItem.id);
+      }
+    };
+  };
+
+  const handleOpenLetter = (itemid: number) => {
+    const item = match.find((el: any) => el.id === itemid);
+    setSelected(item.gift);
+    setIsOpenGift(true);
+  };
+
+  const handleUpdateGift = async (changeData: Gift.IChangeData) => {
+    const {
+      data: { ok, updatedGift },
+    } = await updateGift(changeData);
+
+    if (ok) {
+      const storageGiftList = updatedGift.filter(
+        (el: any) => el.status === "storage"
+      );
+      const newGiftList = updatedGift.filter((el: any) => el.status === "new");
+      const spaceGiftList = updatedGift.filter(
+        (el: any) => el.status === "space"
+      );
+
+      dispatch(setStorageGift(storageGiftList));
+      dispatch(setNewGift(newGiftList));
+      dispatch(setSpaceGift(spaceGiftList));
+    }
+  };
 
   const openGiftModal = () => {
     setIsOpenGift((prev) => !prev);
