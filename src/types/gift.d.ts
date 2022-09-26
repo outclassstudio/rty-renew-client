@@ -21,16 +21,14 @@ declare namespace Gift {
     svg: string;
     content: string;
     status: string;
-    svgAttr: attributeDTO | number;
+    svgAttr?: attributeDTO;
     date?: string;
   }
 
   interface attributeDTO {
-    //idx: number;
-    //x: null | number;
-    //y: null | number;
-    //status: string;
-    //angle?: null | number;
+    x: number;
+    y: number;
+    rotate: number;
   }
 
   interface sendGiftDTO {
@@ -40,5 +38,15 @@ declare namespace Gift {
     svgId: number | null;
     imgId: number | null;
     nickname?: string;
+  }
+
+  interface IChangeData {
+    id: number;
+    svgAttr?: {
+      x: number;
+      y: number;
+      rotate: number;
+    };
+    status?: string;
   }
 }
