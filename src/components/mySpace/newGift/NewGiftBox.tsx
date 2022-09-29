@@ -7,14 +7,7 @@ import { colorSet, fadeSlide } from "../../../style/global";
 export function NewGiftBox(props: any) {
   const [newList, setNewList] = useState<any>();
   const [storageList, setStorageList] = useState<any>();
-
-  const storageGiftLists = useSelector(
-    (state: any) => state.spaceReducer.storageGiftList
-  );
-
-  const newGiftLists = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
-  );
+  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
 
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
@@ -24,14 +17,14 @@ export function NewGiftBox(props: any) {
   );
 
   useEffect(() => {
-    if (storageGiftLists && newGiftLists) {
-      setStorageList(storageGiftLists);
+    if (userGiftList) {
+      const newGiftLists = userGiftList.filter(
+        (item: any) => item.status === "new"
+      );
       setNewList(newGiftLists);
     }
-  }, [newGiftLists, storageGiftLists]);
+  }, [userGiftList]);
 
-  //newGift icon click modal msg new Gift, data newList
-  //storage icon click modal msg storage Gift, data storageList
   return (
     <MainContainer>
       {isOpenGiftBox ? (
@@ -47,8 +40,7 @@ export function NewGiftBox(props: any) {
               </ItemContainer>
             </NewGiftContainer>
           ) : null}
-          {storageGiftLists &&
-          storageList &&
+          {storageList &&
           clickGiftBox === "storage" &&
           storageList.length !== 0 ? (
             <NewGiftContainer>

@@ -1,14 +1,20 @@
 import { RootState } from "./redux/reducers";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { loginChange } from "./redux/reducers/loginReducer";
 import { setFrom } from "./redux/reducers/sendGiftReducer";
-import { setMyGift } from "./redux/reducers/spaceReducer";
+import {
+  setDefaultItem,
+  setMyGift,
+  setUserInfo,
+} from "./redux/reducers/spaceReducer";
 import { getMyGift } from "./apis/giftApi";
 import LoggedIn from "./routes/LoggedIn";
 import LoggedOut from "./routes/LoggedOut";
-import { LOCALSTORAGE_TOKEN } from "./constants";
+import { LOCALSTORAGE_ID, LOCALSTORAGE_TOKEN } from "./constants";
+import { getAllItems } from "./apis/itemApi";
+import { getMyInfo } from "./apis/userApi";
 
 function App() {
   const loginState = useSelector((state: RootState) => state.loginReducer);
@@ -32,13 +38,29 @@ function App() {
   //화면렌더링시 로그인유지 함수 실행
   useEffect(() => {
     keepLogin();
-    getUserGift();
   }, []);
 
   //선물보내는 사람 업데이트
   useEffect(() => {
     if (loginState.login) {
-      let myId = localStorage.getItem("id");
+      getAllItems().then((res) => {
+        if (res.data.items) {
+          let defaultItem = res.data.items.filter(
+            (el) => el.type === "default"
+          );
+          dispatch(setDefaultItem(defaultItem));
+        }
+        getUserGift();
+      });
+
+      getMyInfo().then((res) => {
+        let user = res.data.userInfo;
+        if (user) {
+          dispatch(setUserInfo(user));
+        }
+      });
+
+      let myId = localStorage.getItem(LOCALSTORAGE_ID);
       dispatch(setFrom(myId));
     } else {
       dispatch(setFrom(""));

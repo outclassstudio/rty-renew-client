@@ -4,47 +4,24 @@ import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGif
 import { useEffect, useState } from "react";
 import {
   setClickGiftBox,
-  setNewGift,
   setOpenGiftBox,
 } from "../../../redux/reducers/spaceReducer";
 import { colorSet } from "../../../style/global";
-import { getMyGift } from "../../../apis/giftApi";
 
 export default function NewGift() {
-  // new giftbox의 길이가 0이 아닐 때
-  //새로 받은 선물함 아이콘이 있다.
-  //선물함을 클릭하면 선물함 리스트 컴포넌트가 보인다.
   const dispatch = useDispatch();
-
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
-
-  const newGiftList = useSelector(
-    (state: any) => state.spaceReducer.newGiftList
-  );
-
   const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  const newGiftLists = giftLists.filter((el: any) => el.status === "new");
-
+  const newGiftLists = giftLists?.filter((el: any) => el.status === "new");
   const [newList, setNewList] = useState<any>([]);
 
   useEffect(() => {
-    console.log(newGiftLists);
     setNewList(newGiftLists);
-  }, []);
-
-  useEffect(() => {
-    setNewList(newGiftList);
-  }, [newGiftList, isOpenGiftBox]);
+  }, [giftLists]);
 
   const openGiftHandler = () => {
-    // getMyGift().then((res) => {
-    //   if (res.data.gift) {
-    //     const storge = res.data.gift.filter((el) => el.status === "new");
-    //     dispatch(setNewGift(storge));
-    //   }
-    // });
     dispatch(setOpenGiftBox(!isOpenGiftBox));
     dispatch(setClickGiftBox("new"));
   };
@@ -52,10 +29,8 @@ export default function NewGift() {
   return (
     <div>
       <GiftIconBox>
-        <>
-          <GiftCount>{newList.length}</GiftCount>
-          <NewGifIcon1 onClick={openGiftHandler} />
-        </>
+        <GiftCount>{newList?.length}</GiftCount>
+        <NewGifIcon1 onClick={openGiftHandler} />
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>
