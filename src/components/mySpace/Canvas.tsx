@@ -1,26 +1,18 @@
 import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Background from "./Background";
-import Swal from "sweetalert2";
-import {
-  setNewGift,
-  setSpaceGift,
-  setStorageGift,
-} from "../../redux/reducers/spaceReducer";
+import { useSelector } from "react-redux";
 import { updateGift } from "../../apis/giftApi";
+import Background from "./Background";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import GiftModal from "../giftList/GiftModal";
-import { getAllItems } from "../../apis/itemApi";
+import Swal from "sweetalert2";
 
 interface ICanvasProps {
   canEditSpace: boolean;
 }
 
 export default function Canvas({ canEditSpace }: ICanvasProps) {
-  const dispatch = useDispatch();
-
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [match, setMatch] = useState<any>([]);
   const [selected, setSelected] = useState<any>();
@@ -28,8 +20,8 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
 
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
-  const spaceGiftLists = useSelector(
-    (state: any) => state.spaceReducer.spaceGiftList
+  const defaultItem = useSelector(
+    (state: any) => state.spaceReducer.defaultItem
   );
   const themeModal = useSelector(
     (state: any) => state.spaceReducer.isThemeModal
@@ -51,37 +43,38 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
 
     openGiftHandler();
 
-    getAllItems().then((res) => {
-      if (res.data.items) {
-        const defaultItem = res.data.items.find((el: Item.singleItemDTO) => {
-          return el.type === "default";
-        });
-        if (defaultItem) {
-          Paper.project.importSVG(defaultItem.data, {
-            expandShapes: true,
+    if (defaultItem) {
+      const selected = defaultItem.find((el: Item.singleItemDTO) => {
+        return el.type === "default";
+      });
+      if (selected) {
+        Paper.project.importSVG(selected.data, {
+          expandShapes: true,
 
-            onLoad: function (item: paper.Item) {
-              item.position = new Paper.Point(921, 192);
-              item.data.id = defaultItem.id;
-              item.data.type = "default";
-              item.scale(0.2);
-              item.visible = false;
-            },
-          });
-        }
+          onLoad: function (item: paper.Item) {
+            item.position = new Paper.Point(921, 192);
+            item.data.id = defaultItem.id;
+            item.data.type = "default";
+            item.scale(0.2);
+            item.visible = false;
+          },
+        });
       }
-    });
+    }
 
     //DB의 SVG로드
-    if (spaceGiftLists.length) {
-      spaceGiftLists.forEach((gift: Gift.singleGiftDTO) => {
+    if (userGiftList) {
+      const spaceGiftLists = userGiftList.filter(
+        (item: { status: string }) => item.status === "space"
+      );
+      spaceGiftLists?.forEach((gift: Gift.singleGiftDTO) => {
         const svgAttr = gift.svgAttr;
         if (svgAttr) {
           handleImportSVG(gift, svgAttr.x, svgAttr.y, "");
         }
       });
     }
-  }, []);
+  }, [userGiftList]);
 
   let currentGift: paper.Item;
   let currentNameTag: paper.Item;
@@ -246,7 +239,6 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
 
     //todo 로직개선필요(조건부로 업데이트)
     if (type === "toSpace") {
-      console.log("tospace?");
       const changeData = {
         id: svgItem.id,
         svgAttr: { x, y, rotate: 0 },
@@ -261,17 +253,6 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (spaceGiftLists.length === 15) {
-      Swal.fire({
-        icon: "warning",
-        title: `더 이상 추가할 수 없습니다.`,
-        text: "최대 15개까지 SPACE에 저장할 수 있습니다.",
-        timer: 3000,
-        timerProgressBar: true,
-        confirmButtonText: "알겠어요",
-      });
-      return;
-    }
     // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
 
@@ -320,20 +301,6 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
     const {
       data: { ok, updatedGift },
     } = await updateGift(changeData);
-
-    if (ok) {
-      const storageGiftList = updatedGift.filter(
-        (el: any) => el.status === "storage"
-      );
-      const newGiftList = updatedGift.filter((el: any) => el.status === "new");
-      const spaceGiftList = updatedGift.filter(
-        (el: any) => el.status === "space"
-      );
-
-      dispatch(setStorageGift(storageGiftList));
-      dispatch(setNewGift(newGiftList));
-      dispatch(setSpaceGift(spaceGiftList));
-    }
   };
 
   const openGiftModal = () => {

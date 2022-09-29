@@ -17,7 +17,7 @@ export function Avatar(props: any) {
 
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
   //user info 가져오기
-  // const myInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const myInfoState = useSelector((state: any) => state.spaceReducer.userInfo);
   const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
   const [stateMsg, setStateMsg] = useState<any>("");
@@ -42,8 +42,8 @@ export function Avatar(props: any) {
   };
 
   useEffect(() => {
-    handleMyInfo();
-  }, [dispatch, userGiftList]);
+    setMyInfo(myInfoState);
+  }, [myInfoState]);
 
   const editBtnHandler = () => {
     const blank_pattern = /^\s+|\s+$/g;
@@ -57,7 +57,6 @@ export function Avatar(props: any) {
       changeMsg(stateMsg).then(() => {
         handleMyInfo();
       });
-
       setEdit(!setEdit);
     }
   };
