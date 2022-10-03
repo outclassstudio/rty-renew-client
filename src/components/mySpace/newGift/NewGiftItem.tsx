@@ -1,18 +1,24 @@
+import { DragEvent } from "react";
 import styled from "styled-components";
 import { colorSet } from "../../../style/global";
 
 const NewGiftItem = (item: any) => {
   const itemId = item.id;
 
-  const dragStartHandler = (e: any, item: number) => {
+  const dragStartHandler = (e: DragEvent<HTMLDivElement>, item: number) => {
     e.dataTransfer.dropEffect = "move";
     e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("id", item);
+    e.dataTransfer.setData("id", item.toString());
   };
   const url = item.svg.data;
 
   return (
-    <ItemBox draggable onDragStart={(e: any) => dragStartHandler(e, itemId)}>
+    <ItemBox
+      draggable
+      onDragStart={(e: DragEvent<HTMLDivElement>) =>
+        dragStartHandler(e, itemId)
+      }
+    >
       <ItemP>From. {item.userFrom.nickname}</ItemP>
       <img src={url} alt="giftItem" />
     </ItemBox>

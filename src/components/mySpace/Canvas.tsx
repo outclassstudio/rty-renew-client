@@ -7,12 +7,16 @@ import Background from "./Background";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import GiftModal from "../giftList/GiftModal";
 import Swal from "sweetalert2";
+import { useCallback } from "react";
+import { setMyGift } from "../../redux/reducers/spaceReducer";
+import { useDispatch } from "react-redux";
 
 interface ICanvasProps {
   canEditSpace: boolean;
 }
 
 export default function Canvas({ canEditSpace }: ICanvasProps) {
+  const dispatch = useDispatch();
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [match, setMatch] = useState<any>([]);
   const [selected, setSelected] = useState<any>();
@@ -87,8 +91,14 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       (el) => el.data.type === "default"
     );
 
+    const filtered = Paper.project.activeLayer.children.filter(
+      (el) => el.data.type !== "default"
+    );
+
     if (!canEditSpace) {
       clearBoundingBox();
+      Paper.view.onClick = null;
+      Paper.view.onMouseEnter = null;
       if (trashCan) {
         trashCan.visible = false;
       }
@@ -96,10 +106,6 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       if (trashCan) {
         trashCan.visible = true;
       }
-
-      const filtered = Paper.project.activeLayer.children.filter(
-        (el) => el.data.type !== "default"
-      );
 
       //클릭 이벤트 핸들러
       Paper.view.onClick = (e: paper.MouseEvent) => {
@@ -197,56 +203,54 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   };
 
   //!gift 타입 재정의해야함
-  const handleImportSVG = (
-    svgItem: any,
-    x: number,
-    y: number,
-    type: string
-  ) => {
-    const svg = svgItem.svg.data;
+  const handleImportSVG = useCallback(
+    (svgItem: any, x: number, y: number, type: string) => {
+      const svg = svgItem.svg.data;
 
-    Paper.project.importSVG(svg, {
-      expandShapes: true,
+      Paper.project.importSVG(svg, {
+        expandShapes: true,
 
-      //!왜 타입에서 size를 못찾는지
-      onLoad: function (item: any) {
-        let obj = { id: item.id, gift: svgItem };
-        // setMatch([...match, obj]);
-        match.push(obj);
-        item.position = new Paper.Point(x, y);
-        item.data.type = "gift";
-        item.data.id = svgItem.id;
-        if (item.firstChild.size.width < 200) {
-          item.scale(1.5);
-        } else {
-          item.scale(0.3);
-        }
+        //!왜 타입에서 size를 못찾는지
+        onLoad: function (item: any) {
+          let obj = { id: item.id, gift: svgItem };
+          // setMatch([...match, obj]);
+          match.push(obj);
+          item.position = new Paper.Point(x, y);
+          item.data.type = "gift";
+          item.data.id = svgItem.id;
+          if (item.firstChild.size.width < 200) {
+            item.scale(1.5);
+          } else {
+            item.scale(0.3);
+          }
 
-        // text
-        const pos = new paper.Point(item.position.x, item.position.y - 45);
-        const text = new paper.PointText(pos);
-        text.justification = "center";
-        text.fontWeight = "bold";
-        text.fontSize = 15;
-        text.fillColor = new paper.Color(1, 1, 1);
-        text.shadowOffset = new paper.Point(1, 1);
-        text.shadowColor = new paper.Color(0, 0, 0);
-        text.content = `from. ${svgItem.userFrom.nickname}`;
-        text.data.type = "name";
-        text.data.id = svgItem.id;
-      },
-    });
+          // text
+          const pos = new paper.Point(item.position.x, item.position.y - 45);
+          const text = new paper.PointText(pos);
+          text.justification = "center";
+          text.fontWeight = "bold";
+          text.fontSize = 15;
+          text.fillColor = new paper.Color(1, 1, 1);
+          text.shadowOffset = new paper.Point(1, 1);
+          text.shadowColor = new paper.Color(0, 0, 0);
+          text.content = `from. ${svgItem.userFrom.nickname}`;
+          text.data.type = "name";
+          text.data.id = svgItem.id;
+        },
+      });
 
-    //todo 로직개선필요(조건부로 업데이트)
-    if (type === "toSpace") {
-      const changeData = {
-        id: svgItem.id,
-        svgAttr: { x, y, rotate: 0 },
-        status: "space",
-      };
-      handleUpdateGift(changeData);
-    }
-  };
+      //todo 로직개선필요(조건부로 업데이트)
+      if (type === "toSpace") {
+        const changeData = {
+          id: svgItem.id,
+          svgAttr: { x, y, rotate: 0 },
+          status: "space",
+        };
+        handleUpdateGift(changeData);
+      }
+    },
+    []
+  );
 
   //! 드래그앤드랍시 작동하는 함수
   const dropHandler = (e: DragEvent<HTMLDivElement>) => {
@@ -274,38 +278,38 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   };
 
   /** gift 클릭시 작동하는 함수 */
-  const openGiftHandler = () => {
+  const openGiftHandler = useCallback(() => {
     Paper.view.onDoubleClick = (e: paper.MouseEvent) => {
       const hitItem = Paper.project.activeLayer.children.find((el) =>
         el.contains(e.point)
       );
 
       if (hitItem?.data.type === "name") {
-        hitItem.onMouseDrag = function abc() {};
-        hitItem.onDoubleClick = function abc() {};
+        hitItem.onMouseDrag = null;
+        hitItem.onDoubleClick = null;
         return;
       }
       if (hitItem) {
-        handleOpenLetter(hitItem.id);
+        // handleOpenLetter(hitItem.id);
+        const item = match.find((el: any) => el.id === hitItem.id);
+        setSelected(item.gift);
+        setIsOpenGift(true);
       }
     };
-  };
-
-  const handleOpenLetter = (itemid: number) => {
-    const item = match.find((el: any) => el.id === itemid);
-    setSelected(item.gift);
-    setIsOpenGift(true);
-  };
+  }, []);
 
   const handleUpdateGift = async (changeData: Gift.IChangeData) => {
     const {
       data: { ok, updatedGift },
     } = await updateGift(changeData);
+    if (updatedGift) {
+      dispatch(setMyGift(updatedGift));
+    }
   };
 
-  const openGiftModal = () => {
+  const openGiftModal = useCallback(() => {
     setIsOpenGift((prev) => !prev);
-  };
+  }, [isOpenGift]);
 
   return (
     <>
