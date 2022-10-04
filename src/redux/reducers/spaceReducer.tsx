@@ -4,10 +4,11 @@ interface spaceState {
   isThemeModal: boolean;
   userInfo: Myinfo;
   myGift: any;
+  newGift: any;
   isConfirmModal: boolean;
   isConfirmRes: boolean;
   isOpenGiftBox: boolean;
-  clickGiftBox: string;
+  // clickGiftBox: string;
   isCliked: boolean;
   defaultItem: any;
 }
@@ -30,12 +31,12 @@ const initialState = {
     theme: "",
     msg: "",
   },
-
-  myGift: undefined,
+  myGift: null,
+  newGift: null,
   isConfirmModal: false,
   isConfirmRes: false,
   isOpenGiftBox: false,
-  clickGiftBox: "",
+  // clickGiftBox: "",
   storageGiftList: "",
   spaceGiftList: "",
   isCliked: false,
@@ -56,6 +57,9 @@ const spaceSlice = createSlice({
     setMyGift(state, action: PayloadAction<any>) {
       state.myGift = action.payload;
     },
+    setNewGift(state, action: PayloadAction<any>) {
+      state.newGift = action.payload;
+    },
     setConfirmModal(state, action: PayloadAction<any>) {
       state.isConfirmModal = action.payload;
     },
@@ -65,9 +69,9 @@ const spaceSlice = createSlice({
     setOpenGiftBox(state, action: PayloadAction<any>) {
       state.isOpenGiftBox = action.payload;
     },
-    setClickGiftBox(state, action: PayloadAction<any>) {
-      state.clickGiftBox = action.payload;
-    },
+    // setClickGiftBox(state, action: PayloadAction<any>) {
+    //   state.clickGiftBox = action.payload;
+    // },
     setIsClicked(state, action: PayloadAction<any>) {
       state.isCliked = action.payload;
     },
@@ -81,10 +85,11 @@ export const {
   setUserInfo,
   setModalOpen,
   setMyGift,
+  setNewGift,
   setConfirmModal,
   setConfirmRes,
   setOpenGiftBox,
-  setClickGiftBox,
+  // setClickGiftBox,
   setIsClicked,
   setDefaultItem,
 } = spaceSlice.actions;

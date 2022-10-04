@@ -1,49 +1,45 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
-import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
+import { ReactComponent as EditButton } from "../../assets/images/svg/edit.svg";
 import { changeMsg, getMyInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
-import AllGift from "./gift/AllGift";
 import Swal from "sweetalert2";
 import { colorSet } from "../../style/global";
+import { setUserInfo } from "../../redux/reducers/spaceReducer";
 
 export function Avatar(props: any) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
-  //user info 가져오기
   const myInfoState = useSelector((state: any) => state.spaceReducer.userInfo);
-  const [myInfo, setMyInfo] = useState<any>();
   //avatar state msg
-  const [stateMsg, setStateMsg] = useState<any>("");
+  const [stateMsg, setStateMsg] = useState<string>("");
   // const [isEditBtn, setIsEditBtn] = useState<boolean>(false);
   const [isClickedAvatar, setIsClikedAvatar] = useState<boolean>(false);
-  const [isAllGift, setIsAllGift] = useState<boolean>(false);
 
   const otherUser = props.userInfo;
   const otherGift = props.AllGiftListCount;
   const editType = props.editAvatar;
   const setEdit = props.setEditAvatar;
 
+  useEffect(() => {
+    setStateMsg(myInfoState.msg);
+  }, [myInfoState]);
+
   //내정보 업데이트
   const handleMyInfo = () => {
     getMyInfo().then((res) => {
       let user = res.data.userInfo;
       if (user) {
-        setMyInfo(user);
-        setStateMsg(user.msg);
+        dispatch(setUserInfo(user));
       }
     });
   };
-
-  useEffect(() => {
-    setMyInfo(myInfoState);
-  }, [myInfoState]);
 
   const editBtnHandler = () => {
     const blank_pattern = /^\s+|\s+$/g;
@@ -85,14 +81,9 @@ export function Avatar(props: any) {
     dispatch(setNickname(otherUser.nickname));
   };
 
-  const openAllGiftHandler = () => {
-    //편지 모달 띄우기
-    setIsAllGift(true);
-  };
-
   return (
     <>
-      {myInfo && !otherUser ? (
+      {myInfoState && !otherUser ? (
         <AvatarBox>
           <ContentBox>
             {isClickedAvatar ? (
@@ -100,8 +91,8 @@ export function Avatar(props: any) {
                 <Circle>
                   <P>{userGiftList.length}</P>
                 </Circle>
-                <Circle onClick={openAllGiftHandler}>
-                  <Letter width="24" fill="white" />
+                <Circle onClick={() => navigate("/userinfo")}>
+                  <UserInfo src="https://i.imgur.com/avLXvDj.png" alt="" />
                 </Circle>
               </CircleBox>
             ) : (
@@ -116,27 +107,18 @@ export function Avatar(props: any) {
                         value={stateMsg}
                       />
                       <MsgEditBtn onClick={editBtnHandler}>
-                        <svg
-                          width="24"
-                          height="24"
-                          fill="black"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        >
-                          <path d="M8.071 21.586l-7.071 1.414 1.414-7.071 14.929-14.929 5.657 5.657-14.929 14.929zm-.493-.921l-4.243-4.243-1.06 5.303 5.303-1.06zm9.765-18.251l-13.3 13.301 4.242 4.242 13.301-13.3-4.243-4.243z" />
-                        </svg>
+                        <EditButton />
                       </MsgEditBtn>
                     </EditBox>
                   </>
                 ) : (
-                  <MyMsg>{myInfo.msg}</MyMsg>
+                  <MyMsg>{myInfoState.msg}</MyMsg>
                 )}
               </ArrowBox>
             )}
           </ContentBox>
           <MyAvatar onClick={clickAvatarHandler} />
-          <IntroduceMsg>{myInfo.nickname}의 공간입니다</IntroduceMsg>
+          <IntroduceMsg>{myInfoState.nickname}의 공간입니다</IntroduceMsg>
         </AvatarBox>
       ) : null}
       {otherUser ? (
@@ -147,9 +129,7 @@ export function Avatar(props: any) {
                 <Circle>
                   <P>{otherGift}</P>
                 </Circle>
-                <Circle onClick={sendGiftHandler}>
-                  <Letter width="24" fill="white" />
-                </Circle>
+                <Circle onClick={sendGiftHandler}></Circle>
               </CircleBox>
             ) : (
               <ArrowBox>
@@ -161,7 +141,6 @@ export function Avatar(props: any) {
           <IntroduceMsg>{otherUser.nickname}의 공간입니다</IntroduceMsg>
         </AvatarBox>
       ) : null}
-      {isAllGift ? <AllGift setIsAllGift={setIsAllGift} /> : null}
     </>
   );
 }
@@ -176,12 +155,10 @@ const AvatarBox = styled.div`
   user-select: none;
 `;
 
-const MsgEditBtn = styled.button`
-  border: 1px solid white;
+const MsgEditBtn = styled.div`
   background-color: transparent;
-  width: 36px;
+  width: 30px;
   cursor: pointer;
-  border-radius: 40%;
 `;
 
 const IntroduceMsg = styled.div`
@@ -221,6 +198,10 @@ const Circle = styled.div`
     box-shadow: 0 0 40px 40px #f13838 inset;
     transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
   }
+`;
+
+const UserInfo = styled.img`
+  width: 30px;
 `;
 
 const MyMsg = styled.div`

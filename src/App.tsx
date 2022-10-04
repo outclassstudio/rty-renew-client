@@ -7,6 +7,7 @@ import { setFrom } from "./redux/reducers/sendGiftReducer";
 import {
   setDefaultItem,
   setMyGift,
+  setNewGift,
   setUserInfo,
 } from "./redux/reducers/spaceReducer";
 import { getMyGift } from "./apis/giftApi";
@@ -27,10 +28,14 @@ function App() {
     }
   };
 
-  const getUserGift = () => {
+  const handleGetUserGift = () => {
     if (localStorage.getItem(LOCALSTORAGE_TOKEN)) {
       getMyGift().then((res) => {
-        dispatch(setMyGift(res.data.gift));
+        if (res.data.gift) {
+          dispatch(setMyGift(res.data.gift));
+          const newGift = res.data.gift.filter((el) => el.status === "new");
+          dispatch(setNewGift(newGift));
+        }
       });
     }
   };
@@ -50,7 +55,7 @@ function App() {
           );
           dispatch(setDefaultItem(defaultItem));
         }
-        getUserGift();
+        handleGetUserGift();
       });
 
       getMyInfo().then((res) => {

@@ -44,11 +44,11 @@ export default function Space() {
                 className={editAvatar ? "b" : "c"}
                 onClick={editAvatarHandler}
               >
-                {editAvatar ? "수정 중" : "나의 메시지 수정"}
+                {editAvatar ? "수정 완료" : "나의 메시지 수정"}
               </SpaceBtn>
               {canEditSpace ? (
                 <SpaceBtn className="b" onClick={saveSpaceHandler}>
-                  완료
+                  수정 완료
                 </SpaceBtn>
               ) : (
                 <SpaceBtn className="c" onClick={saveSpaceHandler}>

@@ -1,60 +1,29 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import NewGiftItem from "./NewGiftItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { colorSet, fadeSlide } from "../../../style/global";
 
-export function NewGiftBox(props: any) {
-  const [newList, setNewList] = useState<any>();
-  const [storageList, setStorageList] = useState<any>();
-  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
+export function NewGiftBox() {
+  const newGiftList = useSelector((state: any) => state.spaceReducer.newGift);
 
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
-  const clickGiftBox = useSelector(
-    (state: any) => state.spaceReducer.clickGiftBox
-  );
-
-  useEffect(() => {
-    if (userGiftList) {
-      const newGiftLists = userGiftList.filter(
-        (item: any) => item.status === "new"
-      );
-      setNewList(newGiftLists);
-    }
-  }, [userGiftList]);
 
   return (
     <MainContainer>
-      {isOpenGiftBox ? (
-        <>
-          {clickGiftBox === "new" && newList.length !== 0 ? (
-            <NewGiftContainer>
-              <GiftBoxTitle>🎀New Gift!</GiftBoxTitle>
-              <ItemContainer>
-                {newList &&
-                  newList.map((item: any, idx: number) => {
-                    return <NewGiftItem {...item} key={idx} />;
-                  })}
-              </ItemContainer>
-            </NewGiftContainer>
-          ) : null}
-          {storageList &&
-          clickGiftBox === "storage" &&
-          storageList.length !== 0 ? (
-            <NewGiftContainer>
-              <GiftBoxTitle>🎁Storage Gift!</GiftBoxTitle>
-              <ItemContainer>
-                {storageList &&
-                  storageList.map((item: any, idx: number) => {
-                    return <NewGiftItem {...item} key={idx.toString()} />;
-                  })}
-              </ItemContainer>
-            </NewGiftContainer>
-          ) : null}
-        </>
-      ) : null}
+      {isOpenGiftBox && newGiftList.length !== 0 && (
+        <NewGiftContainer>
+          <GiftBoxTitle>🎀 나의 선물 리스트</GiftBoxTitle>
+          <ItemContainer>
+            {newGiftList &&
+              newGiftList.map((item: any, idx: number) => {
+                return <NewGiftItem {...item} key={idx} />;
+              })}
+          </ItemContainer>
+        </NewGiftContainer>
+      )}
     </MainContainer>
   );
 }
@@ -73,9 +42,8 @@ const NewGiftContainer = styled.div`
   border-radius: 10px;
   scrollbar-width: none;
   padding: 10px 20px;
-  animation: ${fadeSlide} 0.3s ease-out;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 0px;
-
+  animation: ${fadeSlide} 0.3s ease-out;
   user-select: none;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
@@ -98,7 +66,10 @@ const ItemContainer = styled.div`
 `;
 
 const GiftBoxTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  font-family: "Hanna", sans-serif;
   color: #ffffff;
-  font-size: 20px;
-  margin-bottom: 5px;
+  font-size: 17px;
+  margin-bottom: 7px;
 `;

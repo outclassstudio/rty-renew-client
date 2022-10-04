@@ -2,14 +2,14 @@ import styled from "styled-components";
 import Paper from "paper";
 import { DragEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateGift } from "../../apis/giftApi";
 import Background from "./Background";
 import NewGiftIcon from "./newGift/NewGiftIcon";
 import GiftModal from "../giftList/GiftModal";
 import Swal from "sweetalert2";
 import { useCallback } from "react";
-import { setMyGift } from "../../redux/reducers/spaceReducer";
-import { useDispatch } from "react-redux";
+import { setNewGift } from "../../redux/reducers/spaceReducer";
 
 interface ICanvasProps {
   canEditSpace: boolean;
@@ -246,7 +246,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
           svgAttr: { x, y, rotate: 0 },
           status: "space",
         };
-        handleUpdateGift(changeData);
+        handleUpdateGift(changeData, "toSpace");
       }
     },
     []
@@ -257,10 +257,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    // drag시 어떤   target을 잡았는지 찾기
     const targetId = e.dataTransfer.getData("id");
-
-    // newGiftList에서  targetId와 같은걸 찾는다. 찾은 후 해당  svg를 캔버스에 붙인다
     const targetItem = userGiftList.find(
       (el: any) => el.id === Number(targetId)
     );
@@ -298,12 +295,16 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
     };
   }, []);
 
-  const handleUpdateGift = async (changeData: Gift.IChangeData) => {
+  const handleUpdateGift = async (
+    changeData: Gift.IChangeData,
+    type?: string
+  ) => {
     const {
-      data: { ok, updatedGift },
+      data: { updatedGift },
     } = await updateGift(changeData);
-    if (updatedGift) {
-      dispatch(setMyGift(updatedGift));
+    if (updatedGift && type === "toSpace") {
+      const newGift = updatedGift.filter((el: any) => el.status === "new");
+      dispatch(setNewGift(newGift));
     }
   };
 
