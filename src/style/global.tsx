@@ -111,6 +111,19 @@ export const fadeSlide = keyframes`
   }
 `;
 
+export const fadeSlideOut = keyframes`
+  0% {
+    transform: translateX(0%);
+    opacity:1
+  }
+
+
+  100% {
+    transform: translateX(60%);
+    opacity: 0;
+  }
+`;
+
 //페이드아웃
 export const fadeOut = keyframes`
   0% {

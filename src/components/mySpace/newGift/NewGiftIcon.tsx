@@ -1,11 +1,7 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
-import { useEffect, useState } from "react";
-import {
-  setClickGiftBox,
-  setOpenGiftBox,
-} from "../../../redux/reducers/spaceReducer";
+import { setOpenGiftBox } from "../../../redux/reducers/spaceReducer";
 import { colorSet } from "../../../style/global";
 
 export default function NewGift() {
@@ -13,23 +9,17 @@ export default function NewGift() {
   const isOpenGiftBox = useSelector(
     (state: any) => state.spaceReducer.isOpenGiftBox
   );
-  const giftLists = useSelector((state: any) => state.spaceReducer.myGift);
-  const newGiftLists = giftLists?.filter((el: any) => el.status === "new");
-  const [newList, setNewList] = useState<any>([]);
-
-  useEffect(() => {
-    setNewList(newGiftLists);
-  }, [giftLists]);
+  const newGiftList = useSelector((state: any) => state.spaceReducer.newGift);
 
   const openGiftHandler = () => {
     dispatch(setOpenGiftBox(!isOpenGiftBox));
-    dispatch(setClickGiftBox("new"));
+    // dispatch(setClickGiftBox("new"));
   };
 
   return (
     <div>
       <GiftIconBox>
-        <GiftCount>{newList?.length}</GiftCount>
+        <GiftCount>{newGiftList?.length}</GiftCount>
         <NewGifIcon1 onClick={openGiftHandler} />
       </GiftIconBox>
       <GiftBox></GiftBox>
@@ -60,7 +50,6 @@ export const GiftCount = styled.div`
   align-items: center;
   position: fixed;
   margin-top: 60px;
-  /* margin-left: 20px; */
   font-weight: 900;
   font-size: 20px;
   color: white;
@@ -68,5 +57,4 @@ export const GiftCount = styled.div`
   width: 36px;
   height: 36px;
   border-radius: 18px;
-  /* padding-bottom: 2px; */
 `;
