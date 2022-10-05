@@ -35,6 +35,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   let tool: paper.Tool;
 
   useLayoutEffect(() => {
+    console.log("유저정보", userInfo);
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
@@ -318,7 +319,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       <CanvasArea
         ref={canvasRef}
         id="canvas"
-        color={userInfo.theme.data}
+        themeUrl={userInfo.theme.data}
         draggable
         onDrop={(e: any) => dropHandler(e)}
         onDragOver={dragOverHandler}
@@ -333,11 +334,15 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   );
 }
 
-const CanvasArea = styled.canvas`
+interface Theme {
+  themeUrl: string | undefined;
+}
+
+const CanvasArea = styled.canvas<Theme>`
   width: 1008px;
   height: 567px;
   border-radius: 10px;
-  background-image: url(${(props) => props.color});
+  background-image: url(${(props) => props.themeUrl});
   background-size: cover;
   background-repeat: no-repeat;
   box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 20px 0px;
