@@ -1,70 +1,61 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
+import styled from "styled-components";
 import { getOthersGift } from "../apis/giftApi";
 import Layout from "./Layout";
 import Paper from "paper";
-import styled from "styled-components";
+import Loading from "../components/Loading";
 import { NormalBtn } from "../style/btnStyle.style";
 import Swal from "sweetalert2";
 import { getOthersInfo } from "../apis/userApi";
 import { Avatar } from "../components/mySpace/Avatar";
-import axios from "axios";
+import { useLayoutEffect } from "react";
 
 export default function Visit() {
   const params = useParams();
   const canvasRef = useRef(null);
   const navigate = useNavigate();
+  let tool: paper.Tool;
 
   const [spaceGiftList, setSpaceGiftList] = useState<any>([]);
   const [AllGiftListCount, setAllGiftListCount] = useState<number>();
   const [userInfo, setUserInfo] = useState<any>("");
-
-  let tool: paper.Tool;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //캔버스 세팅 및 유저정보 호출
   useEffect(() => {
-    axios
-      .get(`/users/checkid/${params.id}`)
-      .then((res) => {
-        if (res.data) {
+    Paper.install(window);
+    const canvas: any = canvasRef.current;
+    Paper.setup(canvas);
+    tool = new paper.Tool();
+    tool.activate();
+
+    if (params.id) {
+      getOthersInfo(params.id).then((res) => {
+        if (res.data.ok && res.data.userInfo) {
+          setIsLoading(false);
+          setUserInfo(res.data.userInfo);
           Swal.fire({
             icon: "info",
-            title: `이곳은 ${params.id}님의 공간입니다`,
+            title: `이곳은 ${res.data.userInfo.nickname}님의 공간입니다`,
             text: "눈으로 구경만 하실수 있어요!",
             timer: 3000,
             timerProgressBar: true,
             confirmButtonText: "알겠어요",
           });
-
-          Paper.install(window);
-          const canvas: any = canvasRef.current;
-          Paper.setup(canvas);
-          tool = new paper.Tool();
-          tool.activate();
-
-          getOthersGift(params.id).then((res) => {
-            if (res.data.gift) {
-              setAllGiftListCount(res.data.gift.length);
-              let list = res.data.gift.filter((el) => {
-                return el.status === "space";
-              });
-              setSpaceGiftList(list);
-            }
-          });
-
-          if (params.id) {
-            getOthersInfo(params.id).then((res) => {
-              setUserInfo(res.data.userInfo);
-            });
-          }
-        } else {
-          navigate("/notfound");
         }
-      })
-      .catch(() => {
-        navigate("/notfound");
       });
+      getOthersGift(+params.id).then((res) => {
+        if (res.data.gift) {
+          setAllGiftListCount(res.data.gift.length);
+          let list = res.data.gift.filter((el) => {
+            return el.status === "space";
+          });
+          setSpaceGiftList(list);
+        }
+      });
+    }
   }, [params.id]);
 
   //캔버스에 svg세팅
@@ -76,9 +67,10 @@ export default function Visit() {
 
   //캔버스에 svg임포트
   function importSvg() {
+    console.log(spaceGiftList, "ㅋㅋㅋ");
     spaceGiftList.forEach((gift: any) => {
       const svgAttr = gift.svgAttr;
-      Paper.project.importSVG(gift.svg, {
+      Paper.project.importSVG(gift.svg.data, {
         onLoad: function (item: any) {
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);
           if (item.firstChild.size._width < 200) {
@@ -104,13 +96,17 @@ export default function Visit() {
     });
   }
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <Layout title={`${params.id}님의 공간`}>
+    <Layout title={`${userInfo.nickname}님의 공간`}>
       <CanvasBox>
         <CanvasArea
           ref={canvasRef}
           id="canvas"
-          themeUrl={userInfo.theme}
+          themeUrl={`http://localhost:3000/${userInfo.theme?.data}`}
         ></CanvasArea>
         <NormalBtn
           className="b"
@@ -146,8 +142,8 @@ interface Theme {
 }
 
 const CanvasArea = styled.canvas<Theme>`
-  width: 1280px;
-  height: 720px;
+  width: 1008px;
+  height: 567px;
   border-radius: 10px;
   background-image: url(${(props) => props.themeUrl});
   background-size: 100%;

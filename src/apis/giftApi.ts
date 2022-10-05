@@ -14,7 +14,7 @@ export const getMyGift = async (): Promise<
 
 //다른사람 gift받아오기(ok)
 export const getOthersGift = async (
-  id: string | undefined
+  id: number
 ): Promise<AxiosResponse<Gift.GetGiftResponse>> => {
   return apiClient()
     .get(`/gifts/${id}`)

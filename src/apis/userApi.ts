@@ -19,7 +19,7 @@ export const getOthersInfo = async (
   id: string
 ): Promise<AxiosResponse<Users.UserInfoResponse>> => {
   return apiClient()
-    .get(`/users/${id}`)
+    .get(`/users/others/${id}`)
     .then((res) => {
       return res;
     });
