@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
+import Paper from "paper";
 import styled from "styled-components";
 import { getOthersGift } from "../apis/giftApi";
+import { getOthersInfo } from "../apis/userApi";
 import Layout from "./Layout";
-import Paper from "paper";
 import Loading from "../components/Loading";
+import { Avatar } from "../components/mySpace/Avatar";
 import { NormalBtn } from "../style/btnStyle.style";
 import Swal from "sweetalert2";
-import { getOthersInfo } from "../apis/userApi";
-import { Avatar } from "../components/mySpace/Avatar";
-import { useLayoutEffect } from "react";
 
 export default function Visit() {
   const params = useParams();
@@ -34,7 +33,6 @@ export default function Visit() {
     if (params.id) {
       getOthersInfo(params.id).then((res) => {
         if (res.data.ok && res.data.userInfo) {
-          setIsLoading(false);
           setUserInfo(res.data.userInfo);
           Swal.fire({
             icon: "info",
@@ -56,7 +54,7 @@ export default function Visit() {
         }
       });
     }
-  }, [params.id]);
+  }, []);
 
   //캔버스에 svg세팅
   useEffect(() => {
@@ -70,13 +68,13 @@ export default function Visit() {
     console.log(spaceGiftList, "ㅋㅋㅋ");
     spaceGiftList.forEach((gift: any) => {
       const svgAttr = gift.svgAttr;
-      Paper.project.importSVG(gift.svg.data, {
+      Paper.project.importSVG(`http://localhost:3000/${gift.svg.data}`, {
         onLoad: function (item: any) {
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);
           if (item.firstChild.size._width < 200) {
             item.scale(1.5);
           } else {
-            item.scale(0.15);
+            item.scale(0.3);
           }
 
           const pos = new paper.Point(item.position.x, item.position.y - 45);
@@ -87,18 +85,18 @@ export default function Visit() {
           text.fillColor = new paper.Color(1, 1, 1);
           text.shadowOffset = new paper.Point(1, 1);
           text.shadowColor = new paper.Color(0, 0, 0);
-          text.content = gift.userFrom;
+          text.content = gift.userFrom.nickname;
           text.position = pos;
           text.data.type = "name";
-          text.data.id = gift.idx;
+          text.data.id = gift.id;
         },
       });
     });
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <Layout title={`${userInfo.nickname}님의 공간`}>
@@ -106,7 +104,7 @@ export default function Visit() {
         <CanvasArea
           ref={canvasRef}
           id="canvas"
-          themeUrl={`http://localhost:3000/${userInfo.theme?.data}`}
+          themeUrl={userInfo && `http://localhost:3000/${userInfo.theme?.data}`}
         ></CanvasArea>
         <NormalBtn
           className="b"
