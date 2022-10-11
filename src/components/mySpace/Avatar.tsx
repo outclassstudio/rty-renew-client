@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { ReactComponent as MyAvatar } from "../../assets/images/svg/myAvatar.svg";
 import { ReactComponent as EditButton } from "../../assets/images/svg/edit.svg";
+import { ReactComponent as Letter } from "../../assets/images/svg/letter.svg";
 import { changeMsg, getMyInfo } from "../../apis/userApi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -11,7 +12,20 @@ import Swal from "sweetalert2";
 import { colorSet } from "../../style/global";
 import { setUserInfo } from "../../redux/reducers/spaceReducer";
 
-export function Avatar(props: any) {
+interface IAvatarProps {
+  otherUserInfo?: Users.myinfoDTO;
+  otherGiftCount?: number;
+  editMyMsg?: boolean;
+  // setEditMyMsg?: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMyMsg?: any;
+}
+
+export function Avatar({
+  otherUserInfo,
+  otherGiftCount,
+  editMyMsg,
+  setEditMyMsg,
+}: IAvatarProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,13 +33,7 @@ export function Avatar(props: any) {
   const myInfoState = useSelector((state: any) => state.spaceReducer.userInfo);
   //avatar state msg
   const [stateMsg, setStateMsg] = useState<string>("");
-  // const [isEditBtn, setIsEditBtn] = useState<boolean>(false);
   const [isClickedAvatar, setIsClikedAvatar] = useState<boolean>(false);
-
-  const otherUser = props.userInfo;
-  const otherGift = props.AllGiftListCount;
-  const editType = props.editAvatar;
-  const setEdit = props.setEditAvatar;
 
   useEffect(() => {
     setStateMsg(myInfoState.msg);
@@ -53,7 +61,7 @@ export function Avatar(props: any) {
       changeMsg(stateMsg).then(() => {
         handleMyInfo();
       });
-      setEdit(!setEdit);
+      setEditMyMsg(!editMyMsg);
     }
   };
 
@@ -76,72 +84,59 @@ export function Avatar(props: any) {
 
   const sendGiftHandler = () => {
     // 클릭한 유저에게 선물 보내기 페이지 라우팅
-    navigate("/send", { state: otherUser.id });
-    dispatch(setTo(otherUser.id));
-    dispatch(setNickname(otherUser.nickname));
+    if (otherUserInfo) {
+      navigate("/send", { state: otherUserInfo.id });
+      dispatch(setTo(otherUserInfo.nickname));
+      dispatch(setNickname(otherUserInfo.nickname));
+    }
   };
 
   return (
-    <>
-      {myInfoState && !otherUser ? (
-        <AvatarBox>
-          <ContentBox>
-            {isClickedAvatar ? (
-              <CircleBox>
-                <Circle>
-                  <P>{userGiftList.length}</P>
-                </Circle>
-                <Circle onClick={() => navigate("/userinfo")}>
-                  <UserInfo src="https://i.imgur.com/avLXvDj.png" alt="" />
-                </Circle>
-              </CircleBox>
+    <AvatarBox>
+      <ContentBox>
+        {isClickedAvatar ? (
+          <CircleBox>
+            <Circle>
+              <P>{otherUserInfo ? otherGiftCount : userGiftList.length}</P>
+            </Circle>
+            {otherUserInfo ? (
+              <Circle onClick={sendGiftHandler}>
+                <Letter width="24" fill="white" />
+              </Circle>
             ) : (
-              <ArrowBox>
-                {editType ? (
-                  <>
-                    <EditBox>
-                      <Input
-                        type="text"
-                        maxLength={10}
-                        onChange={inputChangeHandler}
-                        value={stateMsg}
-                      />
-                      <MsgEditBtn onClick={editBtnHandler}>
-                        <EditButton />
-                      </MsgEditBtn>
-                    </EditBox>
-                  </>
-                ) : (
-                  <MyMsg>{myInfoState.msg}</MyMsg>
-                )}
-              </ArrowBox>
+              <Circle onClick={() => navigate("/userinfo")}>
+                <UserInfo src="https://i.imgur.com/avLXvDj.png" alt="" />
+              </Circle>
             )}
-          </ContentBox>
-          <MyAvatar onClick={clickAvatarHandler} />
-          <IntroduceMsg>{myInfoState.nickname}의 공간입니다</IntroduceMsg>
-        </AvatarBox>
-      ) : null}
-      {otherUser ? (
-        <AvatarBox>
-          <ContentBox>
-            {isClickedAvatar ? (
-              <CircleBox>
-                <Circle>
-                  <P>{otherGift}</P>
-                </Circle>
-                <Circle onClick={sendGiftHandler}></Circle>
-              </CircleBox>
+          </CircleBox>
+        ) : (
+          <ArrowBox>
+            {editMyMsg && !otherUserInfo ? (
+              <EditBox>
+                <Input
+                  type="text"
+                  maxLength={10}
+                  onChange={inputChangeHandler}
+                  value={stateMsg}
+                />
+                <MsgEditBtn onClick={editBtnHandler}>
+                  <EditButton />
+                </MsgEditBtn>
+              </EditBox>
             ) : (
-              <ArrowBox>
-                <MyMsg>{otherUser.msg}</MyMsg>
-              </ArrowBox>
+              <MyMsg>
+                {otherUserInfo ? otherUserInfo.msg : myInfoState.msg}
+              </MyMsg>
             )}
-          </ContentBox>
-          <MyAvatar onClick={clickAvatarHandler} />
-          <IntroduceMsg>{otherUser.nickname}의 공간입니다</IntroduceMsg>
-        </AvatarBox>
-      ) : null}
-    </>
+          </ArrowBox>
+        )}
+      </ContentBox>
+      <MyAvatar onClick={clickAvatarHandler} />
+      <IntroduceMsg>
+        {otherUserInfo ? otherUserInfo.nickname : myInfoState.nickname}의
+        공간입니다
+      </IntroduceMsg>
+    </AvatarBox>
   );
 }
 

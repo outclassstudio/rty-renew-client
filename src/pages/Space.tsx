@@ -11,7 +11,7 @@ import { NormalBtn } from "../style/btnStyle.style";
 
 export default function Space() {
   const dispatch = useDispatch();
-  const [editAvatar, setEditAvatar] = useState(false);
+  const [editMyMsg, setEditMyMsg] = useState(false);
   const [canEditSpace, setCanEditSpace] = useState(false);
 
   const changeThemeHandler = () => {
@@ -19,7 +19,7 @@ export default function Space() {
   };
 
   const editAvatarHandler = () => {
-    setEditAvatar(!editAvatar);
+    setEditMyMsg(!editMyMsg);
   };
 
   const saveSpaceHandler = () => {
@@ -31,7 +31,7 @@ export default function Space() {
       <MainContainer>
         <SpaceContainer>
           <AvatarWrapper>
-            <Avatar editAvatar={editAvatar} setEditAvatar={setEditAvatar} />
+            <Avatar editMyMsg={editMyMsg} setEditMyMsg={setEditMyMsg} />
           </AvatarWrapper>
           <CanvasContainer>
             <Canvas canEditSpace={canEditSpace} />
@@ -41,10 +41,10 @@ export default function Space() {
                 테마 변경
               </SpaceBtn>
               <SpaceBtn
-                className={editAvatar ? "b" : "c"}
+                className={editMyMsg ? "b" : "c"}
                 onClick={editAvatarHandler}
               >
-                {editAvatar ? "수정 완료" : "나의 메시지 수정"}
+                {editMyMsg ? "수정 완료" : "나의 메시지 수정"}
               </SpaceBtn>
               {canEditSpace ? (
                 <SpaceBtn className="b" onClick={saveSpaceHandler}>

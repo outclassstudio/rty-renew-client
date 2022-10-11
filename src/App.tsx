@@ -25,6 +25,13 @@ function App() {
   const keepLogin = () => {
     if (localStorage.getItem(LOCALSTORAGE_TOKEN)) {
       dispatch(loginChange());
+
+      getMyInfo().then((res) => {
+        let user = res.data.userInfo;
+        if (user) {
+          dispatch(setUserInfo(user));
+        }
+      });
     }
   };
 
@@ -56,13 +63,6 @@ function App() {
           dispatch(setDefaultItem(defaultItem));
         }
         handleGetUserGift();
-      });
-
-      getMyInfo().then((res) => {
-        let user = res.data.userInfo;
-        if (user) {
-          dispatch(setUserInfo(user));
-        }
       });
 
       let myId = localStorage.getItem(LOCALSTORAGE_ID);
