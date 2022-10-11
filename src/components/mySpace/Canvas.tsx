@@ -10,6 +10,7 @@ import GiftModal from "../giftList/GiftModal";
 import Swal from "sweetalert2";
 import { useCallback } from "react";
 import { setNewGift } from "../../redux/reducers/spaceReducer";
+import { useParams } from "react-router";
 
 interface ICanvasProps {
   canEditSpace: boolean;
@@ -17,6 +18,8 @@ interface ICanvasProps {
 
 export default function Canvas({ canEditSpace }: ICanvasProps) {
   const dispatch = useDispatch();
+  const params = useParams();
+
   const [isOpenGift, setIsOpenGift] = useState(false);
   const [match, setMatch] = useState<any>([]);
   const [selected, setSelected] = useState<any>();
@@ -35,7 +38,6 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   let tool: paper.Tool;
 
   useLayoutEffect(() => {
-    console.log("유저정보", userInfo);
     Paper.install(window);
     const canvas: any = canvasRef.current;
     Paper.setup(canvas);
@@ -79,7 +81,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
         }
       });
     }
-  }, [userGiftList]);
+  }, [userGiftList, params.id]);
 
   let currentGift: paper.Item;
   let currentNameTag: paper.Item;
@@ -319,7 +321,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       <CanvasArea
         ref={canvasRef}
         id="canvas"
-        themeUrl={userInfo.theme.data}
+        themeUrl={userInfo && `http://localhost:3000/${userInfo.theme?.data}`}
         draggable
         onDrop={(e: any) => dropHandler(e)}
         onDragOver={dragOverHandler}

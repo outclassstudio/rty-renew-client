@@ -21,8 +21,8 @@ export default function HeaderUserlist({
   const dispatch = useDispatch();
 
   //선택한 아이디로 상태업데이트
-  const handleVisitOthers = (id: string, nickname: string): void => {
-    if (id === localStorage.getItem(LOCALSTORAGE_ID)) {
+  const handleVisitOthers = (userId: string, id: number): void => {
+    if (userId === localStorage.getItem(LOCALSTORAGE_ID)) {
       Swal.fire({
         title: "자신의 페이지는 방문할 수 없어요",
         icon: "warning",
@@ -49,7 +49,7 @@ export default function HeaderUserlist({
                 return (
                   <SingleUser
                     key={idx}
-                    onClick={() => handleVisitOthers(el.id, el.nickname)}
+                    onClick={() => handleVisitOthers(el.userId, el.id)}
                   >
                     <span>{el.nickname}</span>
                     <span>( {el.userId} )</span>

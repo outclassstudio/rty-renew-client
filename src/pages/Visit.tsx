@@ -18,7 +18,7 @@ export default function Visit() {
   let tool: paper.Tool;
 
   const [spaceGiftList, setSpaceGiftList] = useState<any>([]);
-  const [AllGiftListCount, setAllGiftListCount] = useState<number>();
+  const [otherGiftCount, setOtherGiftCount] = useState<number>();
   const [userInfo, setUserInfo] = useState<any>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -46,7 +46,7 @@ export default function Visit() {
       });
       getOthersGift(+params.id).then((res) => {
         if (res.data.gift) {
-          setAllGiftListCount(res.data.gift.length);
+          setOtherGiftCount(res.data.gift.length);
           let list = res.data.gift.filter((el) => {
             return el.status === "space";
           });
@@ -65,7 +65,6 @@ export default function Visit() {
 
   //캔버스에 svg임포트
   function importSvg() {
-    console.log(spaceGiftList, "ㅋㅋㅋ");
     spaceGiftList.forEach((gift: any) => {
       const svgAttr = gift.svgAttr;
       Paper.project.importSVG(`http://localhost:3000/${gift.svg.data}`, {
@@ -114,11 +113,7 @@ export default function Visit() {
         >
           내 공간으로 돌아가기
         </NormalBtn>
-        <Avatar
-          userInfo={userInfo}
-          otherGift={spaceGiftList}
-          AllGiftListCount={AllGiftListCount}
-        />
+        <Avatar otherUserInfo={userInfo} otherGiftCount={otherGiftCount} />
       </CanvasBox>
     </Layout>
   );
