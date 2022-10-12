@@ -42,6 +42,18 @@ export default function Visit() {
             timerProgressBar: true,
             confirmButtonText: "알겠어요",
           });
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "존재하지 않는 아이디에요",
+            timer: 3000,
+            timerProgressBar: true,
+            confirmButtonText: "돌아가기",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate(-1);
+            }
+          });
         }
       });
       getOthersGift(+params.id).then((res) => {

@@ -108,9 +108,19 @@ export default function Find() {
         handleSetPage(1);
         setResultMsg(false);
         findRandomUser().then((res) => {
-          setIsLoading(false);
-          setUserList(res.data);
-          setRandomResult(true);
+          console.log("randomuser", res);
+          if (res.data.ok) {
+            setIsLoading(false);
+            setUserList(res.data);
+            setRandomResult(true);
+          } else {
+            Swal.fire({
+              title: "추천할 유저가 없어요ㅠㅠ",
+              icon: "warning",
+              confirmButtonText: "앗 넵ㅠ",
+            });
+            setIsLoading(false);
+          }
         });
       } else if (result.isDenied) {
         setIsLoading(false);
