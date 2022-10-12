@@ -5,23 +5,18 @@ import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
 import { LOCALSTORAGE_ID } from "../../constants";
 
-interface Props {
+interface IUserBoxProps {
   data: Users.myinfoDTO;
 }
 
-export default function UserBox({ data }: Props) {
+export default function UserBox({ data }: IUserBoxProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("왜그러지", data);
-  }, []);
-
-  const handleVisitOthers = (id: string): void => {
-    if (id === localStorage.getItem(LOCALSTORAGE_ID)) {
+  const handleVisitOthers = (userId: string, id: number) => {
+    if (userId === localStorage.getItem(LOCALSTORAGE_ID)) {
       Swal.fire({
         title: "자신의 페이지는 방문할 수 없어요",
         icon: "warning",
@@ -57,7 +52,7 @@ export default function UserBox({ data }: Props) {
               }
               alt=""
               onClick={() => {
-                handleVisitOthers(data.userId);
+                handleVisitOthers(data.userId, data.id);
               }}
             />
           </Icon>

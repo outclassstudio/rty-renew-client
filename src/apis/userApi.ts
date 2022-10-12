@@ -61,9 +61,9 @@ export const findUser = async (
 };
 
 //!다른 사람 랜덤 찾기
-export const findRandomUser = async (): Promise<AxiosResponse<any[]>> => {
+export const findRandomUser = async (): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .get(`/users/random`)
+    .get(`/users/random/random`)
     .then((res) => {
       return res;
     });
