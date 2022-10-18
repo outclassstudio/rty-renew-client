@@ -111,7 +111,7 @@ export default function Find() {
           console.log("randomuser", res);
           if (res.data.ok) {
             setIsLoading(false);
-            setUserList(res.data);
+            setUserList(res.data.userInfo);
             setRandomResult(true);
           } else {
             Swal.fire({
