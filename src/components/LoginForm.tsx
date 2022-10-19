@@ -29,8 +29,8 @@ export default function LoginForm() {
   //일반 로그인 요청 함수
   const handleLogin = () => {
     axios
-      // .post("http://rty-renew-server.herokuapp.com/users/login", {
-      .post("/users/login", {
+      .post("http://rty-renew-server.herokuapp.com/users/login", {
+        // .post("/users/login", {
         userId: loginInfo.id,
         pwd: loginInfo.pwd,
       })
