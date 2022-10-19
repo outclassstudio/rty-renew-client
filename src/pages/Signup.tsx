@@ -59,7 +59,9 @@ export default function Signup() {
   const handleIdCheck = (): void => {
     if (idCheck(signUpInfo.userId)) {
       axios
-        .get(`/users/checkid/${signUpInfo.userId}`)
+        .get(
+          `https://rty-renew-server.herokuapp.com/users/checkid/${signUpInfo.userId}`
+        )
         .then((res) => {
           setMessageRender(true);
           setErrors({ ...errors, idOverlap: res.data.ok });

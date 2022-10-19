@@ -1,12 +1,14 @@
 import { AxiosResponse } from "axios";
 import apiClient from ".";
 
+const url = "https://rty-renew-server.herokuapp.com";
+
 //모든 아이템 불러오기
 export const getAllItems = async (): Promise<
   AxiosResponse<Item.GetAllItemsResponse>
 > => {
   return apiClient()
-    .get("/items")
+    .get(`${url}/items`)
     .then((res) => {
       return res;
     });
@@ -17,7 +19,7 @@ export const getMyItems = async (): Promise<
   AxiosResponse<Item.GetMyItemsResponse>
 > => {
   return apiClient()
-    .get(`/items/my`)
+    .get(`${url}/items/my`)
     .then((res) => {
       return res;
     });
@@ -27,9 +29,8 @@ export const getMyItems = async (): Promise<
 export const buyItem = async (
   itemId: number
 ): Promise<AxiosResponse<Item.BuyItemResponse>> => {
-  console.log(itemId, "제대로 넘어가니");
   return apiClient()
-    .post(`/items`, { itemId })
+    .post(`${url}/items`, { itemId })
     .then((res) => {
       return res;
     });
