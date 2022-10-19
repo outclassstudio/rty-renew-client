@@ -9,7 +9,7 @@ export const apiClient = () => {
     headers: {
       authorization: `${accessToken}`,
     },
-    withCredentials: true,
+    // withCredentials: true,
   });
 
   return instance;
