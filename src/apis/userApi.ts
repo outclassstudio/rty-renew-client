@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import apiClient from ".";
 
 const myId = localStorage.getItem("id");
+const url = "https://rty-renew-server.herokuapp.com";
 
 //나의 정보 조회(ok)
 export const getMyInfo = async (): Promise<

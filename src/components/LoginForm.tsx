@@ -7,7 +7,7 @@ import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
 import { colorSet } from "../style/global";
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export default function LoginForm() {
   const dispatch = useDispatch();
@@ -29,6 +29,7 @@ export default function LoginForm() {
   //일반 로그인 요청 함수
   const handleLogin = () => {
     axios
+      // .post("http://rty-renew-server.herokuapp.com/users/login", {
       .post("/users/login", {
         userId: loginInfo.id,
         pwd: loginInfo.pwd,
