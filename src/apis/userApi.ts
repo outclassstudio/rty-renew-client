@@ -9,7 +9,7 @@ export const getMyInfo = async (): Promise<
   AxiosResponse<Users.UserInfoResponse>
 > => {
   return apiClient()
-    .get(`/users/${myId}`)
+    .get(`${url}/users/${myId}`)
     .then((res) => {
       return res;
     });
@@ -20,7 +20,7 @@ export const getOthersInfo = async (
   id: string
 ): Promise<AxiosResponse<Users.UserInfoResponse>> => {
   return apiClient()
-    .get(`/users/others/${id}`)
+    .get(`${url}/users/others/${id}`)
     .then((res) => {
       return res;
     });
@@ -32,7 +32,7 @@ export const changeTheme = async (
   themeId: number
 ): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .patch(`/users/theme/${themeId}`)
+    .patch(`${url}/users/theme/${themeId}`)
     .then((res) => {
       return res;
     });
@@ -44,7 +44,7 @@ export const changeMsg = async (
   stateMsg: string
 ): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .patch(`/users`, { msg: stateMsg })
+    .patch(`${url}/users`, { msg: stateMsg })
     .then((res) => {
       return res;
     });
@@ -55,7 +55,7 @@ export const findUser = async (
   userId: string
 ): Promise<AxiosResponse<Users.FindUserResponse>> => {
   return apiClient()
-    .get(`/users/find/${userId}`)
+    .get(`${url}/users/find/${userId}`)
     .then((res) => {
       return res;
     });
@@ -64,7 +64,7 @@ export const findUser = async (
 //!다른 사람 랜덤 찾기
 export const findRandomUser = async (): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .get(`/users/random/random`)
+    .get(`${url}/users/random/random`)
     .then((res) => {
       return res;
     });
@@ -72,24 +72,24 @@ export const findRandomUser = async (): Promise<AxiosResponse<any>> => {
 
 //!정보수정 요청 : 수정필요
 export const patchUserInfo = (data: any): Promise<AxiosResponse<any>> => {
-  return apiClient().patch(`/users`, data);
+  return apiClient().patch(`${url}/users`, data);
 };
 
 //비밀번호 확인(ok) : 로직 점검 필요
 export const checkPassowrd = (
   data: any
 ): Promise<AxiosResponse<Users.CoreResponse>> => {
-  return apiClient().post(`/users/pwdcheck`, data);
+  return apiClient().post(`${url}/users/pwdcheck`, data);
 };
 
 //비밀번호 변경 요청(ok)
 export const changePassword = (
   data: Users.changePwDTO
 ): Promise<AxiosResponse<Users.CoreResponse>> => {
-  return apiClient().post(`/users/updatepwd`, data);
+  return apiClient().post(`${url}/users/updatepwd`, data);
 };
 
 //회원탈퇴 요청(ok)
 export const deleteAccount = (): Promise<AxiosResponse<Users.CoreResponse>> => {
-  return apiClient().delete(`/users`);
+  return apiClient().delete(`${url}/users`);
 };
