@@ -30,7 +30,7 @@ export default function UserBox({ data }: IUserBoxProps) {
   return (
     <BoxContainer>
       <ThumbnailWrapper>
-        <Thumbnail src={data.theme ? `${BASE_URL}${data.theme.data}` : ""} />
+        <Thumbnail src={data.theme && `${BASE_URL}${data.theme.data}`} />
         <Title>{data.nickname}님</Title>
       </ThumbnailWrapper>
       <GroupWrapper>

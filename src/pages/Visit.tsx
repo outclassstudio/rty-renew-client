@@ -10,6 +10,7 @@ import Loading from "../components/Loading";
 import { Avatar } from "../components/mySpace/Avatar";
 import { NormalBtn } from "../style/btnStyle.style";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../constants";
 
 export default function Visit() {
   const params = useParams();
@@ -79,7 +80,7 @@ export default function Visit() {
   function importSvg() {
     spaceGiftList.forEach((gift: any) => {
       const svgAttr = gift.svgAttr;
-      Paper.project.importSVG(`http://localhost:3000/${gift.svg.data}`, {
+      Paper.project.importSVG(`${BASE_URL}${gift.svg.data}`, {
         onLoad: function (item: any) {
           item.position = new Paper.Point(svgAttr.x, svgAttr.y);
           if (item.firstChild.size._width < 200) {
@@ -115,7 +116,7 @@ export default function Visit() {
         <CanvasArea
           ref={canvasRef}
           id="canvas"
-          themeUrl={userInfo && `http://localhost:3000/${userInfo.theme?.data}`}
+          themeUrl={userInfo && `${BASE_URL}${userInfo.theme?.data}`}
         ></CanvasArea>
         <NormalBtn
           className="b"
