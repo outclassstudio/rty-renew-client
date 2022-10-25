@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/reducers";
 import SendItemListCarousel from "./SendItemListCarousel";
 import ViewAllItemsModal from "./ViewAllItemsModal";
+import { BASE_URL } from "../../constants";
 
 interface PrvSvg {
   id: null | number;
@@ -65,7 +66,7 @@ export default function SetGiftBox() {
               }
               alt=""
             />
-            <img src={prvSvg.svg} alt="" />
+            <img src={`${BASE_URL}${prvSvg.svg}`} alt="" />
           </>
         ) : (
           <NoneImg>선택된 포장이 없습니다</NoneImg>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { BASE_URL } from "../../constants";
 import { RootState } from "../../redux/reducers";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
@@ -28,7 +29,7 @@ export default function PreviewModal({ data, handleCloseModal }: Props) {
       <MainWrapper onClick={handleCloseModal}>
         <PrvBoxWrapper>
           <Text>to. {data.userTo}</Text>
-          {prvUrl ? <img src={prvUrl} alt="" /> : ""}
+          {prvUrl ? <img src={`${BASE_URL}${prvUrl}`} alt="" /> : ""}
           <Content>
             <ContentImg>
               <div>{data.content}</div>

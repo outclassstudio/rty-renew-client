@@ -1,5 +1,6 @@
 import Slider from "react-slick";
 import styled from "styled-components";
+import { BASE_URL } from "../../constants";
 import { colorSet } from "../../style/global";
 
 interface Props {
@@ -49,7 +50,7 @@ export default function SendItemListCarousel({
           <SingleSvg
             onClick={() => handleSetPrv(el.id, url)}
             className={el.id === prvItem.id ? "active" : ""}
-            src={url}
+            src={`${BASE_URL}${url}`}
           />
         </ImageWrapper>
       );

@@ -1,5 +1,6 @@
 import { DragEvent } from "react";
 import styled from "styled-components";
+import { BASE_URL } from "../../../constants";
 import { colorSet } from "../../../style/global";
 
 const NewGiftItem = (item: any) => {
@@ -20,7 +21,7 @@ const NewGiftItem = (item: any) => {
       }
     >
       <ItemP>From. {item.userFrom.nickname}</ItemP>
-      <img src={url} alt="giftItem" />
+      <img src={`${BASE_URL}${url}`} alt="giftItem" />
     </ItemBox>
   );
 };
