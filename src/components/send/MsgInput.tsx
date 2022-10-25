@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../../constants";
 import { RootState } from "../../redux/reducers";
 import { setContent, setImg } from "../../redux/reducers/sendGiftReducer";
 import { colorSet } from "../../style/global";
@@ -97,7 +98,7 @@ export default function MsgInput() {
                 alt=""
               />
               <ImagePrvWrapper>
-                <ImagePrv src={prvItem.url} alt="" />
+                <ImagePrv src={`${BASE_URL}${prvItem.url}`} alt="" />
               </ImagePrvWrapper>
             </>
           ) : (

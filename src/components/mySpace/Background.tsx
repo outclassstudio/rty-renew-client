@@ -8,6 +8,7 @@ import NumberCarousel from "../common/NumberCarousel";
 import { getMyItems } from "../../apis/itemApi";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../../constants";
 
 export default function Background() {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ export default function Background() {
             return (
               <SelectImg key={idx}>
                 <ImgBox>
-                  <Img src={theme.data} alt="theme" />
+                  <Img src={`${BASE_URL}${theme.data}`} alt="theme" />
                 </ImgBox>
                 <ImgName>{theme.name}</ImgName>
                 <SelectInput

@@ -1,11 +1,12 @@
 import axios from "axios";
-import { LOCALSTORAGE_TOKEN } from "../constants";
+import { BASE_URL, LOCALSTORAGE_TOKEN } from "../constants";
 
 //axios인스턴스 생성
 export const apiClient = () => {
   const accessToken = localStorage.getItem(LOCALSTORAGE_TOKEN);
 
   const instance = axios.create({
+    baseURL: BASE_URL,
     headers: {
       authorization: `${accessToken}`,
     },

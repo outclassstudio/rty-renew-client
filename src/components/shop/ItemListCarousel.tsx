@@ -7,6 +7,7 @@ import { useState } from "react";
 import ImageModal from "./ImageModal";
 import { buyItem } from "../../apis/itemApi";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../../constants";
 
 interface Props {
   img: Item.singleItemDTO[];
@@ -93,7 +94,6 @@ export default function ItemListCarousel({
 
   //모달 안 띄우고 아이템 구입 요청
   const handleDirectBuy = (item: any) => {
-    console.log("아이디에 문제가 있다", item);
     if (myIdList.includes(item.id)) {
       return;
     } else {
@@ -125,7 +125,6 @@ export default function ItemListCarousel({
   //슬라이더 요소 컴포넌트
   const sliders = () => {
     return img.map((el: Item.singleItemDTO, id: number) => {
-      console.log("myIdList", myIdList);
       const mine = myIdList.includes(el.id);
 
       let url = el.data;
@@ -141,7 +140,11 @@ export default function ItemListCarousel({
       return (
         <Wrapper key={id}>
           <ImageWrapper>
-            <SingleImage src={url} alt="" onClick={() => openModal(el)} />
+            <SingleImage
+              src={`${BASE_URL}${url}`}
+              alt=""
+              onClick={() => openModal(el)}
+            />
             <Text>
               <SubText className="a">{el.name}</SubText>
               <SubText

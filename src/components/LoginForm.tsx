@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { LOCALSTORAGE_ID, LOCALSTORAGE_TOKEN } from "../constants";
+import { BASE_URL, LOCALSTORAGE_ID, LOCALSTORAGE_TOKEN } from "../constants";
 import { loginChange } from "../redux/reducers/loginReducer";
 import { NormalBtn } from "../style/btnStyle.style";
 import { colorSet } from "../style/global";
@@ -29,7 +29,7 @@ export default function LoginForm() {
   //일반 로그인 요청 함수
   const handleLogin = () => {
     axios
-      .post("https://rty-renew-server.herokuapp.com/users/login", {
+      .post(`${BASE_URL}users/login`, {
         // .post("/users/login", {
         userId: loginInfo.id,
         pwd: loginInfo.pwd,

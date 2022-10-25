@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BASE_URL } from "../../constants";
 import { colorSet, fadeAction, fadeExpand } from "../../style/global";
 
 export default function GiftModal({ data }: any) {
@@ -7,7 +8,7 @@ export default function GiftModal({ data }: any) {
       <MainWrapper>
         <PrvBoxWrapper>
           <Text>to. {data.userTo.nickname}</Text>
-          <img src={data.img.data} alt="" />
+          <img src={`${BASE_URL}${data.img.data}`} alt="" />
           <Content>
             <ContentImg>
               <div>{data.content}</div>

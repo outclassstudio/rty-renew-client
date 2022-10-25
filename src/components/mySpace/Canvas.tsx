@@ -6,11 +6,12 @@ import { useDispatch } from "react-redux";
 import { updateGift } from "../../apis/giftApi";
 import Background from "./Background";
 import NewGiftIcon from "./newGift/NewGiftIcon";
-import GiftModal from "../giftList/GiftModal";
+import GiftModal from "../common/GiftModal";
 import Swal from "sweetalert2";
 import { useCallback } from "react";
 import { setNewGift } from "../../redux/reducers/spaceReducer";
 import { useParams } from "react-router";
+import { BASE_URL } from "../../constants";
 
 interface ICanvasProps {
   canEditSpace: boolean;
@@ -55,7 +56,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
         return el.type === "default";
       });
       if (selected) {
-        Paper.project.importSVG(selected.data, {
+        Paper.project.importSVG(`${BASE_URL}${selected.data}`, {
           expandShapes: true,
 
           onLoad: function (item: paper.Item) {
@@ -210,7 +211,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
     (svgItem: any, x: number, y: number, type: string) => {
       const svg = svgItem.svg.data;
 
-      Paper.project.importSVG(svg, {
+      Paper.project.importSVG(`${BASE_URL}${svg}`, {
         expandShapes: true,
 
         //!왜 타입에서 size를 못찾는지
@@ -321,7 +322,7 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       <CanvasArea
         ref={canvasRef}
         id="canvas"
-        themeUrl={userInfo && `http://localhost:3000/${userInfo.theme?.data}`}
+        themeUrl={userInfo && `${BASE_URL}${userInfo.theme?.data}`}
         draggable
         onDrop={(e: any) => dropHandler(e)}
         onDragOver={dragOverHandler}

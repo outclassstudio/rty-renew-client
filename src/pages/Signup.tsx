@@ -8,6 +8,7 @@ import MyPicker from "../components/MyPicker";
 import Swal from "sweetalert2";
 import { idCheck, strongPassword, nickNameCheck } from "../hooks/validation";
 import useDate from "../hooks/useDate";
+import { BASE_URL } from "../constants";
 
 // axios.defaults.withCredentials = true;
 
@@ -59,9 +60,7 @@ export default function Signup() {
   const handleIdCheck = (): void => {
     if (idCheck(signUpInfo.userId)) {
       axios
-        .get(
-          `https://rty-renew-server.herokuapp.com/users/checkid/${signUpInfo.userId}`
-        )
+        .get(`${BASE_URL}users/checkid/${signUpInfo.userId}`)
         .then((res) => {
           setMessageRender(true);
           setErrors({ ...errors, idOverlap: res.data.ok });
@@ -133,7 +132,7 @@ export default function Signup() {
       signUpInfo.password === signUpInfo.passwordCheck
     ) {
       axios
-        .post("/users/signup", {
+        .post(`${BASE_URL}users/signup`, {
           userId: signUpInfo.userId,
           nickname: signUpInfo.nickname,
           pwd: signUpInfo.password,

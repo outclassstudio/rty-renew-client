@@ -1,14 +1,12 @@
 import { AxiosResponse } from "axios";
 import apiClient from "./index";
 
-const url = "https://rty-renew-server.herokuapp.com";
-
 //gift받아오기(ok)
 export const getMyGift = async (): Promise<
   AxiosResponse<Gift.GetGiftResponse>
 > => {
   return apiClient()
-    .get(`${url}/gifts`)
+    .get(`gifts`)
     .then((res) => {
       return res;
     });
@@ -19,7 +17,7 @@ export const getOthersGift = async (
   id: number
 ): Promise<AxiosResponse<Gift.GetGiftResponse>> => {
   return apiClient()
-    .get(`${url}/gifts/${id}`)
+    .get(`gifts/${id}`)
     .then((res) => {
       return res;
     });
@@ -30,7 +28,7 @@ export const getSentGift = async (): Promise<
   AxiosResponse<Gift.GetSentGiftResponse>
 > => {
   return apiClient()
-    .get(`${url}/gifts/sent`)
+    .get(`gifts/sent`)
     .then((res) => {
       return res;
     });
@@ -41,7 +39,7 @@ export const updateGift = (
   data: any //Gift.attributeDTO
 ): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .patch(`${url}/gifts`, data)
+    .patch(`gifts`, data)
     .then((res) => {
       return res;
     });
@@ -52,7 +50,7 @@ export const changeGiftPosition = (
   data: any //Gift.attributeDTO
 ): Promise<AxiosResponse<any>> => {
   return apiClient()
-    .patch(`${url}/gifts/update`, data)
+    .patch(`gifts/update`, data)
     .then((res) => {
       return res;
     });
@@ -60,12 +58,12 @@ export const changeGiftPosition = (
 
 //gift삭제(ok)
 export const deleteGift = (giftId: number): Promise<AxiosResponse<any>> => {
-  return apiClient().delete(`${url}/gifts/${giftId}`);
+  return apiClient().delete(`gifts/${giftId}`);
 };
 
 //!gift보내기
 export const sendGift = (
   data: Gift.sendGiftDTO
 ): Promise<AxiosResponse<any>> => {
-  return apiClient().post(`${url}/gifts`, data);
+  return apiClient().post(`gifts`, data);
 };

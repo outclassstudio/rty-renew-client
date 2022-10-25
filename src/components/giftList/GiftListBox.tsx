@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { colorSet, fadeMoveActionDelay, fadeOut } from "../../style/global";
-import GiftModal from "./GiftModal";
+import GiftModal from "../common/GiftModal";
 import useDate from "../../hooks/useDate";
+import { BASE_URL } from "../../constants";
 
 interface Props {
   data: any;
@@ -64,7 +65,7 @@ export default function GiftListBox({ data }: Props) {
   return (
     <BoxWrapper onClick={handleOpenModal} className={nowAdd ? nowAni : ""}>
       {nowAdd ? <OverWrapText>방금전</OverWrapText> : ""}
-      <BoxSvg src={svgStr} alt="" />
+      <BoxSvg src={`${BASE_URL}${svgStr}`} alt="" />
       <Text>
         <div>to. {data.userTo.nickname}</div>
         <div>{date}</div>
