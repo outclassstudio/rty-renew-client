@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
-import { LOCALSTORAGE_ID } from "../../constants";
+import { BASE_URL, LOCALSTORAGE_ID } from "../../constants";
 
 interface IUserBoxProps {
   data: Users.myinfoDTO;
@@ -30,7 +30,7 @@ export default function UserBox({ data }: IUserBoxProps) {
   return (
     <BoxContainer>
       <ThumbnailWrapper>
-        <Thumbnail src={data.theme ? data.theme.data : ""} />
+        <Thumbnail src={data.theme ? `${BASE_URL}${data.theme.data}` : ""} />
         <Title>{data.nickname}님</Title>
       </ThumbnailWrapper>
       <GroupWrapper>
