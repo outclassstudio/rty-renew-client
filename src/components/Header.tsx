@@ -49,7 +49,11 @@ export default function Header({ title }: Props) {
   };
 
   //사람찾기 실행
-  const handleFindUser = (e: any): void => {
+  const handleFindUser = (
+    e:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLInputElement>
+  ) => {
     e.preventDefault();
 
     //*아이디값이 truthy하고 공백이 아닌 경우
