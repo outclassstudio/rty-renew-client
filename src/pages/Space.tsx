@@ -94,8 +94,8 @@ const ThemeBtnBox = styled.div`
 `;
 
 const SpaceBtn = styled(NormalBtn)`
-  width: 290px;
-  height: 60px;
+  width: 210px;
+  height: 50px;
   font-size: 16px;
 `;
 

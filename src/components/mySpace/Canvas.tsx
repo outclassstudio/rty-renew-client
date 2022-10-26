@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { setNewGift } from "../../redux/reducers/spaceReducer";
 import { useParams } from "react-router";
 import { BASE_URL } from "../../constants";
+import { RootState } from "../../redux/reducers";
 
 interface ICanvasProps {
   canEditSpace: boolean;
@@ -26,13 +27,17 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
   const [selected, setSelected] = useState<any>();
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
 
-  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
-  const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const userGiftList = useSelector(
+    (state: RootState) => state.spaceReducer.myGift
+  );
+  const userInfo = useSelector(
+    (state: RootState) => state.spaceReducer.userInfo
+  );
   const defaultItem = useSelector(
-    (state: any) => state.spaceReducer.defaultItem
+    (state: RootState) => state.spaceReducer.defaultItem
   );
   const themeModal = useSelector(
-    (state: any) => state.spaceReducer.isThemeModal
+    (state: RootState) => state.spaceReducer.isThemeModal
   );
 
   const canvasRef = useRef(null);
@@ -60,10 +65,10 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
           expandShapes: true,
 
           onLoad: function (item: paper.Item) {
-            item.position = new Paper.Point(921, 192);
+            item.position = new Paper.Point(935, 180);
             item.data.id = defaultItem.id;
             item.data.type = "default";
-            item.scale(0.2);
+            item.scale(0.18);
             item.visible = false;
           },
         });
@@ -162,10 +167,10 @@ export default function Canvas({ canEditSpace }: ICanvasProps) {
       Paper.view.onMouseEnter = (e: paper.MouseEvent) => {
         if (
           currentGift &&
-          e.point.x <= 970 &&
-          e.point.x >= 870 &&
-          e.point.y <= 242 &&
-          e.point.y >= 142
+          e.point.x <= 985 &&
+          e.point.x >= 885 &&
+          e.point.y <= 230 &&
+          e.point.y >= 130
         ) {
           Swal.fire({
             title: "정말 삭제하시겠습니까?",

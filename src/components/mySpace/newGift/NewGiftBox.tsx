@@ -3,12 +3,15 @@ import { useSelector } from "react-redux";
 import NewGiftItem from "./NewGiftItem";
 import { useState } from "react";
 import { colorSet, fadeSlide } from "../../../style/global";
+import { RootState } from "../../../redux/reducers";
 
 export function NewGiftBox() {
-  const newGiftList = useSelector((state: any) => state.spaceReducer.newGift);
+  const newGiftList = useSelector(
+    (state: RootState) => state.spaceReducer.newGift
+  );
 
   const isOpenGiftBox = useSelector(
-    (state: any) => state.spaceReducer.isOpenGiftBox
+    (state: RootState) => state.spaceReducer.isOpenGiftBox
   );
 
   return (

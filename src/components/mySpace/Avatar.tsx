@@ -11,6 +11,7 @@ import { setNickname, setTo } from "../../redux/reducers/sendGiftReducer";
 import Swal from "sweetalert2";
 import { colorSet } from "../../style/global";
 import { setUserInfo } from "../../redux/reducers/spaceReducer";
+import { RootState } from "../../redux/reducers";
 
 interface IAvatarProps {
   otherUserInfo?: Users.myinfoDTO;
@@ -29,14 +30,20 @@ export function Avatar({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userGiftList = useSelector((state: any) => state.spaceReducer.myGift);
-  const myInfoState = useSelector((state: any) => state.spaceReducer.userInfo);
+  const userGiftList = useSelector(
+    (state: RootState) => state.spaceReducer.myGift
+  );
+  const myInfoState = useSelector(
+    (state: RootState) => state.spaceReducer.userInfo
+  );
   //avatar state msg
   const [stateMsg, setStateMsg] = useState<string>("");
   const [isClickedAvatar, setIsClikedAvatar] = useState<boolean>(false);
 
   useEffect(() => {
-    setStateMsg(myInfoState.msg);
+    if (myInfoState.msg) {
+      setStateMsg(myInfoState.msg);
+    }
   }, [myInfoState]);
 
   //내정보 업데이트

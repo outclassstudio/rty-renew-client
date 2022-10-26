@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { ReactComponent as NewGifIcon1 } from "../../../assets/images/svg/newGiftBox1.svg";
+import { ReactComponent as NewGifIcon } from "../../../assets/images/svg/newGiftBox.svg";
 import { setOpenGiftBox } from "../../../redux/reducers/spaceReducer";
 import { colorSet } from "../../../style/global";
+import { RootState } from "../../../redux/reducers";
 
 export default function NewGift() {
   const dispatch = useDispatch();
   const isOpenGiftBox = useSelector(
-    (state: any) => state.spaceReducer.isOpenGiftBox
+    (state: RootState) => state.spaceReducer.isOpenGiftBox
   );
-  const newGiftList = useSelector((state: any) => state.spaceReducer.newGift);
+  const newGiftList = useSelector(
+    (state: RootState) => state.spaceReducer.newGift
+  );
 
   const openGiftHandler = () => {
     dispatch(setOpenGiftBox(!isOpenGiftBox));
@@ -20,7 +23,7 @@ export default function NewGift() {
     <div>
       <GiftIconBox>
         <GiftCount>{newGiftList?.length}</GiftCount>
-        <NewGifIcon1 onClick={openGiftHandler} />
+        <NewGifIcon onClick={openGiftHandler} />
       </GiftIconBox>
       <GiftBox></GiftBox>
     </div>
@@ -30,7 +33,7 @@ export default function NewGift() {
 export const GiftIconBox = styled.div`
   position: fixed;
   margin-top: 20px;
-  margin-left: 470px;
+  margin-left: 485px;
   width: 90px;
   cursor: pointer;
   display: flex;

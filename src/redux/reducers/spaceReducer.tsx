@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface spaceState {
   isThemeModal: boolean;
-  userInfo: Myinfo;
+  userInfo: Users.myinfoDTO;
   myGift: any;
   newGift: any;
   isConfirmModal: boolean;
@@ -13,23 +13,15 @@ interface spaceState {
   defaultItem: any;
 }
 
-interface Myinfo {
-  id: undefined | string;
-  nickname: undefined | string;
-  point: number;
-  birth?: undefined | string;
-  theme?: string;
-}
-
 const initialState = {
   isThemeModal: false,
   newGiftList: "",
   userInfo: {
-    id: "",
+    id: 0,
+    userId: "",
     nickname: "",
     point: 0,
-    theme: "",
-    msg: "",
+    birth: "",
   },
   myGift: null,
   newGift: null,
@@ -48,10 +40,10 @@ const spaceSlice = createSlice({
   name: "space",
   initialState,
   reducers: {
-    setUserInfo(state, action: PayloadAction<any>) {
+    setUserInfo(state, action: PayloadAction<Users.myinfoDTO>) {
       state.userInfo = action.payload;
     },
-    setModalOpen(state, action: PayloadAction<any>) {
+    setModalOpen(state, action: PayloadAction<boolean>) {
       state.isThemeModal = action.payload;
     },
     setMyGift(state, action: PayloadAction<any>) {
@@ -60,19 +52,19 @@ const spaceSlice = createSlice({
     setNewGift(state, action: PayloadAction<any>) {
       state.newGift = action.payload;
     },
-    setConfirmModal(state, action: PayloadAction<any>) {
+    setConfirmModal(state, action: PayloadAction<boolean>) {
       state.isConfirmModal = action.payload;
     },
-    setConfirmRes(state, action: PayloadAction<any>) {
+    setConfirmRes(state, action: PayloadAction<boolean>) {
       state.isConfirmRes = action.payload;
     },
-    setOpenGiftBox(state, action: PayloadAction<any>) {
+    setOpenGiftBox(state, action: PayloadAction<boolean>) {
       state.isOpenGiftBox = action.payload;
     },
     // setClickGiftBox(state, action: PayloadAction<any>) {
     //   state.clickGiftBox = action.payload;
     // },
-    setIsClicked(state, action: PayloadAction<any>) {
+    setIsClicked(state, action: PayloadAction<boolean>) {
       state.isCliked = action.payload;
     },
     setDefaultItem(state, action: PayloadAction<any>) {

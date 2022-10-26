@@ -9,10 +9,13 @@ import { getMyItems } from "../../apis/itemApi";
 import { NormalBtn } from "../../style/btnStyle.style";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../../constants";
+import { RootState } from "../../redux/reducers";
 
 export default function Background() {
   const dispatch = useDispatch();
-  const userInfo = useSelector((state: any) => state.spaceReducer.userInfo);
+  const userInfo = useSelector(
+    (state: RootState) => state.spaceReducer.userInfo
+  );
   const [checkedItem, setCheckedItem] = useState<number>(0);
   const [themeList, setThemeList] = useState<Item.singleItemDTO[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -27,7 +30,9 @@ export default function Background() {
       }
       setThemeList(myTheme);
     });
-    setCheckedItem(userInfo.theme.id);
+    if (userInfo.theme?.id) {
+      setCheckedItem(userInfo.theme.id);
+    }
   }, []);
 
   const checkedItemHandler = (isCheckd: boolean, item: string) => {
@@ -40,7 +45,11 @@ export default function Background() {
     if (checkedItem) {
       changeTheme(checkedItem).then((res) => {
         if (res.data.ok) {
-          getMyInfo().then((res) => dispatch(setUserInfo(res.data.userInfo)));
+          getMyInfo().then((res) => {
+            if (res.data.userInfo) {
+              dispatch(setUserInfo(res.data.userInfo));
+            }
+          });
         }
       });
       dispatch(setModalOpen(false));

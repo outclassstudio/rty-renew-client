@@ -45,17 +45,19 @@ export default function HeaderUserlist({
       <MainWrapper>
         <BoxWrapper>
           {userList.length !== 0
-            ? userList.slice(0, 10).map((el: any, idx: number) => {
-                return (
-                  <SingleUser
-                    key={idx}
-                    onClick={() => handleVisitOthers(el.userId, el.id)}
-                  >
-                    <span>{el.nickname}</span>
-                    <span>( {el.userId} )</span>
-                  </SingleUser>
-                );
-              })
+            ? userList
+                .slice(0, 10)
+                .map((el: Users.otherUserDTO, idx: number) => {
+                  return (
+                    <SingleUser
+                      key={idx}
+                      onClick={() => handleVisitOthers(el.userId, el.id)}
+                    >
+                      <span>{el.nickname}</span>
+                      <span>( {el.userId} )</span>
+                    </SingleUser>
+                  );
+                })
             : ""}
           {userList.length > 10 ? (
             <SingleUser className="seeMore" onClick={handleSeemore}>

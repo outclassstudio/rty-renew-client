@@ -16,7 +16,8 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 const LAYOUT_BREAK_POINT = {
-  MOBILE: 768,
+  MOBILE: 420,
+  PAD: 1000,
   MAC: 1440,
 };
 
@@ -27,6 +28,7 @@ const createMediaQuery = (mediaPx: number): string => {
 //미디어쿼리 생성
 export const mediaQuery = {
   mobile: createMediaQuery(LAYOUT_BREAK_POINT.MOBILE),
+  pad: createMediaQuery(LAYOUT_BREAK_POINT.PAD),
   mac: createMediaQuery(LAYOUT_BREAK_POINT.MAC),
 };
 

@@ -34,7 +34,7 @@ declare namespace Users {
   }
 
   interface otherUserDTO {
-    id: string;
+    id: number;
     userId: string;
     nickname: string;
     birth: string;
